@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "774820713719",
+    "firebase_url": "https://mobiletraderv3.firebaseio.com",
+    "project_id": "mobiletraderv3",
+    "storage_bucket": "mobiletraderv3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774820713719:android:f8b1d87a6366212f",
+        "android_client_info": {
+          "package_name": "com.mobile.mtrader.mobiletreaderv3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "774820713719-p2d1nf54sq18okn0vjc6hbiq509aguea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC758LOY9zWaUdMqMlB8HvQvVoEimbsRE0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

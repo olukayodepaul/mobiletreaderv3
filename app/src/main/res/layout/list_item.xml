@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/avatar_pass">
+
+            <TextView
+                android:id="@+id/sku_name"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SKU ITEMS"
+                android:textSize="13sp"
+                />
+
+            <TextView
+                android:id="@+id/sku_roll"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sku_name"
+                android:text=""
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/sku_pack"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sku_name"
+                android:layout_toRightOf="@+id/sku_roll"
+                android:text=""
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/sku_amoun"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="10sp"
+                android:layout_below="@+id/sku_name"
+                android:layout_toRightOf="@+id/sku_pack"
+                />
+
+            <TextView
+                android:id="@+id/sku_post_time"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="10sp"
+                android:layout_below="@+id/sku_name"
+                android:layout_toRightOf="@+id/sku_amoun"
+                android:textAlignment="textEnd"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/avatar_pass"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/pass"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>
+  

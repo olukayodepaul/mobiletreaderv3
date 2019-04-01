@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.mobile.mtrader.ui.ConfirmSales">
+
+    <RelativeLayout
+        android:id="@+id/frames"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/nav_fix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/brys"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:id="@+id/back_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:id="@+id/button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="2dip"
+                            tools:ignore="ContentDescription" />
+
+                        <ImageView
+                            android:id="@+id/back_page"
+                            android:layout_width="32dip"
+                            android:layout_height="36dip"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@+id/button"
+                            android:src="@drawable/cancel_dip_black"
+                            tools:ignore="ContentDescription" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toEndOf="@+id/back_button"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:paddingEnd="8dip"
+                        android:paddingStart="8dip">
+
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_toEndOf="@+id/back_button"
+                            android:gravity="center_vertical"
+                            android:paddingEnd="12dp"
+                            android:paddingStart="8dp"
+                            android:text="@string/menu_history"
+                            android:textColor="@color/blue_nblac"
+                            android:textSize="@dimen/modulesize"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/nav_fix"
+            android:orientation="vertical"
+            android:scrollbars="vertical">
+
+            <include
+                android:id="@+id/app_headers"
+                layout="@layout/sales_header_activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nav_fix"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/saleValues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/app_headers"
+                android:layout_marginTop="5dp"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/sku_t"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_bold"
+                    android:maxLines="1"
+                    android:text="Total"
+                    app:layout_constraintEnd_toStartOf="@+id/order_t"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintHorizontal_weight="1.7"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteY="2dp"
+                    android:textSize="16dp"/>
+
+                <TextView
+                    android:id="@+id/order_t"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="0.0"
+                    android:textAlignment="textEnd"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/app_price_t"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_weight="0.8"
+                    app:layout_constraintStart_toEndOf="@+id/sku_t"
+                    tools:ignore="MissingConstraints"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/app_price_t"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="0.0"
+                    android:textAlignment="textEnd"
+                    app:layout_constraintEnd_toStartOf="@+id/invent_t"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_weight="0.6"
+                    app:layout_constraintStart_toEndOf="@+id/order_t"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteY="1dp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/invent_t"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="0.0"
+                    android:textAlignment="textEnd"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_price_t"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_weight="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/app_price_t"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteY="1dp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/tv_price_t"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="0.0"
+                    android:textAlignment="textEnd"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_weight="0.9"
+                    app:layout_constraintStart_toEndOf="@+id/invent_t"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteY="1dp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/g_di"
+                style="@style/Divider.Horizontal"
+                android:layout_below="@+id/confirm_code" />
+
+
+            <LinearLayout
+                android:id="@+id/confirm_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/s_div"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Enter customer verification code"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"/>
+
+                <EditText
+                    android:id="@+id/confirms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="60dp"
+                    android:layout_marginStart="60dp"
+                    android:background="@drawable/edittext"
+                    android:gravity="center"
+                    android:inputType="numberPassword"
+                    android:padding="7dp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/g_div"
+                style="@style/Divider.Horizontal"
+                android:layout_below="@+id/confirm_code" />
+
+
+            <Button
+                android:id="@+id/btns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/design_login_btn"
+                android:layout_marginEnd="50dp"
+                android:layout_marginStart="50dp"
+                android:minWidth="16dp"
+                android:minHeight="16dp"
+                android:padding="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="Confirm Sales"
+                android:textAllCaps="false"
+                android:textColor="@color/white_color"
+                android:textSize="17dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/hostproressbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>
