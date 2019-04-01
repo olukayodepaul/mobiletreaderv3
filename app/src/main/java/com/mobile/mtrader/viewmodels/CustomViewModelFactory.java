@@ -31,8 +31,12 @@ public class CustomViewModelFactory implements ViewModelProvider.Factory {
             return (T) new CustomerFragmentViewModel(repository);
         }else if(modelClass.isAssignableFrom(ClockInViewModel.class)) {
             return (T) new ClockInViewModel(repository);
+        }else if(modelClass.isAssignableFrom(DailySalesViewModule.class)) {
+            return (T) new DailySalesViewModule(repository);
         }else{
             throw new IllegalArgumentException("ViewModel Not Found");
         }
     }
 }
+
+

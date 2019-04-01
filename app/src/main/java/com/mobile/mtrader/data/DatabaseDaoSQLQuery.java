@@ -50,4 +50,7 @@ public interface DatabaseDaoSQLQuery {
     @Query("UPDATE Customers SET rostertime = :rostertime WHERE sort=:sort")
     void updateIndividualCustomers(String rostertime, int sort);
 
+    @Query("SELECT * FROM Products order by separator asc")
+    LiveData<List<Products>> findAllUserProducts();
+
 }

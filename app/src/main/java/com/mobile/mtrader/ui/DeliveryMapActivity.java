@@ -49,9 +49,10 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
 
     Bundle bundle;
 
-    String rValues;
-    String custid;
-    String cName;
+    String customer_key;
+    String customer_no;
+    String outletname;
+    String outletwaiver;
 
    // private GeofencingClient geofencingClient;
 
@@ -69,26 +70,25 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         //geofencingClient = LocationServices.getGeofencingClient(this);
 
         if (bundle != null) {
-            rValues = bundle.getString("CUSTOMERS_KEYS");
-            custid = bundle.getString("CUSTOMER_UNIQUE_ID");
-            cName = bundle.getString("CUSTOMER_NAMES_ID");
+            customer_key = bundle.getString("CUSTOMERS_ACCESS_KEYS");
+            customer_no = bundle.getString("CUSTOMER_ID");
+            outletname = bundle.getString("CUSTOMER_NAME");
+            outletwaiver = bundle.getString("OUTLET_WAIVER");
         }
 
         back_button.setOnClickListener(v -> {
             onBackPressed();
         });
 
-        users_name.setText(cName);
+        users_name.setText(customer_no+" "+outletname);
 
         prosales.setOnClickListener(v -> {
             intent = new Intent(this, DailySalesActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("CUSTOMERS_KEYS", rValues);
-            intent.putExtra("CUSTOMER_UNIQUE_ID", custid);
-            intent.putExtra("CUSTOMER_NAMES_ID",  cName);
+            intent.putExtra("CUSTOMERS_KEYS", customer_key);
+            intent.putExtra("CUSTOMER_NO", customer_no);
             startActivity(intent);
         });
-
     }
 
     @Override

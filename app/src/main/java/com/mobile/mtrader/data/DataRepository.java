@@ -73,8 +73,12 @@ public class DataRepository  {
         return this.daoSQLQuery.findIndividulUsers();
     }
 
+    public LiveData<List<Products>>findAllUserProducts() {
+         return this.daoSQLQuery.findAllUserProducts();
+    }
+
     public void updateIndividualCustomers(String rostertime,int sort ) {
-         this.daoSQLQuery.updateIndividualCustomers(rostertime,sort);
+        this.daoSQLQuery.updateIndividualCustomers(rostertime,sort);
     }
 
     public Observable<Response<ModelEmployees>> userLogin(String username, String password, String imei) {

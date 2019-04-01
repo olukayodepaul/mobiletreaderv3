@@ -108,12 +108,14 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
                     swichUI(customers.get(position).sort,
                             customers.get(position).token,
                             customers.get(position).id,
-                            customers.get(position).outletname)
+                            customers.get(position).outletname,
+                            customers.get(position).outlet_waiver
+                    )
             );
         }
     }
 
-    private void swichUI(int chg, String customerKeys, int id, String outletnames) {
+    private void swichUI(int chg, String customerKeys, int id, String outletnames, String outletwaiver) {
 
         switch (chg) {
             case 1:
@@ -127,6 +129,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
                 intent.putExtra("CUSTOMERS_ACCESS_KEYS",customerKeys);
                 intent.putExtra("CUSTOMER_ID", Integer.toString(id));
                 intent.putExtra("CUSTOMER_NAME",outletnames);
+                intent.putExtra("OUTLET_WAIVER",outletwaiver);
                 context.startActivity(intent);
                 break;
             case 3:
