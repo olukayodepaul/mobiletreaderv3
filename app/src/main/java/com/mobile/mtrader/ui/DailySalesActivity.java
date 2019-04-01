@@ -75,9 +75,6 @@ public class DailySalesActivity extends AppCompatActivity {
         });
 
         back_page.setOnClickListener(v -> onBackPressed());
-
     }
-
-
 }
 
