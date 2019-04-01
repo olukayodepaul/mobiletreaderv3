@@ -66,7 +66,7 @@ public class DailySalesActivity extends AppCompatActivity {
 
         recyler_data.setLayoutManager(new LinearLayoutManager(this));
         recyler_data.setHasFixedSize(true);
-        skuAdapter = new SkuAdapter(this,customer_no );
+        skuAdapter = new SkuAdapter(this,customer_no);
         recyler_data.setAdapter(skuAdapter);
 
         dailySalesViewModule.findAllUserProducts().observe(this, products -> {

@@ -104,7 +104,11 @@ public class LoginViewModel extends ViewModel {
                                             loginModel.product.get(i).soq,
                                             loginModel.product.get(i).rollprice,
                                             loginModel.product.get(i).packprice,
-                                            loginModel.product.get(i).productname
+                                            loginModel.product.get(i).productname,
+                                            "",
+                                            "",
+                                            "",
+                                            ""
                                     );
                                     new AddProducts().execute(products);
                                }

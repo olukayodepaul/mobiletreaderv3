@@ -5,24 +5,17 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.model.ExposeSalesData;
-import com.mobile.mtrader.repo.RealmService;
-import com.mobile.mtrader.util.AppUtil;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -33,6 +26,7 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
     Context context;
     String customer_no;
 
+    @Inject
     public SkuAdapter(Context context, String customer_no) {
 
         this.context = context;
@@ -53,7 +47,7 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
         if(products!=null){
 
             Products rs = products.get(position);
-            holder.setListener(position);
+            holder.setListener(position, holder);
             holder.skus.setText(rs.productname);
             holder.soq.setText(rs.soq);
 
@@ -117,7 +111,8 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
             ButterKnife.bind(this, mview);
         }
 
-        public void setListener(int position) {
+        public void setListener(int position, SkuAdapter.ViewHolder holder) {
+
         }
     }
 

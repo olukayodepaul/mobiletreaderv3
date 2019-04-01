@@ -2,6 +2,7 @@ package com.mobile.mtrader.di.component;
 
 import android.content.Context;
 
+import com.mobile.mtrader.adapter.SkuAdapter;
 import com.mobile.mtrader.data.Api;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
@@ -37,6 +38,7 @@ public interface ApplicationComponent {
     void inject(CustomerFragment customerFragment);
     void inject(DepotClokingActivity depotClokingActivity);
     void inject(DailySalesActivity dailySalesActivity);
+    void inject(SkuAdapter dailySalesActivity);
 
 
 }
