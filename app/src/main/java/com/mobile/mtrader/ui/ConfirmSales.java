@@ -15,8 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.mobile.mtrader.adapter.ConfirmSalesAdapter;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -24,17 +22,12 @@ import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.viewmodels.RepSalesConfirmViewModel;
-
 import java.text.DecimalFormat;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -72,8 +65,6 @@ public class ConfirmSales extends AppCompatActivity {
 
     @BindView(R.id.progressbar)
     ProgressBar progressbar;
-
-    DecimalFormat myFormatter;
 
     ApplicationComponent component;
 
@@ -113,33 +104,33 @@ public class ConfirmSales extends AppCompatActivity {
         saleValues.setAdapter(confirmSalesAdapter);
 
         mDis.add(repSalesConfirmViewModel.salesEnteryRecord("1", customerno)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(data -> {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data -> {
 
-                                    int sumAllPP = 0;
-                                    int sumAllRP = 0;
-                                    double sumInventory = 0.0;
-                                    int sumPricing = 0;
-                                    double sumOrder = 0.0;
+                            int sumAllPP = 0;
+                            int sumAllRP = 0;
+                            double sumInventory = 0.0;
+                            int sumPricing = 0;
+                            double sumOrder = 0.0;
 
-                                    for (int i = 0; i < data.size(); i++) {
+                            for (int i = 0; i < data.size(); i++) {
 
-                                        String[] divider = Double.toString(Double.parseDouble(data.get(i).orders)).split("\\.");
-                                        sumAllPP += Integer.parseInt(divider[0])*Double.parseDouble(data.get(i).packprice) ;
-                                        sumAllRP += Integer.parseInt(divider[1])*Double.parseDouble(data.get(i).rollprice);
-                                        sumInventory += Double.parseDouble(data.get(i).inventory);
-                                        sumPricing += data.get(i).pricing;
-                                        sumOrder += Double.parseDouble(data.get(i).orders);
-                                    }
-                                     invent_t.setText(Double.toString(sumOrder));
-                                     app_price_t.setText(Integer.toString(sumPricing));
-                                     order_t.setText(Double.toString(sumInventory));
-                                     tv_price_t.setText(Double.toString(sumAllPP+sumAllRP));
-                                     confirmSalesAdapter.setModulesAdapter(data);
-                                },
-                                throwable -> Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
-                        )
+                                String[] divider = Double.toString(Double.parseDouble(data.get(i).orders)).split("\\.");
+                                sumAllPP += Integer.parseInt(divider[0]) * Double.parseDouble(data.get(i).packprice);
+                                sumAllRP += Integer.parseInt(divider[1]) * Double.parseDouble(data.get(i).rollprice);
+                                sumInventory += Double.parseDouble(data.get(i).inventory);
+                                sumPricing += data.get(i).pricing;
+                                sumOrder += Double.parseDouble(data.get(i).orders);
+                            }
+                            invent_t.setText(Double.toString(sumOrder));
+                            app_price_t.setText(Integer.toString(sumPricing));
+                            order_t.setText(Double.toString(sumInventory));
+                            tv_price_t.setText(Double.toString(sumAllPP + sumAllRP));
+                            confirmSalesAdapter.setModulesAdapter(data);
+                        },
+                        throwable -> Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
+                )
         );
 
         back_page.setOnClickListener(v -> onBackPressed());

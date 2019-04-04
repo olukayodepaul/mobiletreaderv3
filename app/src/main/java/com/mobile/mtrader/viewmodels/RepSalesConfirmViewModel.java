@@ -32,32 +32,7 @@ public class RepSalesConfirmViewModel extends ViewModel{
         );
     }
 
-    public Flowable<Long> totalEntryPrice(String updatestatus, String customerno) {
-        return repository.totalSalesValue(updatestatus,customerno).map(
-                total->{
-                    totalPricing = total;
-                    return total;
-                }
-        );
-    }
 
-    public Flowable<Long> totalEntryInventory(String updatestatus, String customerno) {
-        return repository.totalEntryInventory(updatestatus,customerno).map(
-                total->{
-                    totalPricing = total;
-                    return total;
-                }
-        );
-    }
-
-    public Flowable<Long> totalEntryOrder(String updatestatus, String customerno) {
-        return repository.totalEntryOrder(updatestatus,customerno).map(
-                total->{
-                    totalPricing = total;
-                    return total;
-                }
-        );
-    }
 
 
 

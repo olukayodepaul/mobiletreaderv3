@@ -106,17 +106,7 @@ public class DataRepository  {
         return this.daoSQLQuery.salesEnteryRecord(updatestatus,customerno);
     }
 
-    public Flowable<Long> totalSalesValue(String updatestatus, String customerno) {
-        return this.daoSQLQuery.totalSalesValue(updatestatus,customerno);
-    }
 
-    public Flowable<Long> totalEntryInventory(String updatestatus, String customerno) {
-        return this.daoSQLQuery.totalEntryInventory(updatestatus,customerno);
-    }
-
-    public Flowable<Long> totalEntryOrder(String updatestatus, String customerno) {
-        return this.daoSQLQuery.totalEntryOrder(updatestatus,customerno);
-    }
 }
 
 

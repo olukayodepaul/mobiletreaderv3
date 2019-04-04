@@ -6,16 +6,11 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
-import com.mobile.mtrader.data.AllTablesStructures.Sales;
-
 import java.util.List;
-
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -64,17 +59,6 @@ public interface DatabaseDaoSQLQuery {
 
     @Query("SELECT * FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
     Flowable<List<Products>> salesEnteryRecord(String updatestatus, String customerno);
-
-    @Query("SELECT SUM(pricing) FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
-    Flowable<Long> totalSalesValue(String updatestatus, String customerno);
-
-    @Query("SELECT SUM(inventory) FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
-    Flowable<Long> totalEntryInventory(String updatestatus, String customerno);
-
-    @Query("SELECT SUM(orders) FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
-    Flowable<Long> totalEntryOrder(String updatestatus, String customerno);
-
-
 
 }
 
