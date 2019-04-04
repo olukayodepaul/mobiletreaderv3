@@ -18,16 +18,16 @@ import com.mobile.mtrader.ui.DailySalesActivity;
 import com.mobile.mtrader.ui.DepotClokingActivity;
 import com.mobile.mtrader.ui.MainActivity;
 import com.mobile.mtrader.ui.ModuleActivity;
+import com.mobile.mtrader.ui.SalesHistoryFragment;
 import com.mobile.mtrader.viewmodels.CustomViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 import dagger.Component;
 
 @ApplicationScope
-@Component(modules = {ContextModule.class, RetrofitModule.class, RealmModule.class, PicassoModule.class, MvvMModule.class})
+@Component(modules = {ContextModule.class, RetrofitModule.class, PicassoModule.class, MvvMModule.class})
 public interface ApplicationComponent {
 
-    RealmService getRealmService();
     Picasso getPicasso();
     Api getApi();
     @ApplicationContext
@@ -38,7 +38,6 @@ public interface ApplicationComponent {
     void inject(CustomerFragment customerFragment);
     void inject(DepotClokingActivity depotClokingActivity);
     void inject(DailySalesActivity dailySalesActivity);
-    void inject(SkuAdapter dailySalesActivity);
-
+    void inject(SalesHistoryFragment salesHistoryFragment);
 
 }

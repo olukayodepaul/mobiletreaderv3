@@ -1,34 +1,62 @@
 package com.mobile.mtrader.adapter;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
+import com.mobile.mtrader.di.component.ApplicationComponent;
+import com.mobile.mtrader.di.component.DaggerApplicationComponent;
+import com.mobile.mtrader.di.module.ContextModule;
+import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.viewmodels.DailySalesViewModule;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 
 
 public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
 
     List<Products> products = new ArrayList<>();
+
     Context context;
+
     String customer_no;
+
+    EditText editText;
+
+    private OnItemClickListerner mListener;
+
+    public interface OnItemClickListerner{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListerner listerner) {
+        this.mListener = listerner;
+    }
 
     @Inject
     public SkuAdapter(Context context, String customer_no) {
-
         this.context = context;
         this.customer_no = customer_no;
     }
@@ -44,12 +72,12 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull SkuAdapter.ViewHolder holder, int position) {
 
-        if(products!=null){
+        if(products!=null) {
 
             Products rs = products.get(position);
-            holder.setListener(position, holder);
             holder.skus.setText(rs.productname);
             holder.soq.setText(rs.soq);
+
 
             if (rs.separator.equals("1")) {
                 //own product
@@ -68,7 +96,6 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
             }
         }
     }
-
 
     @Override
     public int getItemCount() {
@@ -106,14 +133,67 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
         ConstraintLayout cbg;
 
 
+
         public ViewHolder(View mview) {
             super(mview);
             ButterKnife.bind(this, mview);
-        }
+            EditText mInventory = mview.findViewById(R.id.editTextq);
+            EditText mPricing = mview.findViewById(R.id.editText2q);
+            EditText mOrder = mview.findViewById(R.id.editText3q);
+            mInventory.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        public void setListener(int position, SkuAdapter.ViewHolder holder) {
+                }
 
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    int position = getAdapterPosition();
+                    mListener.onItemClick(position);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+            mPricing.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    int position = getAdapterPosition();
+                    mListener.onItemClick(position);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+            mOrder.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    int position = getAdapterPosition();
+                    mListener.onItemClick(position);
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
         }
     }
-
 }
+

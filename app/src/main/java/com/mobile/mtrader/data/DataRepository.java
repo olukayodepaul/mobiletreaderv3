@@ -7,6 +7,7 @@ import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
+import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.model.ModelAttendant;
 import com.mobile.mtrader.model.ModelEmployees;
 
@@ -15,6 +16,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import retrofit2.Response;
 
@@ -28,21 +31,6 @@ public class DataRepository  {
     public DataRepository(DatabaseDaoSQLQuery daoSQLQuery, Api api) {
         this.daoSQLQuery = daoSQLQuery;
         this.api = api;
-    }
-
-
-    /*
-    public int deleteItem(Employees registrationEntityTable) {
-        return daoSQLQuery.deleteItem(registrationEntityTable);
-    }
-    */
-
-    public LiveData<List<Customers>> findAllCustomers() {
-        return daoSQLQuery.findAllCustomers();
-    }
-
-    public LiveData<List<Modules>> findAllModules() {
-        return daoSQLQuery.findAllModules();
     }
 
     public Long insert(Employees employees) {
@@ -61,6 +49,20 @@ public class DataRepository  {
         return this.daoSQLQuery.insertIntoProducts(products);
     }
 
+    /*
+    public int deleteItem(Employees registrationEntityTable) {
+        return daoSQLQuery.deleteItem(registrationEntityTable);
+    }
+    */
+
+    public Flowable<List<Customers>> findAllCustomers() {
+        return daoSQLQuery.findAllCustomers();
+    }
+
+    public LiveData<List<Modules>> findAllModules() {
+        return daoSQLQuery.findAllModules();
+    }
+
     public LiveData<List<Products>> findAllMyProduct(String id) {
         return this.daoSQLQuery.findAllMyProduct(id);
     }
@@ -73,7 +75,7 @@ public class DataRepository  {
         return this.daoSQLQuery.findIndividulUsers();
     }
 
-    public LiveData<List<Products>>findAllUserProducts() {
+    public Flowable<List<Products>>findAllUserProducts() {
          return this.daoSQLQuery.findAllUserProducts();
     }
 
@@ -89,6 +91,8 @@ public class DataRepository  {
                                                           String times,String lat, String lng,String rmsg) {
         return api.getUserRoster(userid, taskid, dates, times, lat, lng, rmsg);
     }
+
+
 
 }
 

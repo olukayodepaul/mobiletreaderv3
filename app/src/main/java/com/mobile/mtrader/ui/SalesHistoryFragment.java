@@ -1,6 +1,10 @@
 package com.mobile.mtrader.ui;
 
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,72 +12,68 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-
-import com.mobile.mtrader.Apps;
 import com.mobile.mtrader.adapter.OrderHistoryAdapter;
+import com.mobile.mtrader.data.AllTablesStructures.Sales;
+import com.mobile.mtrader.di.component.ApplicationComponent;
+import com.mobile.mtrader.di.component.DaggerApplicationComponent;
+import com.mobile.mtrader.di.module.ContextModule;
+import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
-
-
+import com.mobile.mtrader.viewmodels.DailySalesViewModule;
+import java.util.List;
+import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class SalesHistoryFragment extends Fragment {
 
-
-    //@Inject
-    //RealmService realmService;
-
     @BindView(R.id.lvExp)
-    RecyclerView users_modules;
+    RecyclerView customersales;
 
     OrderHistoryAdapter customerListAdapter;
 
     RecyclerView.LayoutManager layoutManager;
 
+    DailySalesViewModule dailySalesViewModule;
+
+    ApplicationComponent component;
+
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
+    MediatorLiveData liveDataMerger = new MediatorLiveData<>();
+
+    LiveData<List<Sales>> orders;
+
     public SalesHistoryFragment() {
-        // Required empty public constructor
+
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view =  inflater.inflate(R.layout.fragment_sales_history, container, false);
         ButterKnife.bind(this,view);
-        //ApplicationComponent applicationComponent = Apps.get(getActivity()).getApplicationComponent();
-/*
-        salasHistoryFragmentComponent = DaggerSalasHistoryFragmentComponent.builder()
-                .applicationComponent(applicationComponent)
-                .salesHistoryFragmentContextModule(new SalesHistoryFragmentContextModule(this))
+        dailySalesViewModule = ViewModelProviders.of(getActivity(), viewModelFactory).get(DailySalesViewModule.class);
+
+        component = DaggerApplicationComponent.builder()
+                .contextModule(new ContextModule(getActivity()))
+                .mvvMModule(new MvvMModule(getActivity()))
                 .build();
-        salasHistoryFragmentComponent.injectSalesHistoryFragment(this);
-        onLoadData();
-        */
+        component.inject(this);
+
+        customersales.setLayoutManager(new LinearLayoutManager(getActivity()));
+        customersales.setHasFixedSize(true);
+        customersales.setLayoutManager(layoutManager);
+        customerListAdapter = new OrderHistoryAdapter(getActivity());
+        customersales.setAdapter(customerListAdapter);
+
+
+
         return view;
-
     }
-
-    /*@Override
-    public void onStart() {
-        super.onStart();
-        onLoadData();
-    }
-    */
-
-
-    /*public void onLoadData(){
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        users_modules.setLayoutManager(layoutManager);
-        customerListAdapter = new OrderHistoryAdapter(getContext(),realmService);
-        users_modules.setAdapter(customerListAdapter);
-    }
-    */
-
-
-
-
 
 }

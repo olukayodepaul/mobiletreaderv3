@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         component = DaggerApplicationComponent.builder()
                 .contextModule(new ContextModule(this))
                 .mvvMModule(new MvvMModule(this))
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     loginViewModel.setEmployeesDailySalesData(usersName,userPassword,imei);
                 }
             }
+
         });
 
         loginViewModel.getNetRes().observe(this, s -> {

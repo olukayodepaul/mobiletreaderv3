@@ -10,29 +10,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.model.RealmConverterAddProducts;
-import com.mobile.mtrader.repo.RealmService;
-import com.mobile.mtrader.ui.Customer_Sales_History;
-import com.mobile.mtrader.ui.DepotClokingActivity;
 
+import com.mobile.mtrader.data.AllTablesStructures.Sales;
+import com.mobile.mtrader.mobiletreaderv3.R;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder> {
 
-    List<RealmConverterAddProducts> list;
     Context context;
-    RealmService realmService;
     Intent intent;
+    List<Sales> orders = new ArrayList<>();
 
 
-    public OrderHistoryAdapter(Context context, RealmService realmService) {
+    public OrderHistoryAdapter(Context context) {
         this.context = context;
-        this.realmService = realmService;
-        this.list = realmService.getSalesEntryGroup();
     }
 
     @Override
@@ -44,31 +41,29 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
     @Override
     public void onBindViewHolder(OrderHistoryAdapter.ViewHolder holder, int position) {
-        RealmConverterAddProducts rs = list.get(position);
-        holder.modulesnames.setText(rs.customer_name);
-        holder.times.setText(rs.entrydate);
-        if(realmService.getUnPostSales(rs.customer_id, 2,1) == 0) {
-            holder.indicator_green.setVisibility(View.VISIBLE);
-        }else{
-            holder.indicator_red.setVisibility(View.VISIBLE);
+
+        if(orders!=null){
+
+            Sales rs = orders.get(position);
+
         }
-
-        holder.trigger_attendant.setOnClickListener(v->{
-            intent = new Intent(context, Customer_Sales_History.class);
-            intent.putExtra("CUSTOMER_ID", rs.customer_id);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        });
-
     }
 
     @Override
     public int getItemCount() {
-        if(list==null)
+        if (orders != null && !orders.isEmpty()) {
+            return orders.size();
+        } else {
             return 0;
-        else
-            return list.size();
+        }
     }
+
+
+    public void setSalesHistory(List<Sales> orders) {
+        this.orders = orders;
+        notifyDataSetChanged();
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
 

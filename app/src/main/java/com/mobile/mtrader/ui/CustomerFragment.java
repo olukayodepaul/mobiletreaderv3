@@ -10,11 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.mobile.mtrader.adapter.CustomerListAdapter;
-import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
@@ -28,6 +30,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,9 +52,9 @@ public class CustomerFragment extends Fragment {
 
     CustomerListAdapter customerListAdapter;
 
-    public CustomerFragment() {
+    CompositeDisposable mDis = new CompositeDisposable();
 
-    }
+    public CustomerFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,12 +75,22 @@ public class CustomerFragment extends Fragment {
         customerListAdapter = new CustomerListAdapter(getContext());
         customlist.setAdapter(customerListAdapter);
 
-        cFViewModel.getLiveCustomers().observe(this, customers -> {
-            if(customers!=null){
-                customerListAdapter.setModulesAdapter(customers);
-            }
-        });
+        mDis.add(cFViewModel.getLiveCustomers()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data ->
+                            customerListAdapter.setModulesAdapter(data),
+                throwable ->
+                    Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
+                )
+        );
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mDis.clear();
     }
 }

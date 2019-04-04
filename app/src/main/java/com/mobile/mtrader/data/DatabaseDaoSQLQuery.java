@@ -11,24 +11,18 @@ import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
+import com.mobile.mtrader.data.AllTablesStructures.Sales;
 
 import java.util.List;
+
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 @Dao
 public interface DatabaseDaoSQLQuery {
 
-    @Query("SELECT * FROM Modules")
-    LiveData<List<Modules>> findAllModules();
-
-    @Query("SELECT * FROM Customers order by sort asc")
-    LiveData<List<Customers>> findAllCustomers();
-
-    @Query("SELECT * FROM Products WHERE separator=:separator")
-    LiveData<List<Products>> findAllMyProduct(String separator);
-
-    @Query("SELECT SUM(qty)  FROM Products WHERE separator=:separator")
-    LiveData<Long> sumAllMyProduct(String separator);
-
+    //Insert rxjava
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insert(Employees employees);
 
@@ -41,6 +35,19 @@ public interface DatabaseDaoSQLQuery {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertIntoProducts(Products products);
 
+    //select rxjava
+    @Query("SELECT * FROM Modules")
+    LiveData<List<Modules>> findAllModules();
+
+    @Query("SELECT * FROM Customers order by sort asc")
+    Flowable<List<Customers>> findAllCustomers();
+
+    @Query("SELECT * FROM Products WHERE separator=:separator")
+    LiveData<List<Products>> findAllMyProduct(String separator);
+
+    @Query("SELECT SUM(qty)  FROM Products WHERE separator=:separator")
+    LiveData<Long> sumAllMyProduct(String separator);
+
     @Query("SELECT * FROM Employees limit 1")
     LiveData<Employees> findIndividulUsers();
 
@@ -48,6 +55,6 @@ public interface DatabaseDaoSQLQuery {
     void updateIndividualCustomers(String rostertime, int sort);
 
     @Query("SELECT * FROM Products order by separator asc")
-    LiveData<List<Products>> findAllUserProducts();
+    Flowable<List<Products>> findAllUserProducts();
 
 }

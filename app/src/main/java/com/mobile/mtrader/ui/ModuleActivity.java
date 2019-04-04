@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ModuleActivity extends AppCompatActivity  {
+public class ModuleActivity extends AppCompatActivity {
 
 
     ModuleViewModel moduleViewModel;
@@ -58,10 +58,8 @@ public class ModuleActivity extends AppCompatActivity  {
         moduleAdapter = new ModuleAdapter(this);
         users_modules.setAdapter(moduleAdapter);
 
-
         moduleViewModel = ViewModelProviders.of(this, viewModelFactory).get(ModuleViewModel.class);
         moduleViewModel.getLiveModules().observe(this, modules -> moduleAdapter.setModulesAdapter(modules));
 
     }
-
 }

@@ -80,11 +80,9 @@ public class ModuleAdapter  extends RecyclerView.Adapter<ModuleAdapter.ViewHolde
         }
 
         public void setListener(int position) {
-
             pst.setOnClickListener(view -> changeModule(modules.get(position).nav));
         }
     }
-
 
     private void changeModule(String chg) {
 

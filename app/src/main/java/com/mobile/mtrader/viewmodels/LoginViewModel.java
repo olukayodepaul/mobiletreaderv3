@@ -4,15 +4,21 @@ package com.mobile.mtrader.viewmodels;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
+import android.support.v7.util.AsyncListUtil;
+
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.DataRepository;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.model.ModelEmployees;
+
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
@@ -49,73 +55,72 @@ public class LoginViewModel extends ViewModel {
                     @Override
                     public void onNext(Response<ModelEmployees> response) {
 
-                        ModelEmployees loginModel = response.body();
+                        ModelEmployees data = response.body();
                         if (response.code() == 200) {
 
-                           if(loginModel.status==200){
+                            if (data.status == 200) {
+                                Employees employeerdata = new Employees(
+                                        data.id,
+                                        data.name,
+                                        data.dbroute,
+                                        data.customer_code,
+                                        data.lat,
+                                        data.lng,
+                                        data.depot_waiver,
+                                        data.clokin,
+                                        data.clokout
+                                );
+                                new AddEmployees().execute(employeerdata);
 
-                               Employees reg = new Employees(
-                                       loginModel.id,
-                                       loginModel.name,
-                                       loginModel.dbroute,
-                                       loginModel.customer_code,
-                                       loginModel.lat,
-                                       loginModel.lng,
-                                       loginModel.depot_waiver,
-                                       loginModel.clokin,
-                                       loginModel.clokout
-                               );
-                               new AddEmployees().execute(reg);
+                                for (int i = 0; i < data.modules.size(); i++) {
+                                    Modules modulesdata = new Modules(
+                                            data.modules.get(i).id,
+                                            data.modules.get(i).nav,
+                                            data.modules.get(i).name,
+                                            data.modules.get(i).imageurl
+                                    );
+                                    new AddModules().execute(modulesdata);
+                                }
 
-                               for (int i = 0; i < loginModel.modules.size(); i++) {
-                                   Modules modules = new Modules(
-                                           loginModel.modules.get(i).id,
-                                           loginModel.modules.get(i).nav,
-                                           loginModel.modules.get(i).name,
-                                           loginModel.modules.get(i).imageurl
-                                   );
-                                   new AddModules().execute(modules);
-                               }
+                                for (int i = 0; i < data.customers.size(); i++) {
+                                    Customers customersdata = new Customers(
+                                            data.customers.get(i).id,
+                                            data.customers.get(i).notice,
+                                            data.customers.get(i).urno,
+                                            data.customers.get(i).customerno,
+                                            data.customers.get(i).outletname,
+                                            data.customers.get(i).lat,
+                                            data.customers.get(i).lng,
+                                            data.customers.get(i).sort,
+                                            data.customers.get(i).outlet_waiver,
+                                            data.customers.get(i).token,
+                                            data.customers.get(i).rostertime
+                                    );
+                                    new AddCustomers().execute(customersdata);
+                                }
 
-                               for (int i = 0; i < loginModel.customers.size(); i++) {
-                                   Customers customers = new Customers(
-                                           loginModel.customers.get(i).id,
-                                           loginModel.customers.get(i).notice,
-                                           loginModel.customers.get(i).urno,
-                                           loginModel.customers.get(i).customerno,
-                                           loginModel.customers.get(i).outletname,
-                                           loginModel.customers.get(i).lat,
-                                           loginModel.customers.get(i).lng,
-                                           loginModel.customers.get(i).sort,
-                                           loginModel.customers.get(i).outlet_waiver,
-                                           loginModel.customers.get(i).token,
-                                           loginModel.customers.get(i).rostertime
-                                   );
-                                   new AddCustomers().execute(customers);
-                               }
-
-                               for(int i = 0; i < loginModel.product.size(); i++) {
-                                    Products products = new Products(
-                                            loginModel.product.get(i).id,
-                                            loginModel.product.get(i).separator,
-                                            loginModel.product.get(i).separatorname,
-                                            loginModel.product.get(i).productcode,
-                                            loginModel.product.get(i).qty,
-                                            loginModel.product.get(i).soq,
-                                            loginModel.product.get(i).rollprice,
-                                            loginModel.product.get(i).packprice,
-                                            loginModel.product.get(i).productname,
+                                for (int i = 0; i < data.product.size(); i++) {
+                                    Products productsData = new Products(
+                                            data.product.get(i).id,
+                                            data.product.get(i).separator,
+                                            data.product.get(i).separatorname,
+                                            data.product.get(i).productcode,
+                                            data.product.get(i).qty,
+                                            data.product.get(i).soq,
+                                            data.product.get(i).rollprice,
+                                            data.product.get(i).packprice,
+                                            data.product.get(i).productname,
                                             "",
                                             "",
                                             "",
                                             ""
                                     );
-                                    new AddProducts().execute(products);
-                               }
-                               observeResponse.postValue(Integer.toString(loginModel.status) + "~" + "");
-                           }else{
-                               observeResponse.postValue(Integer.toString(loginModel.status) + "~" + loginModel.msg);
-                           }
+                                    new AddProducts().execute(productsData);
+                                }
+                                observeResponse.postValue(Integer.toString(data.status) + "~" + "");
+                            } else {
+                                observeResponse.postValue(Integer.toString(data.status) + "~" + data.msg);
+                            }
                         } else {
                             observeResponse.postValue("404" + "~" + "Server cant be reach");
                         }
@@ -128,6 +133,7 @@ public class LoginViewModel extends ViewModel {
 
                     @Override
                     public void onComplete() {
+
                     }
                 });
     }
@@ -163,4 +169,5 @@ public class LoginViewModel extends ViewModel {
             return null;
         }
     }
+
 }
