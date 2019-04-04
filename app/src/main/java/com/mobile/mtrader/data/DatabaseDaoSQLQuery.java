@@ -22,7 +22,6 @@ import io.reactivex.Single;
 @Dao
 public interface DatabaseDaoSQLQuery {
 
-    //Insert rxjava
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insert(Employees employees);
 
@@ -56,5 +55,9 @@ public interface DatabaseDaoSQLQuery {
 
     @Query("SELECT * FROM Products order by separator asc")
     Flowable<List<Products>> findAllUserProducts();
+
+    @Query("UPDATE Products SET inventory = :inventory, pricing =:pricing, orders =:orders, customerno = :customerno, updatestatus =:updatestatus WHERE id=:id AND separator =:separator AND productcode =:productcode")
+    void updateDailySalesBySku(String inventory, String pricing, String orders, String customerno,
+                                    String updatestatus,  int id, String separator, String productcode);
 
 }

@@ -92,7 +92,10 @@ public class DataRepository  {
         return api.getUserRoster(userid, taskid, dates, times, lat, lng, rmsg);
     }
 
-
+    public void updateDailySalesBySku(String inventory, String pricing, String orders, String customerno,
+                                      String updatestatus,  int id, String separator, String productcode) {
+        this.daoSQLQuery.updateDailySalesBySku(inventory,pricing,orders,customerno,updatestatus,id,separator,productcode);
+    }
 
 }
 

@@ -17,7 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.mobile.mtrader.ui.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name="com.mobile.mtrader.ui.SalesActivity" />
         <activity android:name="com.mobile.mtrader.ui.ModuleActivity" />
@@ -43,11 +47,7 @@
             android:screenOrientation="portrait" />
         <activity android:name="com.mobile.mtrader.ui.DepotClockoutActivity" />
         <activity android:name="com.mobile.mtrader.ui.DailySalesActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name="com.mobile.mtrader.ui.ConfirmSales" />
         <activity android:name="com.mobile.mtrader.ui.Customer_Sales_History"></activity>

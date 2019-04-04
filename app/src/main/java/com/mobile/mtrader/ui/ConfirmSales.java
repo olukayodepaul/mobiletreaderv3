@@ -1,10 +1,8 @@
 package com.mobile.mtrader.ui;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.mobile.mtrader.adapter.ConfirmSalesAdapter;
 import com.mobile.mtrader.frameworks.confirmsku.ConfirmSkuContract;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.repo.RealmService;
@@ -67,7 +64,7 @@ public class ConfirmSales extends AppCompatActivity implements ConfirmSkuContrac
 
     RecyclerView.LayoutManager layoutManager;
 
-    ConfirmSalesAdapter confirmSalesAdapter;
+    //ConfirmSalesAdapter confirmSalesAdapter;
 
     DecimalFormat myFormatter;
 

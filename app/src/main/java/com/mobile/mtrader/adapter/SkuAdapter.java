@@ -106,7 +106,7 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
 
     public void setModulesAdapter(List<Products> products) {
         this.products = products;
-        notifyDataSetChanged();
+
     }
 
 

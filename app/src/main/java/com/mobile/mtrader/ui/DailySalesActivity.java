@@ -21,7 +21,9 @@ import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.viewmodels.DailySalesViewModule;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -45,7 +47,7 @@ public class DailySalesActivity extends AppCompatActivity {
     RecyclerView recyler_data;
 
     Bundle bundle;
-    String customer_key,customer_no;
+    String customer_key, customer_no;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -65,7 +67,7 @@ public class DailySalesActivity extends AppCompatActivity {
                 .mvvMModule(new MvvMModule(this))
                 .build();
         component.inject(this);
-        dailySalesViewModule = ViewModelProviders.of(this,viewModelFactory).get(DailySalesViewModule.class);
+        dailySalesViewModule = ViewModelProviders.of(this, viewModelFactory).get(DailySalesViewModule.class);
         bundle = getIntent().getExtras();
 
         if (bundle != null) {
@@ -75,13 +77,13 @@ public class DailySalesActivity extends AppCompatActivity {
 
         recyler_data.setLayoutManager(new LinearLayoutManager(this));
         recyler_data.setHasFixedSize(true);
-        skuAdapter = new SkuAdapter(this,customer_no);
+        skuAdapter = new SkuAdapter(this, customer_no);
         recyler_data.setAdapter(skuAdapter);
 
         mDis.add(dailySalesViewModule.getLiveCustomers()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data ->{
+                .subscribe(data -> {
                             skuAdapter.setOnItemClickListener(position -> {
 
                                 SkuAdapter.ViewHolder holder = (SkuAdapter.ViewHolder) recyler_data
@@ -91,16 +93,44 @@ public class DailySalesActivity extends AppCompatActivity {
                                 EditText getPricing = holder.itemView.findViewById(R.id.editText2q);
                                 EditText getOrder = holder.itemView.findViewById(R.id.editText3q);
 
+                                if (getInventory.getText().toString().equals(".")) {
+                                    getInventory.setText("");
+                                } else if (getOrder.getText().toString().equals(".")) {
+                                    getOrder.setText("");
+                                } else {
 
-                                save.setText(getInventory.getText().toString()+" "+getPricing.getText().toString()
-                                        +" "+getOrder.getText().toString()+" "+data.get(position).productname+" "+customer_no);
+                                    double salesQty = 0.0;
+                                    if (!getOrder.getText().toString().equals("")) {
+                                        salesQty = Double.parseDouble(getOrder.getText().toString());
+                                    }
 
-                                if(TextUtils.isEmpty(getInventory.getText().toString())
-                                        || TextUtils.isEmpty(getInventory.getText().toString())
-                                        || TextUtils.isEmpty(getInventory.getText().toString())) {
-
+                                    if (Double.parseDouble(data.get(position).qty) < salesQty) {
+                                        getOrder.setText("");
+                                    } else {
+                                        if (TextUtils.isEmpty(getInventory.getText().toString()) ||
+                                                TextUtils.isEmpty(getPricing.getText().toString()) ||
+                                                TextUtils.isEmpty(getOrder.getText().toString())
+                                                ) {
+                                            addSales("",
+                                                    "",
+                                                    "",
+                                                    customer_no,
+                                                    "",
+                                                    data.get(position).id,
+                                                    data.get(position).separator,
+                                                    data.get(position).productcode);
+                                        } else {
+                                            addSales( getInventory.getText().toString(),
+                                                    getPricing.getText().toString(),
+                                                    getOrder.getText().toString(),
+                                                    customer_no,
+                                                    "1",
+                                                    data.get(position).id,
+                                                    data.get(position).separator,
+                                                    data.get(position).productcode);
+                                        }
+                                    }
                                 }
-
                             });
                             skuAdapter.setModulesAdapter(data);
                             recyler_data.setItemViewCacheSize(data.size());
@@ -110,7 +140,22 @@ public class DailySalesActivity extends AppCompatActivity {
         );
         back_page.setOnClickListener(v -> onBackPressed());
     }
+
+    public void addSales(String getInventory, String getPricing, String getOrder, String custno,
+                         String listenToUpdate, int productid, String separetor,String productCode){
+        dailySalesViewModule.setDailySalesByCustomers(
+                getInventory,
+                getPricing,
+                getOrder,
+                custno,
+                listenToUpdate,
+                productid,
+                separetor,
+                productCode
+        );
+    }
 }
+
 
 
 
