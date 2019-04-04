@@ -34,7 +34,6 @@ public interface DatabaseDaoSQLQuery {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertIntoProducts(Products products);
 
-    //select rxjava
     @Query("SELECT * FROM Modules")
     LiveData<List<Modules>> findAllModules();
 
@@ -57,7 +56,28 @@ public interface DatabaseDaoSQLQuery {
     Flowable<List<Products>> findAllUserProducts();
 
     @Query("UPDATE Products SET inventory = :inventory, pricing =:pricing, orders =:orders, customerno = :customerno, updatestatus =:updatestatus WHERE id=:id AND separator =:separator AND productcode =:productcode")
-    void updateDailySalesBySku(String inventory, String pricing, String orders, String customerno,
+    void updateDailySalesBySku(String inventory, int pricing, String orders, String customerno,
                                     String updatestatus,  int id, String separator, String productcode);
 
+    @Query("SELECT COUNT(id) FROM PRODUCTS WHERE  updatestatus =:updatestatus")
+    Single<Long> validateUserSalesEntries(String updatestatus);
+
+    @Query("SELECT * FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
+    Flowable<List<Products>> salesEnteryRecord(String updatestatus, String customerno);
+
+    @Query("SELECT SUM(pricing) FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
+    Flowable<Long> totalSalesValue(String updatestatus, String customerno);
+
+    @Query("SELECT SUM(inventory) FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
+    Flowable<Long> totalEntryInventory(String updatestatus, String customerno);
+
+    @Query("SELECT SUM(orders) FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
+    Flowable<Long> totalEntryOrder(String updatestatus, String customerno);
+
+
+
 }
+
+
+
+

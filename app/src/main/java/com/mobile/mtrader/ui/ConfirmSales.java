@@ -1,39 +1,54 @@
 package com.mobile.mtrader.ui;
 
+import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.mobile.mtrader.frameworks.confirmsku.ConfirmSkuContract;
+import android.widget.Toast;
+
+import com.mobile.mtrader.adapter.ConfirmSalesAdapter;
+import com.mobile.mtrader.di.component.ApplicationComponent;
+import com.mobile.mtrader.di.component.DaggerApplicationComponent;
+import com.mobile.mtrader.di.module.ContextModule;
+import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.repo.RealmService;
-import com.mobile.mtrader.util.AppUtil;
+import com.mobile.mtrader.viewmodels.RepSalesConfirmViewModel;
+
 import java.text.DecimalFormat;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
-public class ConfirmSales extends AppCompatActivity implements ConfirmSkuContract.ConfirmView {
+public class ConfirmSales extends AppCompatActivity {
 
     @BindView(R.id.back_page)
     ImageView back_page;
 
     Bundle bundle;
 
-    String dbToken, custTokenKey;
+    String dbToken, customerno;
 
     @BindView(R.id.saleValues)
     RecyclerView saleValues;
-
-    @Inject
-    RealmService realmService;
 
     @BindView(R.id.order_t)
     TextView order_t;
@@ -53,89 +68,84 @@ public class ConfirmSales extends AppCompatActivity implements ConfirmSkuContrac
     @BindView(R.id.btns)
     Button btns;
 
-    //@Inject
-    //ConfirmSkuImp mView;
-
     Intent intent;
 
     @BindView(R.id.progressbar)
     ProgressBar progressbar;
 
-
-    RecyclerView.LayoutManager layoutManager;
-
-    //ConfirmSalesAdapter confirmSalesAdapter;
-
     DecimalFormat myFormatter;
 
+    ApplicationComponent component;
 
+    RepSalesConfirmViewModel repSalesConfirmViewModel;
 
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
+    CompositeDisposable mDis = new CompositeDisposable();
+
+    ConfirmSalesAdapter confirmSalesAdapter;
+
+    @SuppressLint("SetTextI18n")
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_sales);
         ButterKnife.bind(this);
-        /*ApplicationComponent applicationComponent = Apps.get(this).getApplicationComponent();
-        confirmSalesComponent = DaggerConfirmSalesComponent.builder()
-                .applicationComponent(applicationComponent)
-                .confirmSalesActivityContextModule(new ConfirmSalesActivityContextModule(this))
-                .confirmActivityPreModule(new ConfirmActivityPreModule(this))
+        component = DaggerApplicationComponent.builder()
+                .contextModule(new ContextModule(this))
+                .mvvMModule(new MvvMModule(this))
                 .build();
-        confirmSalesComponent.injectModuleConfirm(this);
-        myFormatter = new DecimalFormat("#,###");
+        component.inject(this);
+        repSalesConfirmViewModel = ViewModelProviders.of(this, viewModelFactory).get(RepSalesConfirmViewModel.class);
         progressbar.setVisibility(View.GONE);
 
         bundle = getIntent().getExtras();
 
         if (bundle != null) {
-            dbToken = bundle.getString("DB_SALES_ENTRY");
-            custTokenKey = bundle.getString("CUSTOMERS_KEYS");
+            dbToken = bundle.getString("CUSTOMERS_ACCESS_KEYS");
+            customerno = bundle.getString("CUSTOMER_NO");
         }
 
-        order_t.setText(realmService.totalInvertoryEntries());
-        app_price_t.setText(realmService.totalPricingEntries());
-        invent_t.setText(realmService.totalOrderEntries());
-        long totalPrice = Math.round((int) realmService.totalAmount());
-        tv_price_t.setText(myFormatter.format(totalPrice));
-
-        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        saleValues.setLayoutManager(layoutManager);
-        confirmSalesAdapter = new ConfirmSalesAdapter(this, realmService);
+        saleValues.setLayoutManager(new LinearLayoutManager(this));
+        saleValues.setHasFixedSize(true);
+        confirmSalesAdapter = new ConfirmSalesAdapter(this);
         saleValues.setAdapter(confirmSalesAdapter);
 
-        btns.setOnClickListener(v->{
-            if(!confirms.getText().toString().equals(custTokenKey)) {
-                AppUtil.showAlertDialog(this, "Verification","Enter valid verification code","Close");
-            }else{
-                if(!AppUtil.checkConnection(this)) {
-                    mView.pushDataToSever("1");
-                }else{
-                    mView.pushDataToSever("2");
-                }
-            }
-        });
-        back_page.setOnClickListener(v-> onBackPressed());
-        */
-    }
+        mDis.add(repSalesConfirmViewModel.salesEnteryRecord("1", customerno)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(data -> {
 
+                                    int sumAllPP = 0;
+                                    int sumAllRP = 0;
+                                    double sumInventory = 0.0;
+                                    int sumPricing = 0;
+                                    double sumOrder = 0.0;
 
-    @Override
-    public void showError(String message, String title, String buttons) {
-        progressbar.setVisibility(View.GONE);
-        AppUtil.showAlertDialogWithIntent(this, title,message,buttons,SalesActivity.class);
-    }
+                                    for (int i = 0; i < data.size(); i++) {
 
-    @Override
-    public void showProgressDialog() {
-        progressbar.setVisibility(View.VISIBLE);
-    }
+                                        String[] divider = Double.toString(Double.parseDouble(data.get(i).orders)).split("\\.");
+                                        sumAllPP += Integer.parseInt(divider[0])*Double.parseDouble(data.get(i).packprice) ;
+                                        sumAllRP += Integer.parseInt(divider[1])*Double.parseDouble(data.get(i).rollprice);
+                                        sumInventory += Double.parseDouble(data.get(i).inventory);
+                                        sumPricing += data.get(i).pricing;
+                                        sumOrder += Double.parseDouble(data.get(i).orders);
+                                    }
+                                     invent_t.setText(Double.toString(sumOrder));
+                                     app_price_t.setText(Integer.toString(sumPricing));
+                                     order_t.setText(Double.toString(sumInventory));
+                                     tv_price_t.setText(Double.toString(sumAllPP+sumAllRP));
+                                     confirmSalesAdapter.setModulesAdapter(data);
+                                },
+                                throwable -> Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
+                        )
+        );
 
-    @Override
-    public void showComplete() {
-
+        back_page.setOnClickListener(v -> onBackPressed());
     }
 }
+
 
 
 

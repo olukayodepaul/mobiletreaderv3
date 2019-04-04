@@ -1,5 +1,5 @@
 package com.mobile.mtrader.ui;
-import com.google.android.gms.location.GeofencingClient;
+
 import com.google.android.gms.location.LocationListener;
 
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -80,13 +79,11 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
             onBackPressed();
         });
 
-        users_name.setText(customer_no+" "+outletname);
-
         prosales.setOnClickListener(v -> {
             intent = new Intent(this, DailySalesActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("CUSTOMERS_KEYS", customer_key);
-            intent.putExtra("CUSTOMER_NO", customer_no);
+            intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
+            intent.putExtra("CUSTOMER_ID", customer_no);
             startActivity(intent);
         });
     }

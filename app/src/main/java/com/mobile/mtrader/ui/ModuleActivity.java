@@ -46,19 +46,18 @@ public class ModuleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homeactivity);
         ButterKnife.bind(this);
-
         component = DaggerApplicationComponent.builder()
                 .contextModule(new ContextModule(this))
                 .mvvMModule(new MvvMModule(this))
                 .build();
         component.inject(this);
+        moduleViewModel = ViewModelProviders.of(this, viewModelFactory).get(ModuleViewModel.class);
 
         users_modules.setLayoutManager(new LinearLayoutManager(this));
         users_modules.setHasFixedSize(true);
         moduleAdapter = new ModuleAdapter(this);
         users_modules.setAdapter(moduleAdapter);
 
-        moduleViewModel = ViewModelProviders.of(this, viewModelFactory).get(ModuleViewModel.class);
         moduleViewModel.getLiveModules().observe(this, modules -> moduleAdapter.setModulesAdapter(modules));
 
     }

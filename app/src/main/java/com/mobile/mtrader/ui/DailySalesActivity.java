@@ -3,6 +3,7 @@ package com.mobile.mtrader.ui;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,6 +57,8 @@ public class DailySalesActivity extends AppCompatActivity {
 
     CompositeDisposable mDis = new CompositeDisposable();
 
+    Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +82,7 @@ public class DailySalesActivity extends AppCompatActivity {
         recyler_data.setHasFixedSize(true);
         skuAdapter = new SkuAdapter(this, customer_no);
         recyler_data.setAdapter(skuAdapter);
+
 
         mDis.add(dailySalesViewModule.getLiveCustomers()
                 .subscribeOn(Schedulers.io())
@@ -112,7 +116,7 @@ public class DailySalesActivity extends AppCompatActivity {
                                                 TextUtils.isEmpty(getOrder.getText().toString())
                                                 ) {
                                             addSales("",
-                                                    "",
+                                                    0,
                                                     "",
                                                     customer_no,
                                                     "",
@@ -120,8 +124,12 @@ public class DailySalesActivity extends AppCompatActivity {
                                                     data.get(position).separator,
                                                     data.get(position).productcode);
                                         } else {
+                                            int pricing = 0;
+                                            if(!getPricing.getText().toString().isEmpty()){
+                                                pricing = Integer.parseInt(getPricing.getText().toString());
+                                            }
                                             addSales( getInventory.getText().toString(),
-                                                    getPricing.getText().toString(),
+                                                    pricing,
                                                     getOrder.getText().toString(),
                                                     customer_no,
                                                     "1",
@@ -136,12 +144,33 @@ public class DailySalesActivity extends AppCompatActivity {
                             recyler_data.setItemViewCacheSize(data.size());
                         },
                         throwable -> Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
+
                 )
         );
+
+        save.setOnClickListener(v->{
+            mDis.add(dailySalesViewModule.validateUserSalesEntries("1")
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            data->{
+                                if(data == 0){
+                                    Toast.makeText(getApplication(),"Please enter sales",Toast.LENGTH_SHORT).show();
+                                }else{
+                                    intent = new Intent(this, ConfirmSales.class);
+                                    intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
+                                    intent.putExtra("CUSTOMER_NO", customer_no);
+                                    startActivity(intent);
+                                }
+                            })
+            );
+        });
+
         back_page.setOnClickListener(v -> onBackPressed());
     }
 
-    public void addSales(String getInventory, String getPricing, String getOrder, String custno,
+    public void addSales(String getInventory, int getPricing, String getOrder, String custno,
                          String listenToUpdate, int productid, String separetor,String productCode) {
         dailySalesViewModule.setDailySalesByCustomers(
                 getInventory,

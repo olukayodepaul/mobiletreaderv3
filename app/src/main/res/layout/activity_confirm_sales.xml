@@ -141,18 +141,18 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="2dp"
                     android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
                     android:fontFamily="@font/roboto_light"
+                    android:maxLines="1"
                     android:text="0.0"
                     android:textAlignment="textEnd"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/app_price_t"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_weight="0.8"
                     app:layout_constraintStart_toEndOf="@+id/sku_t"
-                    tools:ignore="MissingConstraints"
-                    android:textStyle="bold"
-                    android:maxLines="1"
-                    android:ellipsize="end"/>
+                    tools:ignore="MissingConstraints" />
 
                 <TextView
                     android:id="@+id/app_price_t"
@@ -270,7 +270,7 @@
                 android:textSize="17dp" />
         </LinearLayout>
 
-        <RelativeLayout
+       <RelativeLayout
             android:id="@+id/hostproressbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -285,7 +285,5 @@
                 />
 
         </RelativeLayout>
-
-
     </RelativeLayout>
 </LinearLayout>

@@ -26,6 +26,4 @@ public class CustomerFragmentViewModel extends ViewModel {
             }
         );
     }
-
-
 }

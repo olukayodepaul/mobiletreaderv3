@@ -111,7 +111,7 @@ public class LoginViewModel extends ViewModel {
                                             data.product.get(i).packprice,
                                             data.product.get(i).productname,
                                             "",
-                                            "",
+                                            0,
                                             "",
                                             "",
                                             ""

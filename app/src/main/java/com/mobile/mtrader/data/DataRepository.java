@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.Response;
 
 public class DataRepository  {
@@ -92,10 +93,31 @@ public class DataRepository  {
         return api.getUserRoster(userid, taskid, dates, times, lat, lng, rmsg);
     }
 
-    public void updateDailySalesBySku(String inventory, String pricing, String orders, String customerno,
+    public void updateDailySalesBySku(String inventory, int pricing, String orders, String customerno,
                                       String updatestatus,  int id, String separator, String productcode) {
         this.daoSQLQuery.updateDailySalesBySku(inventory,pricing,orders,customerno,updatestatus,id,separator,productcode);
     }
 
+    public Single<Long> validateUserSalesEntries(String updatestatus) {
+        return this.daoSQLQuery.validateUserSalesEntries(updatestatus);
+    }
+
+    public Flowable<List<Products>> salesEnteryRecord(String updatestatus, String customerno) {
+        return this.daoSQLQuery.salesEnteryRecord(updatestatus,customerno);
+    }
+
+    public Flowable<Long> totalSalesValue(String updatestatus, String customerno) {
+        return this.daoSQLQuery.totalSalesValue(updatestatus,customerno);
+    }
+
+    public Flowable<Long> totalEntryInventory(String updatestatus, String customerno) {
+        return this.daoSQLQuery.totalEntryInventory(updatestatus,customerno);
+    }
+
+    public Flowable<Long> totalEntryOrder(String updatestatus, String customerno) {
+        return this.daoSQLQuery.totalEntryOrder(updatestatus,customerno);
+    }
 }
+
+
 

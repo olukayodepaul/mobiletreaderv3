@@ -13,6 +13,7 @@ import com.mobile.mtrader.di.qualifier.ApplicationContext;
 import com.mobile.mtrader.di.scopes.ApplicationScope;
 import com.mobile.mtrader.repo.RealmService;
 import com.mobile.mtrader.repo.RepoService;
+import com.mobile.mtrader.ui.ConfirmSales;
 import com.mobile.mtrader.ui.CustomerFragment;
 import com.mobile.mtrader.ui.DailySalesActivity;
 import com.mobile.mtrader.ui.DepotClokingActivity;
@@ -39,5 +40,6 @@ public interface ApplicationComponent {
     void inject(DepotClokingActivity depotClokingActivity);
     void inject(DailySalesActivity dailySalesActivity);
     void inject(SalesHistoryFragment salesHistoryFragment);
+    void inject(ConfirmSales confirmSales);
 
 }

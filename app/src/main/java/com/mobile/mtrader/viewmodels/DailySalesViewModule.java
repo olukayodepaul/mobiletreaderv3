@@ -10,12 +10,14 @@ import com.mobile.mtrader.data.DataRepository;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 
 public class DailySalesViewModule extends ViewModel {
 
     private DataRepository repository;
     List<Products> mproducts;
+    Long countItems;
 
     DailySalesViewModule(DataRepository repository) {
         this.repository = repository;
@@ -30,7 +32,16 @@ public class DailySalesViewModule extends ViewModel {
         );
     }
 
-    public void setDailySalesByCustomers(String inventory, String pricing, String orders, String customerno,
+    public Single<Long> validateUserSalesEntries(String updatestatus) {
+        return repository.validateUserSalesEntries(updatestatus).map(
+                mItems -> {
+                    countItems = mItems;
+                    return mItems;
+                }
+        );
+    }
+
+    public void setDailySalesByCustomers(String inventory, int pricing, String orders, String customerno,
                                       String updatestatus,  int id, String separator, String productcode) {
         Products updates = new Products(
                 id,
