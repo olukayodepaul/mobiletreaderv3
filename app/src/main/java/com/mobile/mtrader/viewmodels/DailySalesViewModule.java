@@ -54,7 +54,8 @@ public class DailySalesViewModule extends ViewModel {
     private class UpdateCustomerSales extends AsyncTask<Products, Void, Void> {
         @Override
         protected Void doInBackground(Products... item) {
-            repository.updateDailySalesBySku(item[0].inventory, item[0].pricing, item[0].orders,item[0].customerno );
+            repository.updateDailySalesBySku(item[0].inventory, item[0].pricing, item[0].orders,item[0].customerno,
+                    item[0].updatestatus, item[0].id, item[0].separator,item[0].productcode );
             return null;
         }
     }

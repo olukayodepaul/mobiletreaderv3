@@ -142,7 +142,7 @@ public class DailySalesActivity extends AppCompatActivity {
     }
 
     public void addSales(String getInventory, String getPricing, String getOrder, String custno,
-                         String listenToUpdate, int productid, String separetor,String productCode){
+                         String listenToUpdate, int productid, String separetor,String productCode) {
         dailySalesViewModule.setDailySalesByCustomers(
                 getInventory,
                 getPricing,
