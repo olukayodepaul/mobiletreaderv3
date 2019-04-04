@@ -43,8 +43,6 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
 
     String customer_no;
 
-    EditText editText;
-
     private OnItemClickListerner mListener;
 
     public interface OnItemClickListerner{
