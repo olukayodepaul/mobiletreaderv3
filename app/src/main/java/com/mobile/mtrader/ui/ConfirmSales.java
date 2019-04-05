@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.mobile.mtrader.adapter.ConfirmSalesAdapter;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -24,6 +26,10 @@ import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.util.AppUtil;
 import com.mobile.mtrader.viewmodels.RepSalesConfirmViewModel;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -134,20 +140,26 @@ public class ConfirmSales extends AppCompatActivity {
                 )
         );
 
-
         btns.setOnClickListener(v->{
-            if(!confirms.getText().toString().equals(dbToken)) {
+            if(confirms.getText().toString().equals(dbToken)) {
                 AppUtil.showAlertDialog(this, "Verification","Enter valid verification code","Close");
             }else{
                 if(!AppUtil.checkConnection(this)) {
-
+                    AppUtil.showAlertDialog(this, "Internet Error","You are not connected to the internet","Close");
                 }else{
-
+                    repSalesConfirmViewModel.pustSalesToServer("1",customerno,1168,
+                            new SimpleDateFormat("HH:mm:ss").format(new Date()), "open", "00.00", "00.00",
+                            UUID.randomUUID().toString());
                 }
             }
         });
-        back_page.setOnClickListener(v-> onBackPressed());
 
+        repSalesConfirmViewModel.observeResponse().observe(this, s -> {
+            progressbar.setVisibility(View.VISIBLE);
+            Toast.makeText(getApplication(), s.toString(),Toast.LENGTH_SHORT).show();
+        });
+
+        back_page.setOnClickListener(v-> onBackPressed());
     }
 
 }

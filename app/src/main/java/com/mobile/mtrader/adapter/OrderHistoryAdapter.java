@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.model.RealmConverterAddProducts;
 import com.mobile.mtrader.repo.RealmService;
 import com.mobile.mtrader.ui.Customer_Sales_History;
 import com.mobile.mtrader.ui.DepotClokingActivity;
@@ -21,8 +20,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder> {
-
+public class OrderHistoryAdapter  {
+/*
     List<RealmConverterAddProducts> list;
     Context context;
     RealmService realmService;
@@ -92,5 +91,5 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             ButterKnife.bind(this, mview);
         }
     }
-
+*/
 }

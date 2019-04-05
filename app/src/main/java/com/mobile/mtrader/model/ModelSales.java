@@ -3,15 +3,11 @@ package com.mobile.mtrader.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PojoSkuList {
+public class ModelSales {
 
-    @SerializedName("id")
+    @SerializedName("map_token")
     @Expose
-    public int id;
-
-    @SerializedName("separator")
-    @Expose
-    public String separator;
+    public String map_token;
 
     @SerializedName("separatorname")
     @Expose
@@ -25,20 +21,24 @@ public class PojoSkuList {
     @Expose
     public String productname;
 
-    @SerializedName("qty")
+    @SerializedName("inventory")
     @Expose
-    public String qty;
+    public String inventory;
 
-    @SerializedName("soq")
+    @SerializedName("pricing")
     @Expose
-    public String soq;
+    public String pricing;
 
-    @SerializedName("rollprice")
+    @SerializedName("order")
     @Expose
-    public double rollprice;
+    public String order;
 
-    @SerializedName("packprice")
+    @SerializedName("customerno")
     @Expose
-    public double packprice;
+    public String customerno;
+
+    @SerializedName("salestime")
+    @Expose
+    public String salestime;
 
 }

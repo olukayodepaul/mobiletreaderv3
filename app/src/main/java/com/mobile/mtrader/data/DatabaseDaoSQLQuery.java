@@ -10,6 +10,8 @@ import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
+import com.mobile.mtrader.data.AllTablesStructures.Sales;
+
 import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -28,6 +30,9 @@ public interface DatabaseDaoSQLQuery {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertIntoProducts(Products products);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Long insertIntoSales(Sales sales);
 
     @Query("SELECT * FROM Modules")
     LiveData<List<Modules>> findAllModules();

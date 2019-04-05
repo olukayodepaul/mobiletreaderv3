@@ -69,7 +69,7 @@ public class SalesHistoryFragment extends Fragment {
         customersales.setHasFixedSize(true);
         customersales.setLayoutManager(layoutManager);
         //customerListAdapter = new OrderHistoryAdapter(getActivity());
-        customersales.setAdapter(customerListAdapter);
+        //customersales.setAdapter(customerListAdapter);
 
 
 

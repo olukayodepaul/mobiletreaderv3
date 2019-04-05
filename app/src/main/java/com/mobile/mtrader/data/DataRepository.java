@@ -51,11 +51,9 @@ public class DataRepository  {
         return this.daoSQLQuery.insertIntoProducts(products);
     }
 
-    /*
-    public int deleteItem(Employees registrationEntityTable) {
-        return daoSQLQuery.deleteItem(registrationEntityTable);
+    public Long insertIntoSales(Sales sales) {
+        return this.daoSQLQuery.insertIntoSales(sales);
     }
-    */
 
     public Flowable<List<Customers>> findAllCustomers() {
         return daoSQLQuery.findAllCustomers();

@@ -7,13 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.model.RealmConverterRepBasketList;
-import com.mobile.mtrader.repo.RealmService;
-
 import java.util.ArrayList;
 import java.util.List;
 

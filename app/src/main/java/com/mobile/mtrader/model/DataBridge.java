@@ -9,17 +9,13 @@ import java.util.List;
 public class DataBridge {
 
     //Response
-    @SerializedName("rstatus")
+    @SerializedName("mstatus")
     @Expose
-    public int rstatus;
-
-    @SerializedName("rmsg")
-    @Expose
-    public String rmsg;
+    public int mstatus;
 
     @SerializedName("push")
     @Expose
-    public List<ModelProducts> push;
+    public List<ModelSales> push;
 
     //Request
 
@@ -95,14 +91,8 @@ public class DataBridge {
     @Expose
     public String trans;
 
-
-    public DataBridge(String entrytime, String product_name, String product_code,
-                      String customer_id, int userid, String separator,
-                      double order, double invs, int pricing, int status,
-                      double rollprice, double packprice, String separatorname, String lat, String lng,
-                      String location_entry_time, String token, String trans) {
-
-
+    public DataBridge(String entrytime, String product_name, String product_code, String customer_id, int userid, String separator, double order, double invs, int pricing, int status, double rollprice, double packprice, String separatorname, String lat, String lng, String location_entry_time, String token, String trans) {
+        this.entrytime = entrytime;
         this.product_name = product_name;
         this.product_code = product_code;
         this.customer_id = customer_id;
@@ -120,7 +110,6 @@ public class DataBridge {
         this.location_entry_time = location_entry_time;
         this.token = token;
         this.trans = trans;
-        this.entrytime = entrytime;
     }
 
     public String getEntrytime() {
@@ -129,30 +118,6 @@ public class DataBridge {
 
     public void setEntrytime(String entrytime) {
         this.entrytime = entrytime;
-    }
-
-    public String getTrans() {
-        return trans;
-    }
-
-    public void setTrans(String trans) {
-        this.trans = trans;
-    }
-
-    public int getRstatus() {
-        return rstatus;
-    }
-
-    public void setRstatus(int rstatus) {
-        this.rstatus = rstatus;
-    }
-
-    public String getRmsg() {
-        return rmsg;
-    }
-
-    public void setRmsg(String rmsg) {
-        this.rmsg = rmsg;
     }
 
     public String getProduct_name() {
@@ -281,5 +246,13 @@ public class DataBridge {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getTrans() {
+        return trans;
+    }
+
+    public void setTrans(String trans) {
+        this.trans = trans;
     }
 }
