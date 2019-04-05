@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 
-public class MoveDataToServer {
+public class DataBridge {
 
     //Response
     @SerializedName("rstatus")
@@ -22,6 +22,7 @@ public class MoveDataToServer {
     public List<ModelProducts> push;
 
     //Request
+
     @SerializedName("entrytime")
     @Expose
     public String entrytime;
@@ -95,11 +96,11 @@ public class MoveDataToServer {
     public String trans;
 
 
-    public MoveDataToServer(String entrytime, String product_name, String product_code,
-                            String customer_id, int userid, String separator,
-                            double order, double invs, int pricing, int status,
-                            double rollprice, double packprice, String separatorname,String lat, String lng,
-                            String location_entry_time,String token, String trans) {
+    public DataBridge(String entrytime, String product_name, String product_code,
+                      String customer_id, int userid, String separator,
+                      double order, double invs, int pricing, int status,
+                      double rollprice, double packprice, String separatorname, String lat, String lng,
+                      String location_entry_time, String token, String trans) {
 
 
         this.product_name = product_name;

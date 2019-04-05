@@ -1,15 +1,12 @@
 package com.mobile.mtrader.frameworks.confirmsku;
 
-import com.mobile.mtrader.model.MoveDataToServer;
-import com.mobile.mtrader.model.RealmConverterAddProducts;
+import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.repo.RealmService;
 import com.mobile.mtrader.repo.RepoService;
 import com.mobile.mtrader.ui.ConfirmSales;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,8 +25,8 @@ public class ConfirmSkuImp implements ConfirmSkuContract.ConfirmPresenter {
     private ConfirmSkuContract.ConfirmView mView;
     private Picasso picasso;
     private ConfirmSales confirmSales;
-    List<MoveDataToServer> list;
-    MoveDataToServer mapList;
+    List<DataBridge> list;
+    DataBridge mapList;
 
     @Inject
     public ConfirmSkuImp(ConfirmSales confirmSales, RepoService repoService, RealmService realmService,
@@ -57,7 +54,7 @@ public class ConfirmSkuImp implements ConfirmSkuContract.ConfirmPresenter {
         list = new ArrayList<>();
         String uuid = UUID.randomUUID().toString();
         for (int i = 0; i < realmService.getSalesEntriesData().size(); i++) {
-            mapList = new MoveDataToServer(
+            mapList = new DataBridge(
                     realmService.getSalesEntriesData().get(i).getEntrydate(),
                     realmService.getSalesEntriesData().get(i).product_name,
                     realmService.getSalesEntriesData().get(i).product_code,
@@ -84,14 +81,14 @@ public class ConfirmSkuImp implements ConfirmSkuContract.ConfirmPresenter {
         repoService.moveDataToServer(list)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response<MoveDataToServer>>() {
+                .subscribe(new Observer<Response<DataBridge>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Response<MoveDataToServer> response) {
+                    public void onNext(Response<DataBridge> response) {
                         /*MoveDataToServer moveDataToServer = response.body();
                         if(response.code()==200 || moveDataToServer.rstatus==200) {
                             for(int i = 0 ; i < moveDataToServer.push.size() ; i++){

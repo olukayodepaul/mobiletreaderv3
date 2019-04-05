@@ -1,11 +1,16 @@
 package com.mobile.mtrader.data;
 
 
+import com.mobile.mtrader.data.AllTablesStructures.Products;
+import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelEmployees;
 import com.mobile.mtrader.model.ModelAttendant;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import retrofit2.Response;
+import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -27,5 +32,10 @@ public interface Api {
             @Query("lat") String lat,
             @Query("lng") String lng,
             @Query("rmsg") String rmsg
+    );
+
+    @POST("/mobiletrader/order")
+    Observable<Response<DataBridge>> moveDataToServer(
+            @Body List<DataBridge> salesEntries
     );
 }

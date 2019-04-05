@@ -21,6 +21,7 @@ import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.util.AppUtil;
 import com.mobile.mtrader.viewmodels.RepSalesConfirmViewModel;
 import java.text.DecimalFormat;
 import javax.inject.Inject;
@@ -133,8 +134,22 @@ public class ConfirmSales extends AppCompatActivity {
                 )
         );
 
-        back_page.setOnClickListener(v -> onBackPressed());
+
+        btns.setOnClickListener(v->{
+            if(!confirms.getText().toString().equals(dbToken)) {
+                AppUtil.showAlertDialog(this, "Verification","Enter valid verification code","Close");
+            }else{
+                if(!AppUtil.checkConnection(this)) {
+
+                }else{
+
+                }
+            }
+        });
+        back_page.setOnClickListener(v-> onBackPressed());
+
     }
+
 }
 
 

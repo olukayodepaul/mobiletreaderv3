@@ -2,7 +2,7 @@ package com.mobile.mtrader.repo;
 
 
 
-import com.mobile.mtrader.model.MoveDataToServer;
+import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelAttendant;
 import com.mobile.mtrader.model.ModelEmployees;
 
@@ -35,10 +35,8 @@ public interface RepoService {
     );
 
     @POST("/mobiletrader/order")
-    Observable<Response<MoveDataToServer>> moveDataToServer(
-            @Body List<MoveDataToServer> user
-
-
+    Observable<Response<DataBridge>> moveDataToServer(
+            @Body List<DataBridge> user
     );
 }
 

@@ -8,6 +8,7 @@ import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
+import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelAttendant;
 import com.mobile.mtrader.model.ModelEmployees;
 
@@ -106,7 +107,13 @@ public class DataRepository  {
         return this.daoSQLQuery.salesEnteryRecord(updatestatus,customerno);
     }
 
+    public Flowable<List<Products>> pustSalesToServer(String updatestatus, String customerno) {
+        return this.daoSQLQuery.pustSalesToServer(updatestatus,customerno);
+    }
 
+    public Observable<Response<DataBridge>> sentSalesToServer(List<DataBridge> salesEntries) {
+        return api.moveDataToServer(salesEntries);
+    }
 }
 
 

@@ -60,6 +60,11 @@ public interface DatabaseDaoSQLQuery {
     @Query("SELECT * FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
     Flowable<List<Products>> salesEnteryRecord(String updatestatus, String customerno);
 
+    @Query("SELECT * FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
+    Flowable<List<Products>> pustSalesToServer(String updatestatus, String customerno);
+
+
+
 }
 
 

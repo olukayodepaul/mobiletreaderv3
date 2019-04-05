@@ -1,8 +1,6 @@
 package com.mobile.mtrader.frameworks.confirmsku;
 
 
-import com.mobile.mtrader.model.MoveDataToServer;
-
 public interface ConfirmSkuContract {
 
     interface ConfirmView {
