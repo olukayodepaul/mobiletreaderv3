@@ -3,6 +3,7 @@ package com.mobile.mtrader.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,63 +11,67 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.repo.RealmService;
-import com.mobile.mtrader.ui.Customer_Sales_History;
-import com.mobile.mtrader.ui.DepotClokingActivity;
 
+import com.mobile.mtrader.data.AllTablesStructures.Sales;
+import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.ui.Customer_Sales_History;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder> {
 
-public class OrderHistoryAdapter  {
-/*
-    List<RealmConverterAddProducts> list;
     Context context;
-    RealmService realmService;
+    List<Sales> hostory = new ArrayList<>();
+
     Intent intent;
 
-
-    public OrderHistoryAdapter(Context context, RealmService realmService) {
+    public OrderHistoryAdapter(Context context) {
         this.context = context;
-        this.realmService = realmService;
-        this.list = realmService.getSalesEntryGroup();
     }
 
+    @NonNull
     @Override
-    public OrderHistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OrderHistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View mview = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_group, parent, false);
         return new ViewHolder(mview);
     }
 
     @Override
-    public void onBindViewHolder(OrderHistoryAdapter.ViewHolder holder, int position) {
-        RealmConverterAddProducts rs = list.get(position);
-        holder.modulesnames.setText(rs.customer_name);
-        holder.times.setText(rs.entrydate);
-        if(realmService.getUnPostSales(rs.customer_id, 2,1) == 0) {
-            holder.indicator_green.setVisibility(View.VISIBLE);
-        }else{
-            holder.indicator_red.setVisibility(View.VISIBLE);
+    public void onBindViewHolder(@NonNull OrderHistoryAdapter.ViewHolder holder, int position) {
+        if (hostory != null) {
+
+            Sales rs = hostory.get(position);
+            holder.modulesnames.setText(rs.cutomersname);
+            holder.times.setText(rs.salestime);
+
+
+            holder.trigger_attendant.setOnClickListener(v -> {
+
+                intent = new Intent(context, Customer_Sales_History.class);
+                intent.putExtra("CUSTOMER_ID", rs.customerno);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+
+            });
         }
-
-        holder.trigger_attendant.setOnClickListener(v->{
-            intent = new Intent(context, Customer_Sales_History.class);
-            intent.putExtra("CUSTOMER_ID", rs.customer_id);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        });
-
     }
 
     @Override
     public int getItemCount() {
-        if(list==null)
+        if (hostory != null && !hostory.isEmpty()) {
+            return hostory.size();
+        } else {
             return 0;
-        else
-            return list.size();
+        }
+    }
+
+    public void setSalesHiatory(List<Sales> clocking) {
+        this.hostory = clocking;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -91,5 +96,5 @@ public class OrderHistoryAdapter  {
             ButterKnife.bind(this, mview);
         }
     }
-*/
+
 }

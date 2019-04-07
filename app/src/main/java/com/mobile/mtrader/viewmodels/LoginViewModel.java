@@ -4,7 +4,6 @@ package com.mobile.mtrader.viewmodels;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
-import android.support.v7.util.AsyncListUtil;
 
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
@@ -13,12 +12,13 @@ import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.model.ModelEmployees;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
@@ -27,7 +27,10 @@ public class LoginViewModel extends ViewModel {
 
     private DataRepository repository;
     private MutableLiveData<String> observeResponse = new MutableLiveData<>();
+    private MutableLiveData<Long> initcount;
     private MutableLiveData<Throwable> observeThrowable = new MutableLiveData<>();
+    CompositeDisposable mDis = new CompositeDisposable();
+    private MutableLiveData<Employees> obemployee = new MutableLiveData<>();
 
     LoginViewModel(DataRepository repository) {
         this.repository = repository;
@@ -39,6 +42,42 @@ public class LoginViewModel extends ViewModel {
 
     public MutableLiveData<Throwable> getThrowable() {
         return observeThrowable;
+    }
+
+    public MutableLiveData<Long> getInitCount() {
+        if (initcount == null) {
+            initcount = new MutableLiveData<>();
+            getInitSize();
+        }
+        return initcount;
+    }
+
+    public MutableLiveData<Employees> emDetails() {
+        return obemployee;
+    }
+
+
+
+    public void getEmployesProfiles() {
+        mDis.add(repository.checkRosterDate()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data -> {
+                    obemployee.postValue(data);
+                        }
+                )
+        );
+    }
+
+    public void getInitSize() {
+        mDis.add(repository.checkUsersInit()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data -> {
+                    initcount.postValue(data);
+                        }
+                )
+        );
     }
 
     public void setEmployeesDailySalesData(String username, String password, String imei) {
@@ -68,8 +107,10 @@ public class LoginViewModel extends ViewModel {
                                         data.lng,
                                         data.depot_waiver,
                                         data.clokin,
-                                        data.clokout
+                                        data.clokout,
+                                        new SimpleDateFormat("yyyy-MM-dd").format(new Date())
                                 );
+
                                 new AddEmployees().execute(employeerdata);
 
                                 for (int i = 0; i < data.modules.size(); i++) {
@@ -79,6 +120,7 @@ public class LoginViewModel extends ViewModel {
                                             data.modules.get(i).name,
                                             data.modules.get(i).imageurl
                                     );
+                                    new DeleteModules().execute(modulesdata);
                                     new AddModules().execute(modulesdata);
                                 }
 
@@ -167,6 +209,14 @@ public class LoginViewModel extends ViewModel {
         @Override
         protected Void doInBackground(Products... item) {
             repository.insertIntoProducts(item[0]);
+            return null;
+        }
+    }
+
+    private class DeleteModules extends AsyncTask<Modules, Void, Void> {
+        @Override
+        protected Void doInBackground(Modules... item) {
+            repository.deleteAllProducts(item[0]);
             return null;
         }
     }

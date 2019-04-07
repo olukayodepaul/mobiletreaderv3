@@ -1,6 +1,7 @@
 package com.mobile.mtrader.ui;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -88,7 +89,8 @@ public class DepotClokingActivity extends AppCompatActivity {
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             }else {
                 showProgressDialog();
-                clockInViewModel.setEmployeeDetails().observe(this, employees -> clockInViewModel.setUserDailyAttendant(employees.user_id,
+                clockInViewModel.setEmployeeDetails().observe(this,
+                        employees -> clockInViewModel.setUserDailyAttendant(employees.user_id,
                         1, cDates, cTime,"0.000","0.666",cmsg
                 ));
             }
@@ -114,7 +116,10 @@ public class DepotClokingActivity extends AppCompatActivity {
             String[] res = s.split("\\~");
 
             if(Integer.parseInt(res[0])==200){
-                Toast.makeText(this, res[1], Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this,SalesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }else if(Integer.parseInt(res[0])==401){
                 Toast.makeText(this, res[1], Toast.LENGTH_SHORT).show();
             }

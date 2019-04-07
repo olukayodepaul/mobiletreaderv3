@@ -18,8 +18,14 @@ public class Sales {
     public String order;
     public String customerno;
     public String salestime;
+    public String rollqty;
+    public String packqty;
+    public String rollprice;
+    public String packprice;
+    public String cutomersname;
 
-    public Sales(String map_token, String separatorname, String productcode, String productname, String localstatus, String inventory, String pricing, String order, String customerno, String salestime) {
+    public Sales(String map_token, String separatorname, String productcode, String productname, String localstatus, String inventory, String pricing, String order, String customerno,
+                 String salestime, String rollqty, String packqty, String rollprice, String packprice, String cutomersname) {
         this.map_token = map_token;
         this.separatorname = separatorname;
         this.productcode = productcode;
@@ -30,10 +36,11 @@ public class Sales {
         this.order = order;
         this.customerno = customerno;
         this.salestime = salestime;
-    }
-
-    public int getAuto() {
-        return auto;
+        this.rollqty = rollqty;
+        this.packqty = packqty;
+        this.rollprice = rollprice;
+        this.packprice = packprice;
+        this.cutomersname = cutomersname;
     }
 
     public String getMap_token() {
@@ -76,7 +83,31 @@ public class Sales {
         return salestime;
     }
 
+    public String getRollqty() {
+        return rollqty;
+    }
+
+    public String getPackqty() {
+        return packqty;
+    }
+
+    public String getRollprice() {
+        return rollprice;
+    }
+
+    public String getPackprice() {
+        return packprice;
+    }
+
     public void setAuto(int auto) {
         this.auto = auto;
+    }
+
+    public String getCutomersname() {
+        return cutomersname;
+    }
+
+    public int getAuto() {
+        return auto;
     }
 }

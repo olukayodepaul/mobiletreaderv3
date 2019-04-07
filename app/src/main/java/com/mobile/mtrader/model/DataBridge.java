@@ -13,6 +13,14 @@ public class DataBridge {
     @Expose
     public int mstatus;
 
+    @SerializedName("urno")
+    @Expose
+    public String urno;
+
+    @SerializedName("mdate")
+    @Expose
+    public String  mdate;
+
     @SerializedName("push")
     @Expose
     public List<ModelSales> push;

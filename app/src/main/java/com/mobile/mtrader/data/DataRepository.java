@@ -11,13 +11,8 @@ import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelAttendant;
 import com.mobile.mtrader.model.ModelEmployees;
-
-
 import java.util.List;
-
 import javax.inject.Inject;
-
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -79,10 +74,6 @@ public class DataRepository  {
          return this.daoSQLQuery.findAllUserProducts();
     }
 
-    public void updateIndividualCustomers(String rostertime,int sort ) {
-        this.daoSQLQuery.updateIndividualCustomers(rostertime,sort);
-    }
-
     public Observable<Response<ModelEmployees>> userLogin(String username, String password, String imei) {
         return api.getUserLogin(username, password, imei);
     }
@@ -112,6 +103,43 @@ public class DataRepository  {
     public Observable<Response<DataBridge>> sentSalesToServer(List<DataBridge> salesEntries) {
         return api.moveDataToServer(salesEntries);
     }
+
+    public Flowable<Long> checkUsersInit() {
+        return this.daoSQLQuery.checkUsersInit();
+    }
+
+    public Flowable<Employees> checkRosterDate() {
+        return this.daoSQLQuery.checkRosterDate();
+    }
+
+    public int deleteAllProducts(Modules modules) {
+        return this.daoSQLQuery.deleteAllProducts(modules);
+    }
+
+    public Flowable<List<Sales>> salesEntriesToday() {
+        return this.daoSQLQuery.salesEntriesToday();
+    }
+
+    public Flowable<List<Sales>> salesEntriesGroup() {
+        return this.daoSQLQuery.salesEntriesGroup();
+    }
+
+    public Flowable<List<Sales>> salesEntriesGroupList(int custid) {
+        return this.daoSQLQuery.salesEntriesGroupList(custid);
+    }
+
+    public void updateIndividualCustomers(String rostertime,int sort ) {
+        this.daoSQLQuery.updateIndividualCustomers(rostertime,sort);
+    }
+
+    public void updateIndividualCustomersSalesTime(String rostertime, String urno) {
+        this.daoSQLQuery.updateIndividualCustomersSalesTime(rostertime,urno);
+    }
+
+    public void reInitialisProducts(String inventory, int pricing, String order,  String customerno,String updatestatus) {
+        this.daoSQLQuery.reInitialisProducts(inventory,pricing,order,customerno,updatestatus);
+    }
+
 }
 
 

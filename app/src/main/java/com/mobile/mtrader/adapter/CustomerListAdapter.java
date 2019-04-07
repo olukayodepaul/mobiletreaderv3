@@ -1,6 +1,7 @@
 package com.mobile.mtrader.adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
@@ -34,6 +35,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
     Context context;
 
     List<Customers> customers = new ArrayList<>();
+    int REQUEST_FOR_ACTIVITY_CODE = 1;
 
     public CustomerListAdapter(Context context) {
         this.context = context;
@@ -121,7 +123,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             case 1:
                 intent = new Intent(context, DepotClokingActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                ((Activity) context).startActivityForResult(intent,REQUEST_FOR_ACTIVITY_CODE);
                 break;
             case 2:
                 intent = new Intent(context, DeliveryMapActivity.class);

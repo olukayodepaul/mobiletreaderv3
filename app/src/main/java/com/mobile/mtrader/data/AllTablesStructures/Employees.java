@@ -17,9 +17,10 @@ public class Employees {
     public String depot_waiver;
     public String clokin;
     public String clokout;
+    public String mdate;
 
     public Employees(int user_id, String name, String dbroute, String customer_code, String depotlat,
-                     String depotlng, String depot_waiver, String clokin, String clokout) {
+                     String depotlng, String depot_waiver, String clokin, String clokout, String mdate) {
 
         this.user_id = user_id;
         this.name = name;
@@ -30,6 +31,7 @@ public class Employees {
         this.depot_waiver = depot_waiver;
         this.clokin = clokin;
         this.clokout = clokout;
+        this.mdate = mdate;
 
     }
 
@@ -77,5 +79,9 @@ public class Employees {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getMdate() {
+        return mdate;
     }
 }

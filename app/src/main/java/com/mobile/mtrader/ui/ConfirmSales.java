@@ -140,8 +140,8 @@ public class ConfirmSales extends AppCompatActivity {
                 )
         );
 
-        btns.setOnClickListener(v->{
-            if(confirms.getText().toString().equals(dbToken)) {
+        btns.setOnClickListener(v-> {
+            if(!confirms.getText().toString().equals(dbToken)) {
                 AppUtil.showAlertDialog(this, "Verification","Enter valid verification code","Close");
             }else{
                 if(!AppUtil.checkConnection(this)) {
@@ -155,8 +155,17 @@ public class ConfirmSales extends AppCompatActivity {
         });
 
         repSalesConfirmViewModel.observeResponse().observe(this, s -> {
-            progressbar.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplication(), s.toString(),Toast.LENGTH_SHORT).show();
+
+            if(s.equals("501")){
+                progressbar.setVisibility(View.VISIBLE);
+            }else if(s.equals("200")){
+                Intent intent = new Intent(this,SalesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }else{
+
+            }
         });
 
         back_page.setOnClickListener(v-> onBackPressed());

@@ -1,6 +1,90 @@
 package com.mobile.mtrader.adapter;
 
-public class SalesEntryHistoryAdapter {
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.mobile.mtrader.data.AllTablesStructures.Sales;
+import com.mobile.mtrader.mobiletreaderv3.R;
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+
+public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHistoryAdapter.ViewHolder> {
+
+    Context context;
+    List<Sales> hostory = new ArrayList<>();
+
+    public SalesEntryHistoryAdapter(Context context) {
+        this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public SalesEntryHistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View mview = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.items_sales_history, parent, false);
+        return new ViewHolder(mview);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull SalesEntryHistoryAdapter.ViewHolder holder, int position) {
+        if (hostory != null) {
+
+            Sales rs = hostory.get(position);
+            holder.modulesnames.setText(rs.productname);
+            holder.times_image_items.setText(rs.order);
+
+            double total = (Double.parseDouble(rs.packprice)*Integer.parseInt(rs.packqty))+
+                                (Double.parseDouble(rs.rollprice)*Integer.parseInt(rs.rollqty));
+            holder.times_image_qty.setText(Double.toString(total));
+
+            if(!rs.localstatus.equals("1")){
+                holder.indicator_red.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (hostory != null && !hostory.isEmpty()) {
+            return hostory.size();
+        } else {
+            return 0;
+        }
+    }
+
+    public void setSalesHiatory(List<Sales> clocking) {
+        this.hostory = clocking;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.modulesnames)
+        TextView modulesnames;
+
+        @BindView(R.id.times_image_items)
+        TextView times_image_items;
+
+        @BindView(R.id.times_image_qty)
+        TextView times_image_qty;
+
+        @BindView(R.id.indicator_red)
+        ImageView indicator_red;
+
+
+        public ViewHolder(View mview) {
+            super(mview);
+            ButterKnife.bind(this, mview);
+        }
+    }
 
 }

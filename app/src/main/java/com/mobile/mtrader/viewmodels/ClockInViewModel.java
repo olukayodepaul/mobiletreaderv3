@@ -69,7 +69,7 @@ public class ClockInViewModel extends ViewModel {
                                         0, "", "", "", "", "", "", 1, "", "", times
                                 );
                                 new UpdateCustomerTime().execute(customers);
-                                observeResponse.postValue(Integer.toString(roster.status) + "~" + "Successful");
+                                observeResponse.postValue(Integer.toString(roster.status) + "~" + "Successful~"+times);
                             } else {
                                 observeResponse.postValue(Integer.toString(roster.status) + "~" + roster.msg);
                             }

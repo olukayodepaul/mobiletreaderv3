@@ -2,6 +2,8 @@ package com.mobile.mtrader.ui;
 
 import com.google.android.gms.location.LocationListener;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -23,7 +25,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mobile.mtrader.di.component.ApplicationComponent;
+import com.mobile.mtrader.di.component.DaggerApplicationComponent;
+import com.mobile.mtrader.di.module.ContextModule;
+import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.viewmodels.BankViewModel;
+import com.mobile.mtrader.viewmodels.DeliverySalesMapViewmodel;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -53,6 +64,13 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
     String outletname;
     String outletwaiver;
 
+    ApplicationComponent component;
+
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
+    DeliverySalesMapViewmodel deliveryViewModel;
+
    // private GeofencingClient geofencingClient;
 
    /* private GoogleMap mMap;
@@ -66,7 +84,13 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         setContentView(R.layout.activity_delivery_map);
         ButterKnife.bind(this);
         bundle = getIntent().getExtras();
-        //geofencingClient = LocationServices.getGeofencingClient(this);
+        component = DaggerApplicationComponent.builder()
+                .contextModule(new ContextModule(this))
+                .mvvMModule(new MvvMModule(this))
+                .build();
+        component.inject(this);
+        deliveryViewModel = ViewModelProviders.of(this,viewModelFactory).get(DeliverySalesMapViewmodel.class);
+
 
         if (bundle != null) {
             customer_key = bundle.getString("CUSTOMERS_ACCESS_KEYS");
@@ -79,12 +103,19 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
             onBackPressed();
         });
 
+
         prosales.setOnClickListener(v -> {
-            intent = new Intent(this, DailySalesActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
-            intent.putExtra("CUSTOMER_ID", customer_no);
-            startActivity(intent);
+            deliveryViewModel.reInitialisProduct("",0,"","","");
+        });
+
+        deliveryViewModel.returnRep().observe(this, data->{
+            if(data.equals("200")){
+                intent = new Intent(this, DailySalesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
+                intent.putExtra("CUSTOMER_ID", customer_no);
+                startActivity(intent);
+            }
         });
     }
 

@@ -41,4 +41,25 @@ public class ModelSales {
     @Expose
     public String salestime;
 
+    @SerializedName("rollqty")
+    @Expose
+    public String rollqty;
+
+    @SerializedName("packqty")
+    @Expose
+    public String packqty;
+
+    @SerializedName("rollprice")
+    @Expose
+    public String rollprice;
+
+    @SerializedName("packprice")
+    @Expose
+    public String packprice;
+
+    @SerializedName("customername")
+    @Expose
+    public String customername;
+
+
 }

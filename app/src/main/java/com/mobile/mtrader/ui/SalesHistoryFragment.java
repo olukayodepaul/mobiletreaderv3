@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
 import com.mobile.mtrader.adapter.OrderHistoryAdapter;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.di.component.ApplicationComponent;
@@ -19,6 +21,7 @@ import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.viewmodels.BankViewModel;
 import com.mobile.mtrader.viewmodels.DailySalesViewModule;
 import java.util.List;
 import javax.inject.Inject;
@@ -33,23 +36,17 @@ public class SalesHistoryFragment extends Fragment {
 
     OrderHistoryAdapter customerListAdapter;
 
-    RecyclerView.LayoutManager layoutManager;
-
-    DailySalesViewModule dailySalesViewModule;
+    BankViewModel bankViewModel;
 
     ApplicationComponent component;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    MediatorLiveData liveDataMerger = new MediatorLiveData<>();
+    @BindView(R.id.progressbar)
+    ProgressBar progressbar;
 
-    LiveData<List<Sales>> orders;
-
-    public SalesHistoryFragment() {
-
-    }
-
+    public SalesHistoryFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,21 +54,24 @@ public class SalesHistoryFragment extends Fragment {
 
         View view =  inflater.inflate(R.layout.fragment_sales_history, container, false);
         ButterKnife.bind(this,view);
-        dailySalesViewModule = ViewModelProviders.of(getActivity(), viewModelFactory).get(DailySalesViewModule.class);
 
         component = DaggerApplicationComponent.builder()
                 .contextModule(new ContextModule(getActivity()))
                 .mvvMModule(new MvvMModule(getActivity()))
                 .build();
         component.inject(this);
+        bankViewModel = ViewModelProviders.of(this,viewModelFactory).get(BankViewModel.class);
 
         customersales.setLayoutManager(new LinearLayoutManager(getActivity()));
         customersales.setHasFixedSize(true);
-        customersales.setLayoutManager(layoutManager);
-        //customerListAdapter = new OrderHistoryAdapter(getActivity());
-        //customersales.setAdapter(customerListAdapter);
+        customerListAdapter = new OrderHistoryAdapter(getActivity());
+        customersales.setAdapter(customerListAdapter);
 
-
+        bankViewModel.salesEntriesGroup();
+        bankViewModel.emitSalesEntriesParent().observe(this, sales -> {
+            progressbar.setVisibility(View.GONE);
+            customerListAdapter.setSalesHiatory(sales);
+        });
 
         return view;
     }

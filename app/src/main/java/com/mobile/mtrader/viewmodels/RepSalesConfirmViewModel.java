@@ -2,7 +2,11 @@ package com.mobile.mtrader.viewmodels;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.data.DataRepository;
@@ -88,7 +92,7 @@ public class RepSalesConfirmViewModel extends ViewModel {
     }
 
     public void pushToServer(List<DataBridge> results) {
-
+        response.postValue("501");
         repository.sentSalesToServer(results)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -103,7 +107,6 @@ public class RepSalesConfirmViewModel extends ViewModel {
                         DataBridge data = resp.body();
 
                         if (data.mstatus == 200) {
-
                             for (int i = 0; i < data.push.size(); i++) {
                                 Sales sales = new Sales(
                                         data.push.get(i).map_token,
@@ -115,20 +118,31 @@ public class RepSalesConfirmViewModel extends ViewModel {
                                         data.push.get(i).pricing,
                                         data.push.get(i).order,
                                         data.push.get(i).customerno,
-                                        data.push.get(i).salestime
+                                        data.push.get(i).salestime,
+                                        data.push.get(i).rollqty,
+                                        data.push.get(i).packqty,
+                                        data.push.get(i).rollprice,
+                                        data.push.get(i).packprice,
+                                        data.push.get(i).customername
                                 );
                                 new SaveSalesRecord().execute(sales);
                             }
-                            response.postValue("200~");
+
+                            Customers customers = new Customers(
+                                    0, "", data.urno, "",
+                                    "", "", "", 0,
+                                    "", "", data.mdate
+                            );
+                            new UpdateCustomerTime().execute(customers);
+                            response.postValue("200");
                         } else {
-                            //
-                            response.postValue("400~" + "Some thing went wrong. Please save to phone and proceed");
+                            response.postValue("400");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        response.postValue("400~" + "Some thing went wrong. Please save to phone and proceed");
+                        response.postValue("500");
                     }
 
                     @Override
@@ -141,6 +155,14 @@ public class RepSalesConfirmViewModel extends ViewModel {
         @Override
         protected Void doInBackground(Sales... item) {
             repository.insertIntoSales(item[0]);
+            return null;
+        }
+    }
+
+    private class UpdateCustomerTime extends AsyncTask<Customers, Void, Void> {
+        @Override
+        protected Void doInBackground(Customers... item) {
+            repository.updateIndividualCustomersSalesTime(item[0].rostertime, item[0].urno);
             return null;
         }
     }
