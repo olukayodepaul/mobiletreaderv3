@@ -82,7 +82,7 @@ public interface DatabaseDaoSQLQuery {
     Flowable<List<Sales>> salesEntriesGroup();
 
     @Query("SELECT * FROM Sales where customerno=:cust")
-    Flowable<List<Sales>> salesEntriesGroupList(int cust);
+    Flowable<List<Sales>> salesEntriesGroupList(String cust);
 
     @Query("UPDATE Customers SET rostertime = :rostertime WHERE sort=:sort")
     void updateIndividualCustomers(String rostertime, int sort);
@@ -92,6 +92,9 @@ public interface DatabaseDaoSQLQuery {
 
     @Query("UPDATE Products SET inventory =:inventory, pricing =:pricing, orders=:orders, customerno=:customerno, updatestatus=:updatestatus ")
     void reInitialisProducts(String inventory, int pricing, String orders, String customerno,String updatestatus);
+
+    @Query("SELECT COUNT(auto) FROM Sales WHERE  customerno =:customerno AND localstatus =:localstatus ")
+    Single<Long> trackUnPushDataToServer(String customerno, String localstatus);
 
 
 }

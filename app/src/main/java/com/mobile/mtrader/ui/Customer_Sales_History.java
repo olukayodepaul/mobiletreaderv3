@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.mobile.mtrader.adapter.SalesEntryHistoryAdapter;
 import com.mobile.mtrader.di.component.ApplicationComponent;
@@ -78,10 +79,10 @@ public class Customer_Sales_History extends AppCompatActivity {
         salesEntryHistoryAdapter = new SalesEntryHistoryAdapter(this);
         sales_history.setAdapter(salesEntryHistoryAdapter);
 
-        bankViewModel.salesEntriesGroupList(Integer.parseInt(timeId));
+        bankViewModel.salesEntriesGroupList(timeId);
         bankViewModel.emitSalesEntriesChildren().observe(this, sales -> {
             progressbar.setVisibility(View.GONE);
-            salesEntryHistoryAdapter.setSalesHiatory(sales);
+            salesEntryHistoryAdapter.setSalesHistory(sales);
         });
     }
 

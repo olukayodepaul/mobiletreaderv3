@@ -124,7 +124,7 @@ public class DataRepository  {
         return this.daoSQLQuery.salesEntriesGroup();
     }
 
-    public Flowable<List<Sales>> salesEntriesGroupList(int custid) {
+    public Flowable<List<Sales>> salesEntriesGroupList(String custid) {
         return this.daoSQLQuery.salesEntriesGroupList(custid);
     }
 
@@ -138,6 +138,10 @@ public class DataRepository  {
 
     public void reInitialisProducts(String inventory, int pricing, String order,  String customerno,String updatestatus) {
         this.daoSQLQuery.reInitialisProducts(inventory,pricing,order,customerno,updatestatus);
+    }
+
+    public Single<Long> trackUnPushDataToServer(String customerno, String localstatus) {
+        return this.daoSQLQuery.trackUnPushDataToServer(customerno,localstatus);
     }
 
 }

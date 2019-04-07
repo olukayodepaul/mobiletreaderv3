@@ -81,8 +81,6 @@ public class DepotClokingActivity extends AppCompatActivity {
 
         back_page.setOnClickListener(v->onBackPressed());
 
-        //get the lat and lng here.
-
         resume.setOnClickListener(v->{
 
             if(!AppUtil.checkConnection(this)) {

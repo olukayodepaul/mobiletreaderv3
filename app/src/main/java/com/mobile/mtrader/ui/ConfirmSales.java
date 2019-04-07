@@ -163,8 +163,8 @@ public class ConfirmSales extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
-            }else{
-
+            }else if(s.equals("500")){
+                Toast.makeText(this, "Server cant be access", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -27,6 +27,7 @@ import java.util.List;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 
 
 public class SalesHistoryFragment extends Fragment {
@@ -61,16 +62,18 @@ public class SalesHistoryFragment extends Fragment {
                 .build();
         component.inject(this);
         bankViewModel = ViewModelProviders.of(this,viewModelFactory).get(BankViewModel.class);
+        progressbar.setVisibility(View.VISIBLE);
 
         customersales.setLayoutManager(new LinearLayoutManager(getActivity()));
         customersales.setHasFixedSize(true);
-        customerListAdapter = new OrderHistoryAdapter(getActivity());
+        customerListAdapter = new OrderHistoryAdapter(getActivity(), bankViewModel);
         customersales.setAdapter(customerListAdapter);
 
         bankViewModel.salesEntriesGroup();
         bankViewModel.emitSalesEntriesParent().observe(this, sales -> {
             progressbar.setVisibility(View.GONE);
             customerListAdapter.setSalesHiatory(sales);
+
         });
 
         return view;

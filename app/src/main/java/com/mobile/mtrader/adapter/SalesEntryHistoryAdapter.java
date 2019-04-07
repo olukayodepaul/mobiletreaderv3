@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.viewmodels.BankViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,14 +45,18 @@ public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHis
             holder.modulesnames.setText(rs.productname);
             holder.times_image_items.setText(rs.order);
 
-            double total = (Double.parseDouble(rs.packprice)*Integer.parseInt(rs.packqty))+
-                                (Double.parseDouble(rs.rollprice)*Integer.parseInt(rs.rollqty));
+            double total = (Double.parseDouble(rs.packprice) * Integer.parseInt(rs.packqty)) +
+                    (Double.parseDouble(rs.rollprice) * Integer.parseInt(rs.rollqty));
             holder.times_image_qty.setText(Double.toString(total));
 
-            if(!rs.localstatus.equals("1")){
-                holder.indicator_red.setVisibility(View.VISIBLE);
+            if (rs.localstatus.equals("1")) {
+                holder.indicator_green.setVisibility(View.VISIBLE);
+
+            }else{
+                holder.indicator_red.setVisibility(View.GONE);
             }
         }
+
     }
 
     @Override
@@ -62,8 +68,8 @@ public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHis
         }
     }
 
-    public void setSalesHiatory(List<Sales> clocking) {
-        this.hostory = clocking;
+    public void setSalesHistory(List<Sales> hostory) {
+        this.hostory = hostory;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -79,6 +85,11 @@ public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHis
 
         @BindView(R.id.indicator_red)
         ImageView indicator_red;
+
+        @BindView(R.id.indicator_green)
+        ImageView indicator_green;
+
+
 
 
         public ViewHolder(View mview) {
