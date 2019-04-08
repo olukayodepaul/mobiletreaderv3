@@ -6,10 +6,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.mobiletreaderv3.R;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BankAdapter extends RecyclerView.Adapter<BankAdapter.ViewHolder> {
@@ -31,8 +37,20 @@ public class BankAdapter extends RecyclerView.Adapter<BankAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BankAdapter.ViewHolder holder, int position) {
+
         if(clocking!=null){
+
             Sales rs = clocking.get(position);
+            holder.items.setText(rs.productname);
+            holder.qty.setText(rs.order);
+
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+            double packPrice = Double.parseDouble(rs.packprice);
+            double packQty = Double.parseDouble(rs.packqty);
+            double rollPrice = Double.parseDouble(rs.rollprice);
+            double rollQty = Double.parseDouble(rs.rollqty);
+
+            holder.order.setText(formatter.format((rollPrice*rollQty)+(packPrice+packQty)));
         }
     }
 
@@ -50,6 +68,15 @@ public class BankAdapter extends RecyclerView.Adapter<BankAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.items)
+        TextView items;
+
+        @BindView(R.id.qty)
+        TextView qty;
+
+        @BindView(R.id.order)
+        TextView order;
 
         public ViewHolder(View mview) {
             super(mview);

@@ -99,11 +99,11 @@
 
             <TextView
                 android:id="@+id/qty"
-                android:layout_width="50dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:text="QTY"
+                android:text="ORDER"
                 app:layout_constraintEnd_toStartOf="@+id/order"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/items"
@@ -114,10 +114,10 @@
 
             <TextView
                 android:id="@+id/order"
-                android:layout_width="50dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="ORDER"
+                android:text="AMOUNT"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/qty"
@@ -142,7 +142,7 @@
         android:layout_height="154dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@color/gray_light"
+
         android:orientation="vertical"
         android:paddingBottom="5dp">
 
@@ -164,10 +164,10 @@
                     android:layout_marginLeft="10dp"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:text="TOTAL TO PAY TO BANK"
+                    android:text="SALES VALUE"
                     app:layout_constraintEnd_toStartOf="@+id/qty_3"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintHorizontal_chainStyle="spread"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteY="5dp" />
@@ -190,13 +190,13 @@
 
                 <TextView
                     android:id="@+id/order_3"
-                    android:layout_width="50dp"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="ORDER"
+                    android:text=""
                     android:textAlignment="textEnd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -223,10 +223,10 @@
                     android:layout_marginLeft="10dp"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:text="TOTAL TO PAY TO BANK"
+                    android:text="SALES COMMISSION"
                     app:layout_constraintEnd_toStartOf="@+id/qty_4"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintHorizontal_chainStyle="spread"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteY="5dp" />
@@ -249,13 +249,13 @@
 
                 <TextView
                     android:id="@+id/order_4"
-                    android:layout_width="50dp"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="ORDER"
+                    android:text="0.0"
                     android:textAlignment="textEnd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -309,13 +309,13 @@
 
                 <TextView
                     android:id="@+id/order_6"
-                    android:layout_width="50dp"
+                    android:layout_width="110dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="ORDER"
+                    android:text=""
                     android:textAlignment="textEnd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"

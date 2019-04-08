@@ -49,7 +49,6 @@ public class BankViewModel extends ViewModel {
         return listchild;
     }
 
-
     public MutableLiveData<Throwable> getThrowable() {
         return observeThrowable;
     }
@@ -63,12 +62,10 @@ public class BankViewModel extends ViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data -> {
-                    elistresps.postValue(data);
-                        }
+                    elistresps.postValue(data); }
                 )
         );
     }
-
 
     public Single<Long> trackUnPushDataToServer(String customerno, String localstatus) {
         return repository.trackUnPushDataToServer(customerno,localstatus).map(
@@ -78,8 +75,6 @@ public class BankViewModel extends ViewModel {
                 }
         );
     }
-
-
 
     public LiveData<Employees> setEmployeeDetails() {
         return repository.findIndividualUsers();
@@ -172,10 +167,7 @@ public class BankViewModel extends ViewModel {
         mDis.add(repository.salesEntriesGroup()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> {
-                    groupList.postValue(data);
-                        }
-                )
+                .subscribe(data -> groupList.postValue(data))
         );
     }
 
@@ -183,10 +175,7 @@ public class BankViewModel extends ViewModel {
         mDis.add(repository.salesEntriesGroupList(custid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> {
-                    listchild.postValue(data);
-                        }
-                )
+                .subscribe(data ->  listchild.postValue(data))
         );
     }
 

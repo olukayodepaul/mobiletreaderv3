@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout_editor_absoluteY="25dp">
+    android:layout_height="wrap_content"
+    tools:layout_editor_absoluteY="25dp"
+    app:cardElevation="3dp">
 
 
     <TextView
@@ -18,11 +19,11 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="1dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints,Suspicious0dp" />
 
     <TextView
         android:id="@+id/qty"
-        android:layout_width="50dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text=""
         app:layout_constraintEnd_toStartOf="@+id/order"
@@ -35,7 +36,7 @@
 
     <TextView
         android:id="@+id/order"
-        android:layout_width="50dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:text=""
@@ -45,6 +46,5 @@
         tools:layout_editor_absoluteY="1dp"
         android:textAlignment="textEnd"
         tools:ignore="MissingConstraints" />
-
 
 </android.support.constraint.ConstraintLayout>
