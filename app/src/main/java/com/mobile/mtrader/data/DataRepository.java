@@ -144,6 +144,14 @@ public class DataRepository  {
         return this.daoSQLQuery.trackUnPushDataToServer(customerno,localstatus);
     }
 
+    public Flowable<List<Products>> salesStockBalance() {
+        return this.daoSQLQuery.salesStockBalance();
+    }
+
+    public Single<Long> sunAllSoldProduct(String productid) {
+        return this.daoSQLQuery.sunAllSoldProduct(productid);
+    }
+
 }
 
 

@@ -66,7 +66,6 @@ public class DepotClockoutActivity extends AppCompatActivity {
                 .build();
         component.inject(this);
         bankViewModel = ViewModelProviders.of(this,viewModelFactory).get(BankViewModel.class);
-        bankViewModel.salesEntriesToday();
 
         String cDates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String cTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -75,11 +74,11 @@ public class DepotClockoutActivity extends AppCompatActivity {
         back_page.setOnClickListener(v-> onBackPressed());
 
         clock_out_depot.setLayoutManager(new LinearLayoutManager(this));
-        clock_out_depot.setHasFixedSize(true);
-        clockOutAdaper = new ClockOutAdaper(this);
+        clockOutAdaper = new ClockOutAdaper(this, bankViewModel);
         clock_out_depot.setAdapter(clockOutAdaper);
 
-        bankViewModel.emitSalesEntries().observe(this, sales ->{
+        bankViewModel.salesStockBalance();
+        bankViewModel.emitSalesBalance().observe(this, sales ->{
             progressbar.setVisibility(View.GONE);
             clockOutAdaper.setModulesAdapter(sales);
         });
@@ -115,9 +114,7 @@ public class DepotClockoutActivity extends AppCompatActivity {
             hideProgressDialog();
             Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
         });
-
     }
-
 
     public void showProgressDialog() {
         progressbar.setVisibility(View.VISIBLE);

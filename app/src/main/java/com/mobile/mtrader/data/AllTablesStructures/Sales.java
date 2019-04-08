@@ -15,7 +15,7 @@ public class Sales {
     public String localstatus; // 1 push to server 2. save to phone but not been push to the server
     public String inventory;
     public String pricing;
-    public String order;
+    public String orders;
     public String customerno;
     public String salestime;
     public String rollqty;
@@ -24,7 +24,7 @@ public class Sales {
     public String packprice;
     public String cutomersname;
 
-    public Sales(String map_token, String separatorname, String productcode, String productname, String localstatus, String inventory, String pricing, String order, String customerno,
+    public Sales(String map_token, String separatorname, String productcode, String productname, String localstatus, String inventory, String pricing, String orders, String customerno,
                  String salestime, String rollqty, String packqty, String rollprice, String packprice, String cutomersname) {
         this.map_token = map_token;
         this.separatorname = separatorname;
@@ -33,7 +33,7 @@ public class Sales {
         this.localstatus = localstatus;
         this.inventory = inventory;
         this.pricing = pricing;
-        this.order = order;
+        this.orders = orders;
         this.customerno = customerno;
         this.salestime = salestime;
         this.rollqty = rollqty;
@@ -72,7 +72,7 @@ public class Sales {
     }
 
     public String getOrder() {
-        return order;
+        return orders;
     }
 
     public String getCustomerno() {

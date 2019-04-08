@@ -43,7 +43,7 @@ public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHis
 
             Sales rs = hostory.get(position);
             holder.modulesnames.setText(rs.productname);
-            holder.times_image_items.setText(rs.order);
+            holder.times_image_items.setText(rs.orders);
 
             double total = (Double.parseDouble(rs.packprice) * Integer.parseInt(rs.packqty)) +
                     (Double.parseDouble(rs.rollprice) * Integer.parseInt(rs.rollqty));

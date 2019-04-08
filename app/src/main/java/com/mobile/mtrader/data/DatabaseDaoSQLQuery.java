@@ -75,7 +75,7 @@ public interface DatabaseDaoSQLQuery {
     @Delete()
     int deleteAllProducts(Modules modules);
 
-    @Query("SELECT * FROM Sales")
+    @Query("SELECT * FROM Sales WHERE separatorname = 'own brands' and localstatus = '1'")
     Flowable<List<Sales>> salesEntriesToday();
 
     @Query("SELECT * FROM Sales group by customerno")
@@ -96,6 +96,11 @@ public interface DatabaseDaoSQLQuery {
     @Query("SELECT COUNT(auto) FROM Sales WHERE  customerno =:customerno AND localstatus =:localstatus ")
     Single<Long> trackUnPushDataToServer(String customerno, String localstatus);
 
+    @Query("SELECT * FROM Products where separator = 1")
+    Flowable<List<Products>> salesStockBalance();
+
+    @Query("SELECT SUM(orders) FROM Sales WHERE productcode =:productcode")
+    Single<Long> sunAllSoldProduct(String productcode);
 
 }
 

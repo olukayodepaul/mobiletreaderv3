@@ -42,7 +42,7 @@ public class BankAdapter extends RecyclerView.Adapter<BankAdapter.ViewHolder> {
 
             Sales rs = clocking.get(position);
             holder.items.setText(rs.productname);
-            holder.qty.setText(rs.order);
+            holder.qty.setText(rs.orders);
 
             DecimalFormat formatter = new DecimalFormat("#,###.00");
             double packPrice = Double.parseDouble(rs.packprice);

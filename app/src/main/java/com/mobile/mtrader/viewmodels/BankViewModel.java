@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
+import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.data.DataRepository;
 import com.mobile.mtrader.model.ModelAttendant;
@@ -32,6 +33,8 @@ public class BankViewModel extends ViewModel {
     private MutableLiveData<String> observeResponse = new MutableLiveData<>();
     private MutableLiveData<Throwable> observeThrowable = new MutableLiveData<>();
     Long countItems;
+    Long totalProductSold;
+    private MutableLiveData<List<Products>> salesBalane = new MutableLiveData<>();
 
     BankViewModel(DataRepository repository) {
         this.repository = repository;
@@ -39,6 +42,10 @@ public class BankViewModel extends ViewModel {
 
     public MutableLiveData<List<Sales>> emitSalesEntries() {
         return elistresps;
+    }
+
+    public MutableLiveData<List<Products>> emitSalesBalance() {
+        return salesBalane;
     }
 
     public MutableLiveData<List<Sales>> emitSalesEntriesParent() {
@@ -67,11 +74,30 @@ public class BankViewModel extends ViewModel {
         );
     }
 
+    public void salesStockBalance() {
+        mDis.add(repository.salesStockBalance()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data -> {
+                    salesBalane.postValue(data); }
+                )
+        );
+    }
+
     public Single<Long> trackUnPushDataToServer(String customerno, String localstatus) {
         return repository.trackUnPushDataToServer(customerno,localstatus).map(
                 nos -> {
                     countItems = nos;
                     return nos;
+                }
+        );
+    }
+
+    public Single<Long> sunAllSoldProduct(String productid) {
+        return repository.sunAllSoldProduct(productid).map(
+                totals -> {
+                    totalProductSold = totals;
+                    return totals;
                 }
         );
     }
