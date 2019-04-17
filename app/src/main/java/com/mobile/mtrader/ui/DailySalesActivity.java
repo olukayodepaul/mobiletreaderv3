@@ -115,31 +115,38 @@ public class DailySalesActivity extends AppCompatActivity {
                                                 TextUtils.isEmpty(getPricing.getText().toString()) ||
                                                 TextUtils.isEmpty(getOrder.getText().toString())
                                                 ) {
-                                            addSales("",
+                                            updateSalesEntries(
                                                     0,
+                                                    "0",
                                                     "",
-                                                    customer_no,
                                                     "",
-                                                    data.get(position).id,
-                                                    data.get(position).separator,
+                                                    "",
+                                                    "",
+                                                    "",
+                                                    "",
+                                                    "",
+                                                    "",
+                                                    "",
                                                     data.get(position).productcode);
                                         } else {
-                                            int pricing = 0;
-                                            if(!getPricing.getText().toString().isEmpty()){
-                                                pricing = Integer.parseInt(getPricing.getText().toString());
-                                            }
-                                            addSales( getInventory.getText().toString(),
-                                                    pricing,
-                                                    getOrder.getText().toString(),
-                                                    customer_no,
-                                                    "1",
-                                                    data.get(position).id,
+                                            updateSalesEntries(
+                                                    0,
                                                     data.get(position).separator,
+                                                    data.get(position).separatorname,
+                                                    data.get(position).rollprice,
+                                                    data.get(position).packprice,
+                                                    "",
+                                                    "",
+                                                    "",
+                                                    customer_no,
+                                                    "",
+                                                    "",
                                                     data.get(position).productcode);
                                         }
                                     }
                                 }
                             });
+                            skuAdapter.notifyDataSetChanged();
                             skuAdapter.setModulesAdapter(data);
                             recyler_data.setItemViewCacheSize(data.size());
                         },
@@ -170,22 +177,13 @@ public class DailySalesActivity extends AppCompatActivity {
         back_page.setOnClickListener(v -> onBackPressed());
     }
 
-    public void addSales(String getInventory, int getPricing, String getOrder, String custno,
-                         String listenToUpdate, int productid, String separetor,String productCode) {
-        dailySalesViewModule.setDailySalesByCustomers(
-                getInventory,
-                getPricing,
-                getOrder,
-                custno,
-                listenToUpdate,
-                productid,
-                separetor,
-                productCode
+    public void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
+                                   String inventory, String pricing, String orders,
+                                   String customerno, String updatestatus, String entry_date_time,String productcode) {
+        dailySalesViewModule.updateSalesEntries(
+        user_id, separator, separatorname, rollprice, packprice,
+                inventory, pricing, orders,
+                customerno, updatestatus, entry_date_time, productcode
         );
     }
 }
-
-
-
-
-

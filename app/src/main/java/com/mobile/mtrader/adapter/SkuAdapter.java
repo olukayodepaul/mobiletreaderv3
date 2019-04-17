@@ -45,7 +45,7 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
 
     private OnItemClickListerner mListener;
 
-    public interface OnItemClickListerner{
+    public interface OnItemClickListerner {
         void onItemClick(int position);
     }
 
@@ -70,7 +70,7 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull SkuAdapter.ViewHolder holder, int position) {
 
-        if(products!=null) {
+        if (products != null) {
 
             Products rs = products.get(position);
             holder.skus.setText(rs.productname);
@@ -97,9 +97,9 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if(products!=null && !products.isEmpty()){
+        if (products != null && !products.isEmpty()) {
             return products.size();
-        }else{
+        } else {
             return 0;
         }
     }
@@ -129,7 +129,6 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
 
         @BindView(R.id.cbg)
         ConstraintLayout cbg;
-
 
 
         public ViewHolder(View mview) {
@@ -194,4 +193,3 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
         }
     }
 }
-

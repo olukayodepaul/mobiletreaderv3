@@ -8,6 +8,7 @@ import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
+import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelAttendant;
 import com.mobile.mtrader.model.ModelEmployees;
@@ -40,6 +41,18 @@ public class DataRepository  {
 
     public Long insertIntoCustomers(Customers customers) {
         return this.daoSQLQuery.insertIntoCustomers(customers);
+    }
+
+    public Long insertIntoSalesEntries(SalesEntries salesEntries) {
+        return this.daoSQLQuery.insertIntoSalesEntries(salesEntries);
+    }
+
+    public void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
+                                   String inventory, String pricing, String orders,
+                                   String customerno, String updatestatus, String entry_date_time,String productcode) {
+        this.daoSQLQuery.updateSalesEntries(user_id, separator,separatorname, rollprice, packprice,
+                inventory, pricing, orders,
+                customerno, updatestatus, entry_date_time,productcode);
     }
 
     public Long insertIntoProducts(Products products) {
@@ -124,7 +137,11 @@ public class DataRepository  {
         return this.daoSQLQuery.salesEntriesGroup();
     }
 
-    public Flowable<List<Sales>> salesEntriesGroupList(String custid) {
+    /*public Flowable<List<Sales>> salesEntriesGroupList(String custid) {
+        return this.daoSQLQuery.salesEntriesGroupList(custid);
+    }*/
+    //here is the correction....
+    public LiveData<List<Sales>> salesEntriesGroupList(String custid) {
         return this.daoSQLQuery.salesEntriesGroupList(custid);
     }
 
@@ -151,6 +168,20 @@ public class DataRepository  {
     public Single<Long> sunAllSoldProduct(String productid) {
         return this.daoSQLQuery.sunAllSoldProduct(productid);
     }
+
+    public Single<Long> sumTotalBasketQTY() {
+        return this.daoSQLQuery.sumTotalBasketQTY();
+    }
+
+    public Single<Long> sumTotalBasket() {
+        return this.daoSQLQuery.sumTotalBasket();
+    }
+
+    public Single<Long> totalSalesValue() {
+        return this.daoSQLQuery.totalSalesValue();
+    }
+
+
 
 }
 

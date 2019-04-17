@@ -1,11 +1,16 @@
 package com.mobile.mtrader.ui;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,31 +23,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.mobile.mtrader.data.AllTablesStructures.Employees;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
-import com.mobile.mtrader.di.module.PicassoModule;
-import com.mobile.mtrader.di.module.RetrofitModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.model.DeviceLocation;
 import com.mobile.mtrader.model.Pasers;
 import com.mobile.mtrader.util.AppUtil;
 import com.mobile.mtrader.viewmodels.LoginViewModel;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Observable;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+
+
+import static com.mobile.mtrader.util.keyStore.ERROR_DIALOG_REQUEST;
+import static com.mobile.mtrader.util.keyStore.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
+import static com.mobile.mtrader.util.keyStore.PERMISSIONS_REQUEST_ENABLE_GPS;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -69,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
+
+
     String imei;
     Pasers pasers;
     String usersName;
@@ -94,6 +98,13 @@ public class MainActivity extends AppCompatActivity {
 
         progressbar.setVisibility(View.GONE);
         loginViewModel = ViewModelProviders.of(this,viewModelFactory).get(LoginViewModel.class);
+
+        /*intent = new Intent(this,ModuleActivity.class);
+        startActivity(intent);
+        finish();*/
+
+        //Request access fine location permission
+        //
 
         loginButtons.setOnClickListener(v -> {
 
@@ -143,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loginViewModel.emDetails().observe(this, rep-> {
-            if(!rep.mdate.equals(date)) {
+            if(rep.mdate.equals(date)) {
                 intent = new Intent(this,ModuleActivity.class);
                 startActivity(intent);
                 finish();
@@ -157,6 +168,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
+
+
 
     public void showProgressDialog() {
         progressbar.setVisibility(View.VISIBLE);

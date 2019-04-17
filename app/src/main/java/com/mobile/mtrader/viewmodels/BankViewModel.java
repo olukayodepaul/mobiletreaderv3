@@ -27,34 +27,41 @@ public class BankViewModel extends ViewModel {
     CompositeDisposable mDis = new CompositeDisposable();
 
     private DataRepository repository;
-    private MutableLiveData<List<Sales>> elistresps = new MutableLiveData<>();
+    private MutableLiveData<Long> mTotalSalesValue = new MutableLiveData<>();
     private MutableLiveData<List<Sales>> groupList = new MutableLiveData<>();
-    private MutableLiveData<List<Sales>> listchild = new MutableLiveData<>();
+    private MutableLiveData<Long> basketResponce = new MutableLiveData<>();
+    private MutableLiveData<Long> basketqty = new MutableLiveData<>();
+    //private MutableLiveData<List<Sales>> listchild = new MutableLiveData<>();
     private MutableLiveData<String> observeResponse = new MutableLiveData<>();
     private MutableLiveData<Throwable> observeThrowable = new MutableLiveData<>();
     Long countItems;
     Long totalProductSold;
+
     private MutableLiveData<List<Products>> salesBalane = new MutableLiveData<>();
 
     BankViewModel(DataRepository repository) {
         this.repository = repository;
     }
 
-    public MutableLiveData<List<Sales>> emitSalesEntries() {
-        return elistresps;
-    }
-
     public MutableLiveData<List<Products>> emitSalesBalance() {
         return salesBalane;
+    }
+
+    public MutableLiveData<Long> sumTotalBasket() {
+        return basketResponce;
+    }
+
+    public MutableLiveData<Long> sumQtyofProducts() {
+        return basketqty;
     }
 
     public MutableLiveData<List<Sales>> emitSalesEntriesParent() {
         return groupList;
     }
 
-    public MutableLiveData<List<Sales>> emitSalesEntriesChildren() {
+    /*public MutableLiveData<List<Sales>> emitSalesEntriesChildren() {
         return listchild;
-    }
+    }*/
 
     public MutableLiveData<Throwable> getThrowable() {
         return observeThrowable;
@@ -64,15 +71,10 @@ public class BankViewModel extends ViewModel {
         return observeResponse;
     }
 
-    public void salesEntriesToday() {
-        mDis.add(repository.salesEntriesToday()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> {
-                    elistresps.postValue(data); }
-                )
-        );
+    public MutableLiveData<Long> getTotalSalesvalue() {
+        return mTotalSalesValue;
     }
+
 
     public void salesStockBalance() {
         mDis.add(repository.salesStockBalance()
@@ -99,6 +101,41 @@ public class BankViewModel extends ViewModel {
                     totalProductSold = totals;
                     return totals;
                 }
+        );
+    }
+
+    public void sumTotalBasketQTY() {
+        mDis.add(repository.sumTotalBasketQTY()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data ->  {
+                    basketResponce.postValue(data);
+                },
+                Throwable->{}
+                )
+        );
+    }
+
+    public void totalSalesValue() {
+        mDis.add(repository.totalSalesValue()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        data ->  {
+                            mTotalSalesValue.postValue(data);
+                        },
+                        Throwable->{
+
+                        }
+                )
+        );
+    }
+
+    public void sumTotalBasketSales() {
+        mDis.add(repository.sumTotalBasket()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data ->  basketqty.postValue(data))
         );
     }
 
@@ -197,13 +234,18 @@ public class BankViewModel extends ViewModel {
         );
     }
 
-    public void salesEntriesGroupList(String custid) {
+    /*public void salesEntriesGroupList(String custid) {
         mDis.add(repository.salesEntriesGroupList(custid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data ->  listchild.postValue(data))
         );
+    }*/
+
+    public LiveData<List<Sales>> salesEntriesGroupList(String custid){
+        return repository.salesEntriesGroupList(custid);
     }
+
 
     private class UpdateCustomerTime extends AsyncTask<Customers, Void, Void> {
         @Override

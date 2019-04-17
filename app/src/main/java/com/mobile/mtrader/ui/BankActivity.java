@@ -42,8 +42,8 @@ public class BankActivity extends AppCompatActivity {
     @BindView(R.id.progressbar)
     ProgressBar progressbar;
 
-    @BindView(R.id.banks)
-    RecyclerView banks;
+    @BindView(R.id.bank_recycler)
+    RecyclerView bank_recycler;
 
     @BindView(R.id.back_page)
     ImageView back_page;
@@ -53,14 +53,14 @@ public class BankActivity extends AppCompatActivity {
     @BindView(R.id.payments_btn)
     Button payments_btn;
 
-    @BindView(R.id.order_3)
-    TextView order_3;
+    @BindView(R.id.order_8)
+    TextView order_8;
 
-    @BindView(R.id.order_6)
-    TextView order_6;
+    @BindView(R.id.order_9)
+    TextView order_9;
 
-    @BindView(R.id.order_4)
-    TextView order_4;
+    @BindView(R.id.order_10)
+    TextView order_10;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -76,7 +76,6 @@ public class BankActivity extends AppCompatActivity {
                 .build();
         component.inject(this);
         bankViewModel = ViewModelProviders.of(this, viewModelFactory).get(BankViewModel.class);
-        bankViewModel.salesEntriesToday();
 
         String cDates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String cTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -85,30 +84,18 @@ public class BankActivity extends AppCompatActivity {
 
         back_page.setOnClickListener(v -> onBackPressed());
 
-        banks.setLayoutManager(new LinearLayoutManager(this));
-        banks.setHasFixedSize(true);
-        bankAdapter = new BankAdapter(this);
-        banks.setAdapter(bankAdapter);
-        bankViewModel.emitSalesEntries().observe(this, sales -> {
+        bank_recycler.setLayoutManager(new LinearLayoutManager(this));
+        bank_recycler.setHasFixedSize(true);
+        bankAdapter = new BankAdapter(this, bankViewModel);
+        bank_recycler.setAdapter(bankAdapter);
 
-            double salesvalue = 0;
-
-            for (int i = 0; i < sales.size(); i++) {
-                salesvalue +=
-                        (Double.parseDouble(sales.get(i).rollprice) * Double.parseDouble(sales.get(i).rollqty)) +
-                                (Double.parseDouble(sales.get(i).packprice) * Double.parseDouble(sales.get(i).packqty));
-            }
-
+        bankViewModel.salesStockBalance();
+        bankViewModel.emitSalesBalance().observe(this, sales -> {
             hideProgressDialog();
-            order_3.setText(formatter.format(salesvalue));
-            order_4.setText("0.0");
-            order_6.setText(formatter.format(salesvalue));
             bankAdapter.setModulesAdapter(sales);
-
         });
 
         payments_btn.setOnClickListener(v -> {
-
             if (!AppUtil.checkConnection(this)) {
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             } else {
@@ -119,33 +106,29 @@ public class BankActivity extends AppCompatActivity {
             }
         });
 
-
         bankViewModel.getObserveResponse().observe(this, s -> {
-
             hideProgressDialog();
             String[] res = s.split("\\~");
-
             if (Integer.parseInt(res[0]) == 200) {
-
                 Intent intent = new Intent(this, SalesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
-
             } else if (Integer.parseInt(res[0]) == 401) {
-
                 Toast.makeText(this, res[1], Toast.LENGTH_SHORT).show();
             }
-
         });
 
         bankViewModel.getThrowable().observe(this, throwable -> {
-
             hideProgressDialog();
             Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-
         });
 
+        bankViewModel.totalSalesValue();
+        bankViewModel.getTotalSalesvalue().observe(this, result ->{
+            order_8.setText(formatter.format(result));
+
+        });
     }
 
     public void showProgressDialog() {

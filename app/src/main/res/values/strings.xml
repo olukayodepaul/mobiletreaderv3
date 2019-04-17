@@ -1,4 +1,5 @@
 <resources>
+    <string name="google_map_api_key">AIzaSyAUoAalxX7BMwO5G6LCPAV28azXPMMms1c</string>
     <string name="app_name">Mobile Trader</string>
     <string name="modules">Modules</string>
     <string name="logout">Logout</string>

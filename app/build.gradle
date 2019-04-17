@@ -53,7 +53,6 @@ dependencies {
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
-    implementation 'com.google.android.gms:play-services-location:11.6.2'
     implementation 'com.github.paolorotolo:expandableheightlistview:1.0.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.13'
@@ -75,6 +74,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.github.jd-alexander:library:1.1.0'
+
+
+    implementation 'org.slf4j:slf4j-simple:1.7.25'
+    implementation 'com.google.maps:google-maps-services:0.9.3'
 
     //Lifecycle
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
@@ -97,3 +102,4 @@ dependencies {
 
 }
 com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+//apply plugin: 'com.google.gms.google-services'

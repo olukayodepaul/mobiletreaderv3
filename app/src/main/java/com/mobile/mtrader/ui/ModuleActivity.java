@@ -34,6 +34,7 @@ public class ModuleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homeactivity);
         ButterKnife.bind(this);
@@ -48,7 +49,14 @@ public class ModuleActivity extends AppCompatActivity {
         users_modules.setHasFixedSize(true);
         moduleAdapter = new ModuleAdapter(this);
         users_modules.setAdapter(moduleAdapter);
-        moduleViewModel.getLiveModules().observe(this, modules -> moduleAdapter.setModulesAdapter(modules));
 
+        moduleViewModel.getLiveModules().observe(this,
+                modules -> moduleAdapter.setModulesAdapter(modules)
+        );
+        
     }
 }
+
+
+//ci->
+//development progress->

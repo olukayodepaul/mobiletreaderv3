@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.mtrader.adapter.ClockOutAdaper;
@@ -23,6 +24,7 @@ import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.util.AppUtil;
 import com.mobile.mtrader.viewmodels.BankViewModel;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,6 +32,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class DepotClockoutActivity extends AppCompatActivity {
@@ -55,6 +60,11 @@ public class DepotClockoutActivity extends AppCompatActivity {
     @BindView(R.id.payments_btn)
     Button payments_btn;
 
+    @BindView(R.id.order_8)
+    TextView order_8;
+
+    CompositeDisposable mDis = new CompositeDisposable();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +79,7 @@ public class DepotClockoutActivity extends AppCompatActivity {
 
         String cDates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String cTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
         String cmsg = "Close already taken";
 
         back_page.setOnClickListener(v-> onBackPressed());
@@ -78,12 +89,21 @@ public class DepotClockoutActivity extends AppCompatActivity {
         clock_out_depot.setAdapter(clockOutAdaper);
 
         bankViewModel.salesStockBalance();
-        bankViewModel.emitSalesBalance().observe(this, sales ->{
+        bankViewModel.emitSalesBalance().observe(this, products ->{
             progressbar.setVisibility(View.GONE);
-            clockOutAdaper.setModulesAdapter(sales);
+            clockOutAdaper.setModulesAdapter(products);
         });
 
-        payments_btn.setOnClickListener(v->{
+        bankViewModel.sumTotalBasketQTY();
+        bankViewModel.sumTotalBasketSales();
+        bankViewModel.sumTotalBasket().observe(this,totalsales->{
+            bankViewModel.sumQtyofProducts().observe(this,totalproducts->{
+                order_8.setText(formatter.format(totalproducts-totalsales));
+            });
+        });
+
+
+        payments_btn.setOnClickListener(v-> {
             if(!AppUtil.checkConnection(this)) {
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             }else {
@@ -94,7 +114,6 @@ public class DepotClockoutActivity extends AppCompatActivity {
                         ));
             }
         });
-
 
         bankViewModel.getObserveResponse().observe(this, s -> {
             hideProgressDialog();

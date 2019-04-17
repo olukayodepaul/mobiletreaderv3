@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
+import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.data.DataRepository;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
@@ -142,6 +143,7 @@ public class LoginViewModel extends ViewModel {
                                 }
 
                                 for (int i = 0; i < data.product.size(); i++) {
+
                                     Products productsData = new Products(
                                             data.product.get(i).id,
                                             data.product.get(i).separator,
@@ -158,7 +160,26 @@ public class LoginViewModel extends ViewModel {
                                             "",
                                             ""
                                     );
+
+                                    SalesEntries salesEntries = new SalesEntries(
+                                        data.product.get(i).productcode,
+                                            data.product.get(i).productname,
+                                            0,
+                                            "",
+                                            "",
+                                            "",
+                                            "",
+                                            "",
+                                            "",
+                                            "",
+                                            "",
+                                            "",
+                                            ""
+                                    );
+
+                                    new AddSalesEntries().execute(salesEntries);
                                     new AddProducts().execute(productsData);
+
                                 }
                                 observeResponse.postValue(Integer.toString(data.status) + "~" + "");
                             } else {
@@ -220,5 +241,14 @@ public class LoginViewModel extends ViewModel {
             return null;
         }
     }
+
+    private class AddSalesEntries extends AsyncTask<SalesEntries, Void, Void> {
+        @Override
+        protected Void doInBackground(SalesEntries... item) {
+            repository.insertIntoSalesEntries(item[0]);
+            return null;
+        }
+    }
+
 
 }

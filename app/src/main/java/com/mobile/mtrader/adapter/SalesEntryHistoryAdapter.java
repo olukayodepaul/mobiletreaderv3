@@ -1,6 +1,5 @@
 package com.mobile.mtrader.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,25 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.viewmodels.BankViewModel;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHistoryAdapter.ViewHolder> {
 
-    Context context;
     List<Sales> hostory = new ArrayList<>();
 
-    public SalesEntryHistoryAdapter(Context context) {
-        this.context = context;
+    public SalesEntryHistoryAdapter() {
     }
 
     @NonNull
@@ -56,20 +49,16 @@ public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHis
                 holder.indicator_red.setVisibility(View.GONE);
             }
         }
-
     }
 
     @Override
     public int getItemCount() {
-        if (hostory != null && !hostory.isEmpty()) {
-            return hostory.size();
-        } else {
-            return 0;
-        }
+        return hostory.size();
     }
 
     public void setSalesHistory(List<Sales> hostory) {
         this.hostory = hostory;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -88,9 +77,6 @@ public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHis
 
         @BindView(R.id.indicator_green)
         ImageView indicator_green;
-
-
-
 
         public ViewHolder(View mview) {
             super(mview);

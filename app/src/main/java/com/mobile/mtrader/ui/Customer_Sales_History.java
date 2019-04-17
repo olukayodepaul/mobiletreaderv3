@@ -76,13 +76,12 @@ public class Customer_Sales_History extends AppCompatActivity {
 
         sales_history.setLayoutManager(new LinearLayoutManager(this));
         sales_history.setHasFixedSize(true);
-        salesEntryHistoryAdapter = new SalesEntryHistoryAdapter(this);
+        salesEntryHistoryAdapter = new SalesEntryHistoryAdapter();
         sales_history.setAdapter(salesEntryHistoryAdapter);
 
-        bankViewModel.salesEntriesGroupList(timeId);
-        bankViewModel.emitSalesEntriesChildren().observe(this, sales -> {
+        bankViewModel.salesEntriesGroupList(timeId).observe(this, data->{
             progressbar.setVisibility(View.GONE);
-            salesEntryHistoryAdapter.setSalesHistory(sales);
+            salesEntryHistoryAdapter.setSalesHistory(data);
         });
     }
 

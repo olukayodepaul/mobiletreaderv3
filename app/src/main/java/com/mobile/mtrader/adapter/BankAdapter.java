@@ -1,5 +1,6 @@
 package com.mobile.mtrader.adapter;
 
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,23 +9,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mobile.mtrader.data.AllTablesStructures.Sales;
+import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.viewmodels.BankViewModel;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class BankAdapter extends RecyclerView.Adapter<BankAdapter.ViewHolder> {
 
     Context context;
-    List<Sales> clocking = new ArrayList<>();
+    List<Products> clocking = new ArrayList<>();
+    BankViewModel bankViewModel;
+    CompositeDisposable mDis = new CompositeDisposable();
 
-    public BankAdapter(Context context) {
+    public BankAdapter(Context context, BankViewModel bankViewModel) {
         this.context = context;
+        this.bankViewModel = bankViewModel;
     }
 
     @NonNull
@@ -37,20 +44,22 @@ public class BankAdapter extends RecyclerView.Adapter<BankAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BankAdapter.ViewHolder holder, int position) {
+        if (clocking != null) {
 
-        if(clocking!=null){
-
-            Sales rs = clocking.get(position);
+            Products rs = clocking.get(holder.getAdapterPosition());
             holder.items.setText(rs.productname);
-            holder.qty.setText(rs.orders);
+            holder.qty.setText(rs.qty);
 
-            DecimalFormat formatter = new DecimalFormat("#,###.00");
-            double packPrice = Double.parseDouble(rs.packprice);
-            double packQty = Double.parseDouble(rs.packqty);
-            double rollPrice = Double.parseDouble(rs.rollprice);
-            double rollQty = Double.parseDouble(rs.rollqty);
-
-            holder.order.setText(formatter.format((rollPrice*rollQty)+(packPrice+packQty)));
+            mDis.add(bankViewModel.sunAllSoldProduct(rs.productcode)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            data -> {
+                                holder.order.setText(Long.toString(data));
+                            },
+                            Throwable -> {
+                            })
+            );
         }
     }
 
@@ -63,7 +72,17 @@ public class BankAdapter extends RecyclerView.Adapter<BankAdapter.ViewHolder> {
         }
     }
 
-    public void setModulesAdapter(List<Sales> clocking) {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    public void setModulesAdapter(List<Products> clocking) {
         this.clocking = clocking;
     }
 

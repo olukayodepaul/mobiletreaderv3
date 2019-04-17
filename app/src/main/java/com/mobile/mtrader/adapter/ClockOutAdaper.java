@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mobile.mtrader.data.AllTablesStructures.Products;
-import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.viewmodels.BankViewModel;
 

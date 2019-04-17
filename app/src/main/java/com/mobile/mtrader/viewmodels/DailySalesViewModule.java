@@ -1,6 +1,7 @@
 package com.mobile.mtrader.viewmodels;
 
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 
@@ -9,8 +10,15 @@ import com.mobile.mtrader.data.DataRepository;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class DailySalesViewModule extends ViewModel {
@@ -18,6 +26,9 @@ public class DailySalesViewModule extends ViewModel {
     private DataRepository repository;
     List<Products> mproducts;
     Long countItems;
+
+    CompositeDisposable mDis = new CompositeDisposable();
+
 
     DailySalesViewModule(DataRepository repository) {
         this.repository = repository;
@@ -41,37 +52,39 @@ public class DailySalesViewModule extends ViewModel {
         );
     }
 
-    public void setDailySalesByCustomers(String inventory, int pricing, String orders, String customerno,
-                                      String updatestatus,  int id, String separator, String productcode) {
-        Products updates = new Products(
-                id,
-                separator,
-                "",
-                productcode,
-                "",
-                "",
-                "",
-                "",
-                "",
-                inventory,
-                pricing,
-                orders,
-                customerno,
-                updatestatus
-        );
-        new UpdateCustomerSales().execute(updates);
+    public void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
+                         String inventory, String pricing, String orders,
+                         String customerno, String updatestatus, String entry_date_time,String productcode) {
+
+         Completable.fromAction(() ->repository.updateSalesEntries (
+         user_id, separator,separatorname, rollprice, packprice,
+                inventory, pricing, orders,
+                 customerno, updatestatus, entry_date_time,productcode
+
+         ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mDis.add(d);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
-    private class UpdateCustomerSales extends AsyncTask<Products, Void, Void> {
-        @Override
-        protected Void doInBackground(Products... item) {
-            repository.updateDailySalesBySku(item[0].inventory, item[0].pricing, item[0].orders,item[0].customerno,
-                    item[0].updatestatus, item[0].id, item[0].separator,item[0].productcode );
-            return null;
-        }
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mDis.clear();
     }
-
-
-
-
 }

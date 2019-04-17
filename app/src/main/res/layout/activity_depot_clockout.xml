@@ -94,7 +94,9 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="5dp" />
+                tools:layout_editor_absoluteY="5dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_bold"/>
 
             <TextView
                 android:id="@+id/qty"
@@ -109,7 +111,9 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/items"
                 tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="1dp" />
+                tools:layout_editor_absoluteY="1dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_bold"/>
 
             <TextView
                 android:id="@+id/order"
@@ -124,7 +128,11 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/qty"
                 tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="1dp" />
+                tools:layout_editor_absoluteY="1dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_bold"
+                />
+
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 
@@ -132,13 +140,13 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/clock_out_depot"
         android:layout_width="match_parent"
-        android:layout_height="361dp"
+        android:layout_height="395dp"
         android:layout_marginTop="70dp"
         android:scrollbars="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="134dp"
+        android:layout_height="103dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:background="@color/gray_light"
@@ -148,8 +156,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="7dp"
             android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
@@ -157,22 +165,24 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/items_3"
+                    android:id="@+id/items_8"
                     android:layout_width="0dp"
                     android:layout_height="25dp"
                     android:layout_marginLeft="10dp"
                     android:ellipsize="end"
+                    android:fontFamily="@font/roboto_bold"
                     android:gravity="center_vertical"
-                    android:text="TOTAL TO PAY TO BANK"
-                    app:layout_constraintEnd_toStartOf="@+id/qty_3"
+                    android:text="TOTAL TO RETURN"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/qty_8"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintHorizontal_chainStyle="spread"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteY="5dp" />
 
                 <TextView
-                    android:id="@+id/qty_3"
+                    android:id="@+id/qty_8"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
@@ -181,85 +191,25 @@
                     android:gravity="center_vertical"
                     android:maxLines="1"
                     android:text=""
-                    app:layout_constraintEnd_toStartOf="@+id/order_3"
+                    app:layout_constraintEnd_toStartOf="@+id/order_8"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/items_3"
+                    app:layout_constraintStart_toEndOf="@+id/items_8"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteY="1dp" />
 
                 <TextView
-                    android:id="@+id/order_3"
-                    android:layout_width="50dp"
+                    android:id="@+id/order_8"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="ORDER"
+                    android:text="0.0"
                     android:textAlignment="textEnd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/qty_3"
-                    tools:ignore="MissingConstraints,RtlCompat"
-                    tools:layout_editor_absoluteY="1dp" />
-            </android.support.constraint.ConstraintLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical">
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/items_6"
-                    android:layout_width="0dp"
-                    android:layout_height="25dp"
-                    android:layout_marginLeft="10dp"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:text="TOTAL TO PAY TO BANK"
-                    app:layout_constraintEnd_toStartOf="@+id/qty_6"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:ignore="MissingConstraints"
-                    tools:layout_editor_absoluteY="5dp" />
-
-                <TextView
-                    android:id="@+id/qty_6"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text=""
-                    app:layout_constraintEnd_toStartOf="@+id/order_6"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/items_6"
-                    tools:ignore="MissingConstraints"
-                    tools:layout_editor_absoluteY="1dp" />
-
-                <TextView
-                    android:id="@+id/order_6"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="ORDER"
-                    android:textAlignment="textEnd"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/qty_6"
+                    app:layout_constraintStart_toEndOf="@+id/qty_8"
                     tools:ignore="MissingConstraints,RtlCompat"
                     tools:layout_editor_absoluteY="1dp" />
             </android.support.constraint.ConstraintLayout>
@@ -288,6 +238,7 @@
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/hostproressbar"
