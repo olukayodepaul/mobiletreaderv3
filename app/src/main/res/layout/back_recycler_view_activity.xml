@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:layout_editor_absoluteY="25dp"
-    app:cardElevation="3dp">
-
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/items"
-        android:layout_width="0dp"
+        android:layout_width="185dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/qty"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="1dp"
-        tools:ignore="MissingConstraints,Suspicious0dp" />
+        android:fontFamily="@font/roboto_regular"
+        android:paddingBottom="5dp"
+        android:text="ITEM"
+        android:textAlignment="textStart"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/qty"
-        android:layout_width="80dp"
+        android:layout_width="66dp"
         android:layout_height="wrap_content"
-        android:text=""
-        app:layout_constraintEnd_toStartOf="@+id/order"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/items"
-        tools:layout_editor_absoluteY="1dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/order"
+        android:fontFamily="@font/roboto_regular"
+        android:paddingBottom="5dp"
+        android:text="0.0"
+        android:textAlignment="textEnd"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/order"
-        android:layout_width="80dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/qty"
-        tools:layout_editor_absoluteY="1dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/roboto_regular"
+        android:paddingBottom="5dp"
+        android:text="0.0"
         android:textAlignment="textEnd"
-        tools:ignore="MissingConstraints" />
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
-</android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

@@ -1,54 +1,37 @@
 package com.mobile.mtrader.ui;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
+
+import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.model.DeviceLocation;
-import com.mobile.mtrader.model.Pasers;
-import com.mobile.mtrader.util.AppUtil;
 import com.mobile.mtrader.viewmodels.LoginViewModel;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.disposables.CompositeDisposable;
 
 
-import static com.mobile.mtrader.util.keyStore.ERROR_DIALOG_REQUEST;
-import static com.mobile.mtrader.util.keyStore.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
-import static com.mobile.mtrader.util.keyStore.PERMISSIONS_REQUEST_ENABLE_GPS;
-
-
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends BaseActivity {
 
     @BindView(R.id.u_email)
     EditText u_email;
@@ -59,11 +42,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.loginButton)
     Button loginButtons;
 
-    @BindView(R.id.progressbar)
-    ProgressBar progressbar;
-
-    Intent intent;
-
     ApplicationComponent component;
 
     LoginViewModel loginViewModel;
@@ -71,21 +49,16 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-
-
-    String imei;
-    Pasers pasers;
-    String usersName;
     TelephonyManager telephonyManager;
+
     int READ_PHONE_STATE_REQUEST = 0;
 
-    CompositeDisposable mDis = new CompositeDisposable();
+    Intent intent;
 
-    private final static String TAG = MainActivity.class.getSimpleName();
-    String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -94,89 +67,42 @@ public class MainActivity extends AppCompatActivity {
                 .mvvMModule(new MvvMModule(this))
                 .build();
         component.inject(this);
-        pasers = new Pasers();
+        loginViewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel.class);
+        showProgressBar(false);
 
-        progressbar.setVisibility(View.GONE);
-        loginViewModel = ViewModelProviders.of(this,viewModelFactory).get(LoginViewModel.class);
-
-        /*intent = new Intent(this,ModuleActivity.class);
+        intent = new Intent(this,ModuleActivity.class);
         startActivity(intent);
-        finish();*/
+        finish();
 
-        //Request access fine location permission
-        //
 
-        loginButtons.setOnClickListener(v -> {
+        loginButtons.setOnClickListener(view -> {
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE_REQUEST);
-            }else{
-
-                telephonyManager  = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-                imei = telephonyManager.getDeviceId();
-                usersName = u_email.getText().toString();
-                String userPassword = u_paswd.getText().toString();
-
-                if(!AppUtil.checkConnection(this)){
-                    Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                }
-                else if (TextUtils.isEmpty(usersName) || TextUtils.isEmpty(userPassword)) {
-                    Toast.makeText(this, "Please enter username and password", Toast.LENGTH_SHORT).show();
-                }else{
-                    loginViewModel.getInitCount().observe(this, avail-> {
-                        showProgressDialog();
-                        if(avail==0){
-                            loginViewModel.setEmployeesDailySalesData(usersName,userPassword,imei);
-                        }else{
-                            pasers.setUsersname(usersName);
-                            pasers.setImei(imei);
-                            pasers.setPasssord(userPassword);
-                            loginViewModel.getEmployesProfiles();
-                        }
-                    });
-                }
+            } else {
+                showProgressBar(true);
+                telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                String imei = telephonyManager.getDeviceId();
+                loginViewModel.processLogin(u_email.getText().toString(), u_paswd.getText().toString(), imei,  new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             }
+
         });
 
-        loginViewModel.getNetRes().observe(this, s -> {
-            hideProgressDialog();
-            String[] res = s.split("\\~");
-            if(Integer.parseInt(res[0])==200){
+        loginViewModel.callBallAllResponse().observe(this, data -> {
+
+            showProgressBar(false);
+
+            String[] transData = data.split("\\~");
+
+            if (transData[0].equals("1")) {
+                Toast.makeText(this, transData[1], Toast.LENGTH_SHORT).show();
+            }else if(transData[0].equals("3")){
                 intent = new Intent(this,ModuleActivity.class);
                 startActivity(intent);
                 finish();
-            }else if(Integer.parseInt(res[0])==404){
-                Toast.makeText(this, res[1], Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(this, "Login Error", Toast.LENGTH_SHORT).show();
             }
+
         });
-
-        loginViewModel.emDetails().observe(this, rep-> {
-            if(rep.mdate.equals(date)) {
-                intent = new Intent(this,ModuleActivity.class);
-                startActivity(intent);
-                finish();
-            }else{
-                loginViewModel.setEmployeesDailySalesData(pasers.getUsersname(), pasers.getPasssord(), pasers.getImei());
-            }
-        });
-
-        loginViewModel.getThrowable().observe(this, throwable -> {
-            hideProgressDialog();
-            Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-        });
-    }
-
-
-
-    public void showProgressDialog() {
-        progressbar.setVisibility(View.VISIBLE);
-    }
-
-    public void hideProgressDialog() {
-        progressbar.setVisibility(View.GONE);
     }
 }
-

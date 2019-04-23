@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
+import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import butterknife.ButterKnife;
 
 public class ConfirmSalesAdapter extends RecyclerView.Adapter<ConfirmSalesAdapter.ViewHolder> {
 
-    List<Products> products = new ArrayList<>();
+    List<SalesEntries> products = new ArrayList<>();
 
     Context context;
 
@@ -33,16 +34,15 @@ public class ConfirmSalesAdapter extends RecyclerView.Adapter<ConfirmSalesAdapte
         return new ViewHolder(mview);
     }
 
-    //Reason for not using java.String.format()
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ConfirmSalesAdapter.ViewHolder holder, int position) {
         if(products!=null){
 
-            Products rs = products.get(position);
+            SalesEntries rs = products.get(position);
             holder.sku.setText(rs.productname);
             holder.order.setText(rs.inventory);
-            holder.app_price.setText(Integer.toString(rs.pricing));
+            holder.app_price.setText(rs.pricing);
             holder.invent.setText(Double.toString(Double.parseDouble(rs.orders)));
 
             double packPrice = Double.parseDouble(rs.packprice);
@@ -62,7 +62,7 @@ public class ConfirmSalesAdapter extends RecyclerView.Adapter<ConfirmSalesAdapte
         }
     }
 
-    public void setModulesAdapter(List<Products> products) {
+    public void setModulesAdapter(List<SalesEntries> products) {
         this.products = products;
         notifyDataSetChanged();
     }

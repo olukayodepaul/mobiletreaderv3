@@ -1,9 +1,11 @@
 package com.mobile.mtrader.ui;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.mtrader.adapter.ConfirmSalesAdapter;
+import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
@@ -28,6 +31,7 @@ import com.mobile.mtrader.viewmodels.RepSalesConfirmViewModel;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -105,65 +109,62 @@ public class ConfirmSales extends AppCompatActivity {
             customerno = bundle.getString("CUSTOMER_NO");
         }
 
+        repSalesConfirmViewModel.salesEntries("1", customerno);
         saleValues.setLayoutManager(new LinearLayoutManager(this));
         saleValues.setHasFixedSize(true);
         confirmSalesAdapter = new ConfirmSalesAdapter(this);
         saleValues.setAdapter(confirmSalesAdapter);
 
-        mDis.add(repSalesConfirmViewModel.salesEnteryRecord("1", customerno)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> {
 
-                            int sumAllPP = 0;
-                            int sumAllRP = 0;
-                            double sumInventory = 0.0;
-                            int sumPricing = 0;
-                            double sumOrder = 0.0;
+        repSalesConfirmViewModel.SalesEntriesdata().observe(this, salesEntries -> {
 
-                            for (int i = 0; i < data.size(); i++) {
+            int sumAllPP = 0;
+            int sumAllRP = 0;
+            double sumInventory = 0.0;
+            int sumPricing = 0;
+            double sumOrder = 0.0;
 
-                                String[] divider = Double.toString(Double.parseDouble(data.get(i).orders)).split("\\.");
-                                sumAllPP += Integer.parseInt(divider[0]) * Double.parseDouble(data.get(i).packprice);
-                                sumAllRP += Integer.parseInt(divider[1]) * Double.parseDouble(data.get(i).rollprice);
-                                sumInventory += Double.parseDouble(data.get(i).inventory);
-                                sumPricing += data.get(i).pricing;
-                                sumOrder += Double.parseDouble(data.get(i).orders);
-                            }
-                            invent_t.setText(Double.toString(sumOrder));
-                            app_price_t.setText(Integer.toString(sumPricing));
-                            order_t.setText(Double.toString(sumInventory));
-                            tv_price_t.setText(Double.toString(sumAllPP + sumAllRP));
-                            confirmSalesAdapter.setModulesAdapter(data);
-                        },
-                        throwable -> Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
-                )
-        );
+            for (int i = 0; i < salesEntries.size(); i++) {
+
+                String[] divider = Double.toString(Double.parseDouble(salesEntries.get(i).orders)).split("\\.");
+                sumAllPP += Integer.parseInt(divider[0]) * Double.parseDouble(salesEntries.get(i).packprice);
+                sumAllRP += Integer.parseInt(divider[1]) * Double.parseDouble(salesEntries.get(i).rollprice);
+                sumInventory += Double.parseDouble(salesEntries.get(i).inventory);
+                sumPricing += Double.parseDouble(salesEntries.get(i).pricing);
+                sumOrder += Double.parseDouble(salesEntries.get(i).orders);
+            }
+
+            invent_t.setText(Double.toString(sumOrder));
+            app_price_t.setText(Integer.toString(sumPricing));
+            order_t.setText(Double.toString(sumInventory));
+            tv_price_t.setText(Double.toString(sumAllPP + sumAllRP));
+            confirmSalesAdapter.setModulesAdapter(salesEntries);
+
+        });
 
         btns.setOnClickListener(v-> {
             if(!confirms.getText().toString().equals(dbToken)) {
                 AppUtil.showAlertDialog(this, "Verification","Enter valid verification code","Close");
-            }else{
+            }else {
                 if(!AppUtil.checkConnection(this)) {
                     AppUtil.showAlertDialog(this, "Internet Error","You are not connected to the internet","Close");
                 }else{
-                    repSalesConfirmViewModel.pustSalesToServer("1",customerno,1168,
-                            new SimpleDateFormat("HH:mm:ss").format(new Date()), "open", "00.00", "00.00",
-                            UUID.randomUUID().toString());
+                   /* repSalesConfirmViewModel.pustSalesToServer("1",customerno,1168,
+                            new SimpleDateFormat("HH:mm:ss").format(new Date()), "open", "00.00", "00.00", UUID.randomUUID().toString());
+                            */
                 }
             }
         });
 
         repSalesConfirmViewModel.observeResponse().observe(this, s -> {
-
-            if(s.equals("501")){
+            if(s.equals("501")) {
                 progressbar.setVisibility(View.VISIBLE);
-            }else if(s.equals("200")){
+            }else if(s.equals("200")) {
                 Intent intent = new Intent(this,SalesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
-            }else if(s.equals("500")){
+            }else if(s.equals("500")) {
                 Toast.makeText(this, "Server cant be access", Toast.LENGTH_SHORT).show();
             }
         });

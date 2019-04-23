@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.adapter.ModuleAdapter;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -17,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ModuleActivity extends AppCompatActivity {
+public class ModuleActivity extends BaseActivity {
 
 
     ModuleViewModel moduleViewModel;
@@ -44,6 +46,7 @@ public class ModuleActivity extends AppCompatActivity {
                 .build();
         component.inject(this);
         moduleViewModel = ViewModelProviders.of(this, viewModelFactory).get(ModuleViewModel.class);
+        showProgressBar(true);
 
         users_modules.setLayoutManager(new LinearLayoutManager(this));
         users_modules.setHasFixedSize(true);
@@ -51,12 +54,12 @@ public class ModuleActivity extends AppCompatActivity {
         users_modules.setAdapter(moduleAdapter);
 
         moduleViewModel.getLiveModules().observe(this,
-                modules -> moduleAdapter.setModulesAdapter(modules)
+                modules ->
+                {
+                    showProgressBar(false);
+                    moduleAdapter.setModulesAdapter(modules);
+                }
         );
-        
     }
 }
 
-
-//ci->
-//development progress->

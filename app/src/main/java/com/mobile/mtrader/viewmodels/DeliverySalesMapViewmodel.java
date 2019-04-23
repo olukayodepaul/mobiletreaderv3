@@ -20,19 +20,20 @@ public class DeliverySalesMapViewmodel extends ViewModel {
     }
 
     public void reInitialisProduct(String inventory, int pricing, String orders, String customerno, String updatestatus) {
-        Products products = new Products(
+        /*Products products = new Products(
             0,"","","","","","","",
                 "",inventory, pricing, orders, customerno, updatestatus
         );
         new UpdateCustomerTime().execute(products);
         rep.postValue("200");
+        */
     }
 
-    private class UpdateCustomerTime extends AsyncTask<Products, Void, Void> {
+    /*private class UpdateCustomerTime extends AsyncTask<Products, Void, Void> {
         @Override
         protected Void doInBackground(Products... item) {
             repository.reInitialisProducts(item[0].inventory, item[0].pricing, item[0].orders, item[0].customerno, item[0].updatestatus);
             return null;
         }
-    }
+    }*/
 }

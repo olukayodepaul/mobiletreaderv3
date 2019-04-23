@@ -8,13 +8,14 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.mobiletreaderv3.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class SalesActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class SalesActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     @BindView(R.id.bnview)
     BottomNavigationView bnView;
@@ -32,9 +33,9 @@ public class SalesActivity extends AppCompatActivity implements BottomNavigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales);
         ButterKnife.bind(this);
+        showProgressBar(false);
 
         back_page.setOnClickListener(v->onBackPressed());
-
 
         bottomNavigationView = bnView;
         bottomNavigationView.setOnNavigationItemSelectedListener(this);

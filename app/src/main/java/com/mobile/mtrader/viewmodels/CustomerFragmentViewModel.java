@@ -1,4 +1,5 @@
 package com.mobile.mtrader.viewmodels;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
@@ -12,18 +13,13 @@ public class CustomerFragmentViewModel extends ViewModel {
 
     private DataRepository repository;
 
-    List<Customers> mcustomers;
 
     CustomerFragmentViewModel(DataRepository repository) {
         this.repository = repository;
     }
 
-    public Flowable<List<Customers>> getLiveCustomers() {
-        return repository.findAllCustomers().map(
-            customers -> {
-               mcustomers = customers;
-               return customers;
-            }
-        );
+    public LiveData<List<Customers>> getLiveModules() {
+        return repository.findAllCustomers();
     }
+
 }

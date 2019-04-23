@@ -17,16 +17,10 @@ public class Products {
     public String rollprice;
     public String packprice;
     public String productname;
-    public String inventory;
-    public int pricing;
-    public String orders;
-    public String customerno;
-    public String updatestatus;
 
-
-    public Products(int id, String separator, String separatorname, String productcode, String qty, String soq, String rollprice, String packprice, String productname,
-                    String inventory, int pricing, String orders, String customerno, String updatestatus) {
-
+    public Products(int id, String separator, String separatorname, String productcode,
+                    String qty, String soq, String rollprice,
+                    String packprice, String productname) {
         this.id = id;
         this.separator = separator;
         this.separatorname = separatorname;
@@ -36,11 +30,10 @@ public class Products {
         this.rollprice = rollprice;
         this.packprice = packprice;
         this.productname = productname;
-        this.inventory = inventory;
-        this.pricing = pricing;
-        this.orders = orders;
-        this.customerno = customerno;
-        this.updatestatus = updatestatus;
+    }
+
+    public int getAuto() {
+        return auto;
     }
 
     public int getId() {
@@ -79,31 +72,7 @@ public class Products {
         return productname;
     }
 
-    public String getInventory() {
-        return inventory;
-    }
-
-    public int getPricing() {
-        return pricing;
-    }
-
-    public String getOrders() {
-        return orders;
-    }
-
-    public String getCustomerno() {
-        return customerno;
-    }
-
-    public String getUpdatestatus() {
-        return updatestatus;
-    }
-
     public void setAuto(int auto) {
         this.auto = auto;
-    }
-
-    public int getAuto() {
-        return auto;
     }
 }

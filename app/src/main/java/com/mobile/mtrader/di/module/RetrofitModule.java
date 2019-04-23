@@ -33,7 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class RetrofitModule {
 
-    @Provides
+    /*@Provides
     @ApplicationScope
     @Named("mt_server")
     Retrofit getRetrofit(OkHttpClient okHttpClient, Gson gson) {
@@ -56,6 +56,7 @@ public class RetrofitModule {
                 .client(okHttpClient)
                 .build();
     }
+    */
 
 
     @Provides
@@ -110,7 +111,7 @@ public class RetrofitModule {
         return httpLoggingInterceptor;
     }
 
-    @Provides
+    /*@Provides
     @ApplicationScope
     public RepoService provideApiService(@Named("mt_server") Retrofit retrofit) {
         return retrofit.create(RepoService.class);
@@ -120,7 +121,7 @@ public class RetrofitModule {
     @ApplicationScope
     public RepoBasket provideApiBasket(@Named("dynamic_server") Retrofit retrofit) {
         return retrofit.create(RepoBasket.class);
-    }
+    }*/
 
     @Provides
     @ApplicationScope

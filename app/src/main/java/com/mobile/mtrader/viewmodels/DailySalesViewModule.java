@@ -1,19 +1,13 @@
 package com.mobile.mtrader.viewmodels;
 
 
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.os.AsyncTask;
-
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.DataRepository;
-
 import java.util.List;
-
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -24,11 +18,12 @@ import io.reactivex.schedulers.Schedulers;
 public class DailySalesViewModule extends ViewModel {
 
     private DataRepository repository;
+
     List<Products> mproducts;
+
     Long countItems;
 
     CompositeDisposable mDis = new CompositeDisposable();
-
 
     DailySalesViewModule(DataRepository repository) {
         this.repository = repository;

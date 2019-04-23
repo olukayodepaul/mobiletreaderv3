@@ -39,6 +39,8 @@ public class CustomViewModelFactory implements ViewModelProvider.Factory {
             return (T) new BankViewModel(repository);
         }else if(modelClass.isAssignableFrom(DeliverySalesMapViewmodel.class)) {
             return (T) new DeliverySalesMapViewmodel(repository);
+        }else if(modelClass.isAssignableFrom(ClockOutViewModel.class)) {
+            return (T) new ClockOutViewModel(repository);
         }else{
             throw new IllegalArgumentException("ViewModel Not Found");
         }

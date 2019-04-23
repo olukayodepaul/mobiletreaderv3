@@ -9,6 +9,7 @@ import android.util.Log;
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
+import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.data.DataRepository;
 import com.mobile.mtrader.model.DataBridge;
 import java.text.SimpleDateFormat;
@@ -28,9 +29,9 @@ public class RepSalesConfirmViewModel extends ViewModel {
     private DataRepository repository;
     MutableLiveData<String> response = new MutableLiveData<>();
     CompositeDisposable mDis = new CompositeDisposable();
-    List<Products> mproducts;
     List<DataBridge> result;
     DataBridge dataBridge;
+    MutableLiveData<List<SalesEntries>> SalesEntriesdata = new MutableLiveData<>();
 
 
     public RepSalesConfirmViewModel(DataRepository repository) {
@@ -41,17 +42,23 @@ public class RepSalesConfirmViewModel extends ViewModel {
         return response;
     }
 
+    public MutableLiveData<List<SalesEntries>> SalesEntriesdata() {
+        return SalesEntriesdata;
+    }
 
-    public Flowable<List<Products>> salesEnteryRecord(String updatestatus, String customerno) {
-        return repository.salesEnteryRecord(updatestatus, customerno).map(
-                products -> {
-                    mproducts = products;
-                    return products;
-                }
+    public void salesEntries(String updatestatus, String customerno) {
+        mDis.add(repository.salesEnteryRecord(updatestatus, customerno)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data ->SalesEntriesdata.postValue(data),
+                        throwable -> Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
+                )
         );
     }
 
-    public void pustSalesToServer(String updatestatus, String customerno,
+
+
+    /*public void pustSalesToServer(String updatestatus, String customerno,
                                   int user_id, String artime, String outletstatus,
                                   String lat, String lng, String uiid) {
 
@@ -150,6 +157,7 @@ public class RepSalesConfirmViewModel extends ViewModel {
                     }
                 });
     }
+    */
 
     private class SaveSalesRecord extends AsyncTask<Sales, Void, Void> {
         @Override

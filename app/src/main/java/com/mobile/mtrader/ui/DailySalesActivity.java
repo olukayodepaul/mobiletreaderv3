@@ -155,15 +155,15 @@ public class DailySalesActivity extends AppCompatActivity {
                 )
         );
 
-        save.setOnClickListener(v->{
+        save.setOnClickListener(v -> {
             mDis.add(dailySalesViewModule.validateUserSalesEntries("1")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                            data->{
-                                if(data == 0){
-                                    Toast.makeText(getApplication(),"Please enter sales",Toast.LENGTH_SHORT).show();
-                                }else{
+                            data -> {
+                                if (data == 0) {
+                                    Toast.makeText(getApplication(), "Please enter sales", Toast.LENGTH_SHORT).show();
+                                } else {
                                     intent = new Intent(this, ConfirmSales.class);
                                     intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
@@ -177,11 +177,11 @@ public class DailySalesActivity extends AppCompatActivity {
         back_page.setOnClickListener(v -> onBackPressed());
     }
 
-    public void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
+    public void updateSalesEntries(int user_id, String separator, String separatorname, String rollprice, String packprice,
                                    String inventory, String pricing, String orders,
-                                   String customerno, String updatestatus, String entry_date_time,String productcode) {
+                                   String customerno, String updatestatus, String entry_date_time, String productcode) {
         dailySalesViewModule.updateSalesEntries(
-        user_id, separator, separatorname, rollprice, packprice,
+                user_id, separator, separatorname, rollprice, packprice,
                 inventory, pricing, orders,
                 customerno, updatestatus, entry_date_time, productcode
         );

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.viewmodels.BankViewModel;
+import com.mobile.mtrader.viewmodels.ClockOutViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +27,12 @@ public class ClockOutAdaper extends RecyclerView.Adapter<ClockOutAdaper.ViewHold
 
     Context context;
     List<Products> clocking = new ArrayList<>();
-    BankViewModel bankViewModel;
-    CompositeDisposable mDis = new CompositeDisposable();
+    ClockOutViewModel clockOutViewModel;
+    //CompositeDisposable mDis = new CompositeDisposable();
 
-    public ClockOutAdaper(Context context, BankViewModel bankViewModel) {
+    public ClockOutAdaper(Context context, ClockOutViewModel clockOutViewModel) {
         this.context = context;
-        this.bankViewModel = bankViewModel;
+        this.clockOutViewModel = clockOutViewModel;
     }
 
     @NonNull
@@ -50,7 +51,7 @@ public class ClockOutAdaper extends RecyclerView.Adapter<ClockOutAdaper.ViewHold
             holder.items.setText(rs.productname);
             holder.qty.setText(rs.qty);
 
-            mDis.add(bankViewModel.sunAllSoldProduct(rs.productcode)
+           /* mDis.add(bankViewModel.sunAllSoldProduct(rs.productcode)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -58,7 +59,7 @@ public class ClockOutAdaper extends RecyclerView.Adapter<ClockOutAdaper.ViewHold
                                 holder.order.setText(Long.toString(data));
                             },
                             Throwable -> {})
-            );
+            );*/
         }
     }
 

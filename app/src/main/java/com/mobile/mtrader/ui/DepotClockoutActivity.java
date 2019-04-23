@@ -1,20 +1,15 @@
 package com.mobile.mtrader.ui;
 
-
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.adapter.ClockOutAdaper;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -22,37 +17,22 @@ import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.util.AppUtil;
-import com.mobile.mtrader.viewmodels.BankViewModel;
-
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import com.mobile.mtrader.viewmodels.ClockOutViewModel;
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
-
-public class DepotClockoutActivity extends AppCompatActivity {
+public class DepotClockoutActivity extends BaseActivity {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    BankViewModel bankViewModel;
+    ClockOutViewModel clockOutViewModel;
 
     ApplicationComponent component;
 
-    ClockOutAdaper clockOutAdaper;
-
-    @BindView(R.id.clock_out_depot)
-    RecyclerView clock_out_depot;
-
-    @BindView(R.id.progressbar)
-    ProgressBar progressbar;
+    @BindView(R.id.user_baskets)
+    RecyclerView user_baskets;
 
     @BindView(R.id.back_page)
     ImageView back_page;
@@ -60,10 +40,7 @@ public class DepotClockoutActivity extends AppCompatActivity {
     @BindView(R.id.payments_btn)
     Button payments_btn;
 
-    @BindView(R.id.order_8)
-    TextView order_8;
-
-    CompositeDisposable mDis = new CompositeDisposable();
+    ClockOutAdaper clockOutAdaper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,71 +52,32 @@ public class DepotClockoutActivity extends AppCompatActivity {
                 .mvvMModule(new MvvMModule(this))
                 .build();
         component.inject(this);
-        bankViewModel = ViewModelProviders.of(this,viewModelFactory).get(BankViewModel.class);
+        clockOutViewModel = ViewModelProviders.of(this, viewModelFactory).get(ClockOutViewModel.class);
+        showProgressBar(true);
 
-        String cDates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String cTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
-        String cmsg = "Close already taken";
+        user_baskets.setLayoutManager(new LinearLayoutManager(this));
+        user_baskets.setHasFixedSize(true);
+        clockOutAdaper = new ClockOutAdaper(this, clockOutViewModel);
+        user_baskets.setAdapter(clockOutAdaper);
 
-        back_page.setOnClickListener(v-> onBackPressed());
-
-        clock_out_depot.setLayoutManager(new LinearLayoutManager(this));
-        clockOutAdaper = new ClockOutAdaper(this, bankViewModel);
-        clock_out_depot.setAdapter(clockOutAdaper);
-
-        bankViewModel.salesStockBalance();
-        bankViewModel.emitSalesBalance().observe(this, products ->{
-            progressbar.setVisibility(View.GONE);
+        clockOutViewModel.setBasket("1").observe(this, products -> {
+            showProgressBar(false);
             clockOutAdaper.setModulesAdapter(products);
+            clockOutAdaper.notifyDataSetChanged();
         });
 
-        bankViewModel.sumTotalBasketQTY();
-        bankViewModel.sumTotalBasketSales();
-        bankViewModel.sumTotalBasket().observe(this,totalsales->{
-            bankViewModel.sumQtyofProducts().observe(this,totalproducts->{
-                order_8.setText(formatter.format(totalproducts-totalsales));
-            });
-        });
-
-
-        payments_btn.setOnClickListener(v-> {
-            if(!AppUtil.checkConnection(this)) {
+        payments_btn.setOnClickListener(v -> {
+            showProgressBar(true);
+            if (!AppUtil.checkConnection(this)) {
+                showProgressBar(false);
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }else {
-                showProgressDialog();
-                bankViewModel.setEmployeeDetails().observe(this,
-                        employees -> bankViewModel.setUserDailyAttendantForClockout(employees.user_id,
-                                6, cDates, cTime,"0.000","0.666",cmsg
-                        ));
+            } else {
+                clockOutViewModel.dailyRoster();
             }
         });
 
-        bankViewModel.getObserveResponse().observe(this, s -> {
-            hideProgressDialog();
-            String[] res = s.split("\\~");
 
-            if(Integer.parseInt(res[0])==200){
-                Intent intent = new Intent(this,SalesActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            }else if(Integer.parseInt(res[0])==401){
-                Toast.makeText(this, res[1], Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        bankViewModel.getThrowable().observe(this, throwable -> {
-            hideProgressDialog();
-            Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-        });
-    }
-
-    public void showProgressDialog() {
-        progressbar.setVisibility(View.VISIBLE);
-    }
-
-    public void hideProgressDialog() {
-        progressbar.setVisibility(View.GONE);
+        back_page.setOnClickListener(v -> onBackPressed());
     }
 }

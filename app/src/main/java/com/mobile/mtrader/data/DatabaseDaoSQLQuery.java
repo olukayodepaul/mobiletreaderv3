@@ -34,7 +34,6 @@ public interface DatabaseDaoSQLQuery {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertIntoSalesEntries(SalesEntries salesEntries);
 
-    //update SalesEntries Table for recording sales entries
     @Query("UPDATE SalesEntries SET user_id=:user_id,separator=:separator, separatorname=:separatorname,rollprice=:rollprice, packprice=:packprice, inventory=:inventory, pricing=:pricing, orders=:orders, customerno=:customerno, updatestatus=:updatestatus, entry_date_time=:entry_date_time where productcode=:productcode")
     void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
                             String inventory, String pricing, String orders,
@@ -51,32 +50,42 @@ public interface DatabaseDaoSQLQuery {
 
     @Query("SELECT * FROM Customers order by sort asc")
 
-    Flowable<List<Customers>> findAllCustomers();
+    LiveData<List<Customers>> findAllCustomers();
 
     @Query("SELECT * FROM Products WHERE separator=:separator")
     LiveData<List<Products>> findAllMyProduct(String separator);
 
-    @Query("SELECT SUM(qty)  FROM Products WHERE separator=:separator")
-    LiveData<Long> sumAllMyProduct(String separator);
-
     @Query("SELECT * FROM Employees limit 1")
-    LiveData<Employees> findIndividulUsers();
+    Flowable<Employees> findIndividulUsers();
 
     @Query("SELECT * FROM Products order by separator asc")
     Flowable<List<Products>> findAllUserProducts();
 
-    @Query("UPDATE Products SET inventory = :inventory, pricing =:pricing, orders =:orders, customerno = :customerno, updatestatus =:updatestatus WHERE id=:id AND separator =:separator AND productcode =:productcode")
-    void updateDailySalesBySku(String inventory, int pricing, String orders, String customerno,
-                                    String updatestatus,  int id, String separator, String productcode);
-
-    @Query("SELECT COUNT(id) FROM PRODUCTS WHERE  updatestatus =:updatestatus")
+    @Query("SELECT COUNT(auto) FROM SalesEntries WHERE  updatestatus =:updatestatus")
     Single<Long> validateUserSalesEntries(String updatestatus);
 
-    @Query("SELECT * FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
-    Flowable<List<Products>> salesEnteryRecord(String updatestatus, String customerno);
+    @Query("SELECT COUNT(id) FROM Employees WHERE  mdate =:mdate")
+    Single<Long> checkFirstLogin(String mdate);
 
+    @Query("SELECT * FROM SalesEntries WHERE updatestatus=:updatestatus AND customerno =:customerno")
+    Flowable<List<SalesEntries>> salesEnteryRecord(String updatestatus, String customerno);
+
+    @Query("Delete from Employees")
+    void deleteFromEmployee();
+
+    @Query("Delete from Modules")
+    void deleteFromModules();
+
+    @Query("Delete from Products")
+    void deleteFromProduct();
+
+    @Query("Delete from Customers")
+    void deleteFromCustomers();
+
+    /*
     @Query("SELECT * FROM Products WHERE updatestatus=:updatestatus AND customerno =:customerno")
     Flowable<List<Products>> pustSalesToServer(String updatestatus, String customerno);
+    */
 
     @Query("SELECT count(mdate) FROM Employees")
     Flowable<Long> checkUsersInit();
@@ -108,8 +117,8 @@ public interface DatabaseDaoSQLQuery {
     @Query("UPDATE Customers SET rostertime =:rostertime WHERE urno=:urno")
     void updateIndividualCustomersSalesTime(String rostertime, String urno);
 
-    @Query("UPDATE Products SET inventory =:inventory, pricing =:pricing, orders=:orders, customerno=:customerno, updatestatus=:updatestatus ")
-    void reInitialisProducts(String inventory, int pricing, String orders, String customerno,String updatestatus);
+    /*@Query("UPDATE Products SET inventory =:inventory, pricing =:pricing, orders=:orders, customerno=:customerno, updatestatus=:updatestatus ")
+    void reInitialisProducts(String inventory, int pricing, String orders, String customerno,String updatestatus);*/
 
     @Query("SELECT COUNT(auto) FROM Sales WHERE  customerno =:customerno AND localstatus =:localstatus ")
     Single<Long> trackUnPushDataToServer(String customerno, String localstatus);

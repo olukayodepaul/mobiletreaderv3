@@ -100,9 +100,9 @@ public class BankActivity extends AppCompatActivity {
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             } else {
                 showProgressDialog();
-                bankViewModel.setEmployeeDetails().observe(this,
+               /* bankViewModel.setEmployeeDetails().observe(this,
                         employees -> bankViewModel.setUserDailyAttendant(employees.user_id,
-                                5, cDates, cTime, "0.000", "0.666", cmsg));
+                                5, cDates, cTime, "0.000", "0.666", cmsg));*/
             }
         });
 

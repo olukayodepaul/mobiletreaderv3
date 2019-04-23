@@ -139,9 +139,7 @@ public class BankViewModel extends ViewModel {
         );
     }
 
-    public LiveData<Employees> setEmployeeDetails() {
-        return repository.findIndividualUsers();
-    }
+
 
 
     public void setUserDailyAttendant(int userid, int taskid, String dates,
@@ -185,46 +183,7 @@ public class BankViewModel extends ViewModel {
                 });
     }
 
-    public void setUserDailyAttendantForClockout(int userid, int taskid, String dates,
-                                      String times, String lat, String lng, String rmsg) {
 
-        repository.setRoster(userid, taskid, dates, times, lat, lng, rmsg)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response<ModelAttendant>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) { }
-
-                    @Override
-                    public void onNext(Response<ModelAttendant> response) {
-                        ModelAttendant roster = response.body();
-
-                        if (response.code() == 200) {
-                            if (roster.status == 200) {
-                                Customers customers = new Customers(
-                                        0, "", "", "", "", "", "", 4, "", "", times
-                                );
-                                new UpdateCustomerTime().execute(customers);
-                                observeResponse.postValue(Integer.toString(roster.status) + "~" + "Successful~"+times);
-                            } else {
-                                observeResponse.postValue(Integer.toString(roster.status) + "~" + roster.msg);
-                            }
-                        } else {
-                            observeResponse.postValue("401" + "~" + "Server cant be reach");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        observeThrowable.postValue(e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
 
     public void salesEntriesGroup() {
         mDis.add(repository.salesEntriesGroup()

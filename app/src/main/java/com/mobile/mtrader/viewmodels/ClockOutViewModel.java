@@ -1,20 +1,16 @@
 package com.mobile.mtrader.viewmodels;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
-import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.DataRepository;
 import com.mobile.mtrader.model.ModelAttendant;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -22,66 +18,66 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
-public class ClockInViewModel extends ViewModel {
+public class ClockOutViewModel extends ViewModel {
 
     private DataRepository repository;
 
-    private MutableLiveData<String> observeResponse = new MutableLiveData<>();
-
     CompositeDisposable mDis = new CompositeDisposable();
 
-    public ClockInViewModel(DataRepository repository) {
+    ClockOutViewModel(DataRepository repository) {
         this.repository = repository;
-    }
-
-    public MutableLiveData<String> getObserveResponse() {
-        return observeResponse;
     }
 
     public LiveData<List<Products>> setBasket(String separator) {
         return repository.findAllMyProduct(separator);
     }
 
-    public void dailyRoster() {
 
-        String dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String times = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+    public void dailyRoster() {
 
         mDis.add(repository.findIndividualUsers()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data -> {
 
-                    repository.setRoster(data.user_id, 1, dates, times, "0.0", "0.0",
-                            "Resumption already taken")
+                    repository.setRoster(
+                            data.user_id,
+                            6,
+                            new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
+                            new SimpleDateFormat("HH:mm:ss").format(new Date()),
+                            "0.0",
+                            "0.0",
+                            "Closing already taken")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<Response<ModelAttendant>>() {
                                 @Override
-                                public void onSubscribe(Disposable d) {
-                                }
+                                public void onSubscribe(Disposable d) { }
 
                                 @Override
                                 public void onNext(Response<ModelAttendant> response) {
-
                                     ModelAttendant roster = response.body();
 
                                     if (response.code() == 200) {
                                         if (roster.status == 200) {
-                                            Customers customers = new Customers(0, "", "", "", "", "", "", 1, "", "", times);
-                                            new UpdateCustomerTime().execute(customers);
-                                            observeResponse.postValue(Integer.toString(roster.status) + "~" + "Successful~" + times);
+                               /* Customers customers = new Customers(
+                                        0, "", "", "", "", "", "", 4, "", "", times
+                                );
+                                new BankViewModel.UpdateCustomerTime().execute(customers);
+                                observeResponse.postValue(Integer.toString(roster.status) + "~" + "Successful~"+times);
+                                */
                                         } else {
-                                            observeResponse.postValue(Integer.toString(roster.status) + "~" + roster.msg);
+                                            // observeResponse.postValue(Integer.toString(roster.status) + "~" + roster.msg);
                                         }
                                     } else {
-                                        observeResponse.postValue("401" + "~" + "Server cant be reach");
+                                        //observeResponse.postValue("401" + "~" + "Server cant be reach");
                                     }
                                 }
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    observeResponse.postValue("401" + "~" + e.getMessage());
+
                                 }
 
                                 @Override
@@ -89,10 +85,9 @@ public class ClockInViewModel extends ViewModel {
 
                                 }
                             });
-                })
+                        })
         );
     }
-
 
     private class UpdateCustomerTime extends AsyncTask<Customers, Void, Void> {
         @Override
@@ -101,6 +96,5 @@ public class ClockInViewModel extends ViewModel {
             return null;
         }
     }
-
 
 }

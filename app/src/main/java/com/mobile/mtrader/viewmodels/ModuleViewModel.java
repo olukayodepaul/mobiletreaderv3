@@ -1,7 +1,6 @@
 package com.mobile.mtrader.viewmodels;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
@@ -20,5 +19,6 @@ public class ModuleViewModel extends ViewModel {
     public LiveData<List<Modules>> getLiveModules() {
         return repository.findAllModules();
     }
+
 
 }

@@ -55,13 +55,15 @@ public class CustomerFragment extends Fragment {
 
     CustomerListAdapter customerListAdapter;
 
-    CompositeDisposable mDis = new CompositeDisposable();
-
     public CustomerFragment() {}
+
+    SalesActivity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
 
         View view = inflater.inflate(R.layout.fragment_customer, container, false);
         ButterKnife.bind(this,view);
@@ -70,7 +72,8 @@ public class CustomerFragment extends Fragment {
                 .mvvMModule(new MvvMModule(getActivity()))
                 .build();
         component.inject(this);
-
+        if ( getActivity() instanceof SalesActivity){ activity = (SalesActivity) getActivity(); }
+        activity.showProgressBar(true);
         cFViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(CustomerFragmentViewModel.class);
 
         customlist.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -78,22 +81,14 @@ public class CustomerFragment extends Fragment {
         customerListAdapter = new CustomerListAdapter(getContext());
         customlist.setAdapter(customerListAdapter);
 
-        mDis.add(cFViewModel.getLiveCustomers()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data ->
-                            customerListAdapter.setModulesAdapter(data),
-                throwable ->
-                    Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
-                )
+        cFViewModel.getLiveModules().observe(this,
+                customers ->
+                {
+                    activity.showProgressBar(false);
+                    customerListAdapter.setModulesAdapter(customers);
+                }
         );
 
         return view;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mDis.clear();
     }
 }

@@ -2,16 +2,14 @@ package com.mobile.mtrader.ui;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.adapter.ClockInAdapter;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -28,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class DepotClokingActivity extends AppCompatActivity {
+public class DepotClokingActivity extends BaseActivity {
 
     ClockInAdapter clockInAdapter;
 
@@ -40,9 +38,6 @@ public class DepotClokingActivity extends AppCompatActivity {
 
     @BindView(R.id.totalqty)
     TextView totalqty;
-
-    @BindView(R.id.progressbar)
-    ProgressBar progressbar;
 
     @BindView(R.id.back_page)
     ImageView back_page;
@@ -71,46 +66,45 @@ public class DepotClokingActivity extends AppCompatActivity {
                 .build();
         component.inject(this);
         clockInViewModel = ViewModelProviders.of(this, viewModelFactory).get(ClockInViewModel.class);
-        progressbar.setVisibility(View.GONE);
 
-        String cDates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String cTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        String cmsg = "Resumption already taken";
+        showProgressBar(true);
 
         myFormatter = new DecimalFormat("#,###.00");
 
         back_page.setOnClickListener(v->onBackPressed());
 
         resume.setOnClickListener(v->{
-
+            showProgressBar(true);
             if(!AppUtil.checkConnection(this)) {
+                showProgressBar(false);
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             }else {
-                showProgressDialog();
-                clockInViewModel.setEmployeeDetails().observe(this,
-                        employees -> clockInViewModel.setUserDailyAttendant(employees.user_id,
-                        1, cDates, cTime,"0.000","0.666",cmsg
-                ));
+                clockInViewModel.dailyRoster();
             }
         });
+        user_baskets.setLayoutManager(new LinearLayoutManager(this));
+        user_baskets.setHasFixedSize(true);
+        clockInAdapter = new ClockInAdapter(this);
+        user_baskets.setAdapter(clockInAdapter);
         observeAll();
     }
 
     public void observeAll() {
 
-        clockInViewModel.sumAllMyProduct("1").observe(this, products ->
-                totalqty.setText(myFormatter.format(products)));
+        clockInViewModel.setBasket("1").observe(this, products -> {
 
-        user_baskets.setLayoutManager(new LinearLayoutManager(this));
-        user_baskets.setHasFixedSize(true);
-        clockInAdapter = new ClockInAdapter(this);
-        user_baskets.setAdapter(clockInAdapter);
-
-        clockInViewModel.setBasket("1").observe(this, products ->
-                clockInAdapter.setModulesAdapter(products));
+                    showProgressBar(false);
+                    double qty = 0.0;
+                    for (int i = 0; i < products.size() ; i++) {
+                        qty += Double.parseDouble(products.get(i).qty);
+                    }
+                    totalqty.setText(myFormatter.format(qty));
+                    clockInAdapter.setModulesAdapter(products);
+                }
+        );
 
         clockInViewModel.getObserveResponse().observe(this, s -> {
-            hideProgressDialog();
+            showProgressBar(false);
             String[] res = s.split("\\~");
 
             if(Integer.parseInt(res[0])==200){
@@ -118,23 +112,10 @@ public class DepotClokingActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
-            }else if(Integer.parseInt(res[0])==401){
+            }else if(Integer.parseInt(res[0])==401) {
                 Toast.makeText(this, res[1], Toast.LENGTH_SHORT).show();
             }
         });
-
-        clockInViewModel.getThrowable().observe(this, throwable -> {
-            hideProgressDialog();
-            Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-        });
-    }
-
-    public void showProgressDialog() {
-        progressbar.setVisibility(View.VISIBLE);
-    }
-
-    public void hideProgressDialog() {
-        progressbar.setVisibility(View.GONE);
     }
 
 }
