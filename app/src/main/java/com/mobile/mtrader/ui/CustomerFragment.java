@@ -78,7 +78,7 @@ public class CustomerFragment extends Fragment {
 
         customlist.setLayoutManager(new LinearLayoutManager(getActivity()));
         customlist.setHasFixedSize(true);
-        customerListAdapter = new CustomerListAdapter(getContext());
+        customerListAdapter = new CustomerListAdapter(getContext(), cFViewModel);
         customlist.setAdapter(customerListAdapter);
 
         cFViewModel.getLiveModules().observe(this,

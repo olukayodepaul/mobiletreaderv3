@@ -2,9 +2,9 @@ package com.mobile.mtrader.data;
 
 
 import android.arch.lifecycle.LiveData;
-
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
+import com.mobile.mtrader.data.AllTablesStructures.LastLoation;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
@@ -15,6 +15,7 @@ import com.mobile.mtrader.model.ModelEmployees;
 import java.util.List;
 import javax.inject.Inject;
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Response;
@@ -45,6 +46,10 @@ public class DataRepository  {
 
     public Long insertIntoSalesEntries(SalesEntries salesEntries) {
         return this.daoSQLQuery.insertIntoSalesEntries(salesEntries);
+    }
+
+    public Long insertLastLocation(LastLoation lastLoation) {
+        return this.daoSQLQuery.insertLastLocation(lastLoation);
     }
 
     public void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
@@ -104,10 +109,9 @@ public class DataRepository  {
         return this.daoSQLQuery.salesEnteryRecord(updatestatus,customerno);
     }
 
-     /*
-    public Flowable<List<Products>> pustSalesToServer(String updatestatus, String customerno) {
-        return this.daoSQLQuery.pustSalesToServer(updatestatus,customerno);
-    }*/
+    public Flowable<List<SalesEntries>> pustSalesToServer(String updatestatus) {
+        return this.daoSQLQuery.pustSalesToServer(updatestatus);
+    }
 
     public void deleteFromEmployee() {
         this.daoSQLQuery.deleteFromEmployee();
@@ -121,24 +125,16 @@ public class DataRepository  {
         this.daoSQLQuery.deleteFromProduct();
     }
 
+    public void deleteFromSalesEntries() {
+        this.daoSQLQuery.deleteFromSalesEntries();
+    }
+
     public void deleteFromCustomers() {
         this.daoSQLQuery.deleteFromCustomers();
     }
 
     public Observable<Response<DataBridge>> sentSalesToServer(List<DataBridge> salesEntries) {
         return api.moveDataToServer(salesEntries);
-    }
-
-    public Flowable<Long> checkUsersInit() {
-        return this.daoSQLQuery.checkUsersInit();
-    }
-
-    public Flowable<Employees> checkRosterDate() {
-        return this.daoSQLQuery.checkRosterDate();
-    }
-
-    public int deleteAllProducts(Modules modules) {
-        return this.daoSQLQuery.deleteAllProducts(modules);
     }
 
     public Flowable<List<Sales>> salesEntriesGroup() {
@@ -157,35 +153,37 @@ public class DataRepository  {
         this.daoSQLQuery.updateIndividualCustomersSalesTime(rostertime,urno);
     }
 
-    /*public void reInitialisProducts(String inventory, int pricing, String order,  String customerno,String updatestatus) {
-        this.daoSQLQuery.reInitialisProducts(inventory,pricing,order,customerno,updatestatus);
-    }*/
+    public void reInitialisSalesEntries() {
+        this.daoSQLQuery.reInitialisSalesEntries();
+    }
 
     public Single<Long> trackUnPushDataToServer(String customerno, String localstatus) {
         return this.daoSQLQuery.trackUnPushDataToServer(customerno,localstatus);
     }
 
-    public Flowable<List<Products>> salesStockBalance() {
-        return this.daoSQLQuery.salesStockBalance();
-    }
-
-    public Single<Long> sunAllSoldProduct(String productid) {
+    public Single<Double> sunAllSoldProduct(String productid) {
         return this.daoSQLQuery.sunAllSoldProduct(productid);
     }
 
-    public Single<Long> sumTotalBasketQTY() {
-        return this.daoSQLQuery.sumTotalBasketQTY();
+    public Single<Double> sunAllTotalSoldProduct() {
+        return this.daoSQLQuery.sunAllTotalSoldProduct();
     }
 
-    public Single<Long> sumTotalBasket() {
-        return this.daoSQLQuery.sumTotalBasket();
+    public Single<Double> skuTotalSum(String productcode) {
+        return this.daoSQLQuery.skuTotalSum(productcode);
     }
 
-    public Single<Long> totalSalesValue() {
-        return this.daoSQLQuery.totalSalesValue();
+    public Single<Double> sumAllOrder(String productcode) {
+        return this.daoSQLQuery.sumAllOrder(productcode);
     }
 
+    public Flowable<Customers> getLastloaction() {
+        return this.daoSQLQuery.getLastloaction();
+    }
 
+    public Single<LastLoation> getPreviousState() {
+        return this.daoSQLQuery.getPreviousState();
+    }
 
 }
 

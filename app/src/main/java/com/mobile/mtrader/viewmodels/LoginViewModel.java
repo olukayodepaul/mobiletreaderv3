@@ -2,6 +2,7 @@ package com.mobile.mtrader.viewmodels;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
@@ -9,6 +10,7 @@ import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
+import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.data.DataRepository;
 import com.mobile.mtrader.model.ModelEmployees;
 
@@ -20,6 +22,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class LoginViewModel extends ViewModel {
@@ -41,9 +45,7 @@ public class LoginViewModel extends ViewModel {
     public void processLogin(String userName, String password, String imei, String todaysDate) {
 
         if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(password) || imei.isEmpty() || todaysDate.isEmpty()) {
-
             loginres.postValue("1~Please enter username and password");
-
         } else {
 
             repository.userLogin(userName, password, imei)
@@ -70,10 +72,13 @@ public class LoginViewModel extends ViewModel {
                                             .subscribe(mData -> {
 
                                                         if (mData == 0) {
+
                                                             deleteFromEmployee();
                                                             deleteFromModules();
                                                             deleteFromCustomers();
                                                             deleteFromProduct();
+                                                            deleteFromSalesEntries();
+
                                                             Employees employeerdata = new Employees(
                                                                     data.id,
                                                                     data.name,
@@ -84,7 +89,8 @@ public class LoginViewModel extends ViewModel {
                                                                     data.depot_waiver,
                                                                     data.clokin,
                                                                     data.clokout,
-                                                                    todaysDate
+                                                                    todaysDate,
+                                                                    "0.0"
                                                             );
                                                             new AddEmployees().execute(employeerdata);
 
@@ -116,6 +122,7 @@ public class LoginViewModel extends ViewModel {
                                                             }
 
                                                             for (int i = 0; i < data.product.size(); i++) {
+
                                                                 Products productsData = new Products(
                                                                         data.product.get(i).id,
                                                                         data.product.get(i).separator,
@@ -127,7 +134,24 @@ public class LoginViewModel extends ViewModel {
                                                                         data.product.get(i).packprice,
                                                                         data.product.get(i).productname
                                                                 );
+
+                                                                SalesEntries salesEntries = new SalesEntries(
+                                                                        data.product.get(i).productcode,
+                                                                        data.product.get(i).productname,
+                                                                        0,
+                                                                        "",
+                                                                        "",
+                                                                        "",
+                                                                        "",
+                                                                        "",
+                                                                        "",
+                                                                        "",
+                                                                        "",
+                                                                        "",
+                                                                        ""
+                                                                );
                                                                 new AddProducts().execute(productsData);
+                                                                new AddSalesEntries().execute(salesEntries);
                                                             }
 
                                                             loginres.postValue("3~");
@@ -249,6 +273,26 @@ public class LoginViewModel extends ViewModel {
                 });
     }
 
+    private void deleteFromSalesEntries() {
+        Completable.fromAction(() -> repository.deleteFromSalesEntries())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
+    }
+
     private class AddEmployees extends AsyncTask<Employees, Void, Void> {
         @Override
         protected Void doInBackground(Employees... item) {
@@ -277,6 +321,14 @@ public class LoginViewModel extends ViewModel {
         @Override
         protected Void doInBackground(Products... item) {
             repository.insertIntoProducts(item[0]);
+            return null;
+        }
+    }
+
+    private class AddSalesEntries extends AsyncTask<SalesEntries, Void, Void> {
+        @Override
+        protected Void doInBackground(SalesEntries... item) {
+            repository.insertIntoSalesEntries(item[0]);
             return null;
         }
     }

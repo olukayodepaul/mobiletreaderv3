@@ -99,7 +99,10 @@ public class DataBridge {
     @Expose
     public String trans;
 
-    public DataBridge(String entrytime, String product_name, String product_code, String customer_id, int userid, String separator, double order, double invs, int pricing, int status, double rollprice, double packprice, String separatorname, String lat, String lng, String location_entry_time, String token, String trans) {
+    public DataBridge(String entrytime, String product_name, String product_code, String customer_id,
+                      int userid, String separator, double order, double invs, int pricing, int status,
+                      double rollprice, double packprice, String separatorname, String lat, String lng,
+                      String location_entry_time, String token, String trans) {
         this.entrytime = entrytime;
         this.product_name = product_name;
         this.product_code = product_code;

@@ -2,6 +2,7 @@ package com.mobile.mtrader.viewmodels;
 
 
 import android.arch.lifecycle.ViewModel;
+import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.DataRepository;
 import java.util.List;
@@ -23,6 +24,8 @@ public class DailySalesViewModule extends ViewModel {
 
     Long countItems;
 
+    Employees employees;
+
     CompositeDisposable mDis = new CompositeDisposable();
 
     DailySalesViewModule(DataRepository repository) {
@@ -43,6 +46,15 @@ public class DailySalesViewModule extends ViewModel {
                 mItems -> {
                     countItems = mItems;
                     return mItems;
+                }
+        );
+    }
+
+    public Flowable<Employees> getUsersIndividualInformation() {
+        return repository.findIndividualUsers().map(
+                em -> {
+                    employees = em;
+                    return em;
                 }
         );
     }

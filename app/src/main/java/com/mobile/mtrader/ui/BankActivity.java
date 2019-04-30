@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.adapter.BankAdapter;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -33,17 +34,14 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BankActivity extends AppCompatActivity {
+public class BankActivity extends BaseActivity {
 
     BankViewModel bankViewModel;
 
     ApplicationComponent component;
 
-    @BindView(R.id.progressbar)
-    ProgressBar progressbar;
-
-    @BindView(R.id.bank_recycler)
-    RecyclerView bank_recycler;
+    @BindView(R.id.user_baskets)
+    RecyclerView user_baskets;
 
     @BindView(R.id.back_page)
     ImageView back_page;
@@ -52,15 +50,6 @@ public class BankActivity extends AppCompatActivity {
 
     @BindView(R.id.payments_btn)
     Button payments_btn;
-
-    @BindView(R.id.order_8)
-    TextView order_8;
-
-    @BindView(R.id.order_9)
-    TextView order_9;
-
-    @BindView(R.id.order_10)
-    TextView order_10;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -76,66 +65,48 @@ public class BankActivity extends AppCompatActivity {
                 .build();
         component.inject(this);
         bankViewModel = ViewModelProviders.of(this, viewModelFactory).get(BankViewModel.class);
-
-        String cDates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String cTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        String cmsg = "Bank already taken";
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        showProgressBar(true);
 
         back_page.setOnClickListener(v -> onBackPressed());
 
-        bank_recycler.setLayoutManager(new LinearLayoutManager(this));
-        bank_recycler.setHasFixedSize(true);
+        user_baskets.setLayoutManager(new LinearLayoutManager(this));
+        user_baskets.setHasFixedSize(true);
         bankAdapter = new BankAdapter(this, bankViewModel);
-        bank_recycler.setAdapter(bankAdapter);
+        user_baskets.setAdapter(bankAdapter);
 
-        bankViewModel.salesStockBalance();
-        bankViewModel.emitSalesBalance().observe(this, sales -> {
-            hideProgressDialog();
+        bankViewModel.setBasket().observe(this, sales -> {
+
             bankAdapter.setModulesAdapter(sales);
+            bankAdapter.notifyDataSetChanged();
+            showProgressBar(false);
+
         });
 
         payments_btn.setOnClickListener(v -> {
+            showProgressBar(true);
             if (!AppUtil.checkConnection(this)) {
+                showProgressBar(false);
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             } else {
-                showProgressDialog();
-               /* bankViewModel.setEmployeeDetails().observe(this,
-                        employees -> bankViewModel.setUserDailyAttendant(employees.user_id,
-                                5, cDates, cTime, "0.000", "0.666", cmsg));*/
+                bankViewModel.dailyRoster();
             }
         });
 
+
         bankViewModel.getObserveResponse().observe(this, s -> {
-            hideProgressDialog();
+            
+            showProgressBar(false);
             String[] res = s.split("\\~");
-            if (Integer.parseInt(res[0]) == 200) {
-                Intent intent = new Intent(this, SalesActivity.class);
+
+            if(Integer.parseInt(res[0])==200){
+                Intent intent = new Intent(this,SalesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
-            } else if (Integer.parseInt(res[0]) == 401) {
+            }else if(Integer.parseInt(res[0])==401) {
                 Toast.makeText(this, res[1], Toast.LENGTH_SHORT).show();
             }
         });
 
-        bankViewModel.getThrowable().observe(this, throwable -> {
-            hideProgressDialog();
-            Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-        });
-
-        bankViewModel.totalSalesValue();
-        bankViewModel.getTotalSalesvalue().observe(this, result ->{
-            order_8.setText(formatter.format(result));
-
-        });
-    }
-
-    public void showProgressDialog() {
-        progressbar.setVisibility(View.VISIBLE);
-    }
-
-    public void hideProgressDialog() {
-        progressbar.setVisibility(View.GONE);
     }
 }

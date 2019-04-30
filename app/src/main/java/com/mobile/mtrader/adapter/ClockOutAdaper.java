@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.viewmodels.BankViewModel;
 import com.mobile.mtrader.viewmodels.ClockOutViewModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class ClockOutAdaper extends RecyclerView.Adapter<ClockOutAdaper.ViewHold
     Context context;
     List<Products> clocking = new ArrayList<>();
     ClockOutViewModel clockOutViewModel;
-    //CompositeDisposable mDis = new CompositeDisposable();
+    CompositeDisposable mDisp = new CompositeDisposable();
 
     public ClockOutAdaper(Context context, ClockOutViewModel clockOutViewModel) {
         this.context = context;
@@ -39,7 +39,7 @@ public class ClockOutAdaper extends RecyclerView.Adapter<ClockOutAdaper.ViewHold
     @Override
     public ClockOutAdaper.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View mview = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.back_recycler_view_activity, parent, false);
+                .inflate(R.layout.bank_recycler_view_activity, parent, false);
         return new ViewHolder(mview);
     }
 
@@ -49,17 +49,23 @@ public class ClockOutAdaper extends RecyclerView.Adapter<ClockOutAdaper.ViewHold
 
             Products rs = clocking.get(holder.getAdapterPosition());
             holder.items.setText(rs.productname);
-            holder.qty.setText(rs.qty);
+            holder.basket.setText(rs.qty);
+            DecimalFormat formatter = new DecimalFormat("#,###.0");
 
-           /* mDis.add(bankViewModel.sunAllSoldProduct(rs.productcode)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            data -> {
-                                holder.order.setText(Long.toString(data));
-                            },
-                            Throwable -> {})
-            );*/
+            //function to calculate the sales entries.
+            mDisp.add(clockOutViewModel.sunAllSoldProduct(rs.productcode)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        data -> {
+                            holder.qty.setText(formatter.format(data));
+                            holder.order.setText(formatter.format(Double.parseDouble(rs.qty)-data));
+                        },
+                        Throwable -> {
+                            holder.qty.setText("0");
+                            holder.order.setText(rs.qty);
+                        })
+            );
         }
     }
 
@@ -90,6 +96,9 @@ public class ClockOutAdaper extends RecyclerView.Adapter<ClockOutAdaper.ViewHold
 
         @BindView(R.id.items)
         TextView items;
+
+        @BindView(R.id.basket)
+        TextView basket;
 
         @BindView(R.id.qty)
         TextView qty;

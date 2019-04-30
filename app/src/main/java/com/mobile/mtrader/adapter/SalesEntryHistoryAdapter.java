@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.mobiletreaderv3.R;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -37,10 +39,13 @@ public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHis
             Sales rs = hostory.get(position);
             holder.modulesnames.setText(rs.productname);
             holder.times_image_items.setText(rs.orders);
+            holder.times_image_qty_int.setText(rs.inventory);
+            holder.times_image_qty_pricing.setText(rs.pricing);
 
-            double total = (Double.parseDouble(rs.packprice) * Integer.parseInt(rs.packqty)) +
-                    (Double.parseDouble(rs.rollprice) * Integer.parseInt(rs.rollqty));
-            holder.times_image_qty.setText(Double.toString(total));
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+
+            double total = (Double.parseDouble(rs.rollprice) + Double.parseDouble(rs.packprice));
+            holder.times_image_qty.setText(formatter.format(total));
 
             if (rs.localstatus.equals("1")) {
                 holder.indicator_green.setVisibility(View.VISIBLE);
@@ -77,6 +82,12 @@ public class SalesEntryHistoryAdapter extends RecyclerView.Adapter<SalesEntryHis
 
         @BindView(R.id.indicator_green)
         ImageView indicator_green;
+
+        @BindView(R.id.times_image_qty_int)
+        TextView  times_image_qty_int;
+
+        @BindView(R.id.times_image_qty_pricing)
+        TextView times_image_qty_pricing;
 
         public ViewHolder(View mview) {
             super(mview);

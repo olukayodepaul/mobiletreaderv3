@@ -54,55 +54,100 @@
                 android:layout_marginLeft="33dp"/>
 
             <RelativeLayout
-                android:layout_width="203dp"
+                android:layout_width="295dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/modulesnames"
                 android:layout_marginBottom="10dp"
-                android:layout_toRightOf="@+id/icon_image"
-                android:layout_marginTop="3dp"
                 android:layout_marginLeft="33dp"
-                >
+                android:layout_marginTop="3dp"
+                android:layout_toRightOf="@+id/icon_image">
 
                 <TextView
                     android:id="@+id/times_image"
-                    android:layout_width="89dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
-                    android:textSize="11sp"
                     android:fontFamily="@font/roboto_light"
-                    android:text="QTY ORDERED"
-                    android:textStyle="bold"
-                    android:textColor="@color/dip_blue"/>
+                    android:text="QTY"
+                    android:textColor="@color/dip_blue"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/times"
-                    android:layout_width="195dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/times_image"
-                    android:text="TOTAL AMOUNT"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="AMOUNT"
                     android:textColor="@color/dip_blue"
                     android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/invt"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/times"
                     android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold"/>
+                    android:text="INVENT"
+                    android:textColor="@color/dip_blue"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/pricing"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/invt"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="PRICING"
+                    android:textColor="@color/dip_blue"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/times_image_items"
-                    android:layout_width="89dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textSize="11sp"
-                    android:fontFamily="@font/roboto_light"
                     android:layout_below="@+id/times_image"
-                    android:textStyle="bold"/>
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/times_image_qty"
-                    android:layout_width="109dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/times"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="2dp"
                     android:layout_toRightOf="@+id/times_image_items"
+                    android:fontFamily="@font/roboto_light"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/times_image_qty_int"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/invt"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toRightOf="@+id/times_image_qty"
+                    android:fontFamily="@font/roboto_light"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/times_image_qty_pricing"
+                    android:layout_width="71dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/pricing"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toRightOf="@+id/times_image_qty_int"
                     android:fontFamily="@font/roboto_light"
                     android:textSize="11sp"
                     android:textStyle="bold" />

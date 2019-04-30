@@ -18,10 +18,11 @@ public class Employees {
     public String clokin;
     public String clokout;
     public String mdate;
+    public String distance;
 
     public Employees(int user_id, String name, String dbroute, String customer_code, String depotlat,
-                     String depotlng, String depot_waiver, String clokin, String clokout, String mdate) {
-
+                     String depotlng, String depot_waiver, String clokin, String clokout, String mdate,
+                     String distance) {
         this.user_id = user_id;
         this.name = name;
         this.dbroute = dbroute;
@@ -32,22 +33,20 @@ public class Employees {
         this.clokin = clokin;
         this.clokout = clokout;
         this.mdate = mdate;
-
+        this.distance = distance;
     }
 
     public int getId() {
         return id;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
-
-
 
     public String getDbroute() {
         return dbroute;
@@ -77,11 +76,11 @@ public class Employees {
         return clokout;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getMdate() {
         return mdate;
+    }
+
+    public String getDistance() {
+        return distance;
     }
 }

@@ -70,10 +70,11 @@ public class MainActivity extends BaseActivity {
         loginViewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel.class);
         showProgressBar(false);
 
+        /*
         intent = new Intent(this,ModuleActivity.class);
         startActivity(intent);
         finish();
-
+        */
 
         loginButtons.setOnClickListener(view -> {
 

@@ -4,7 +4,6 @@ package com.mobile.mtrader.ui;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.adapter.SkuAdapter;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -22,16 +21,16 @@ import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.viewmodels.DailySalesViewModule;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class DailySalesActivity extends AppCompatActivity {
+public class DailySalesActivity extends BaseActivity {
 
 
     ApplicationComponent component;
@@ -72,6 +71,7 @@ public class DailySalesActivity extends AppCompatActivity {
         component.inject(this);
         dailySalesViewModule = ViewModelProviders.of(this, viewModelFactory).get(DailySalesViewModule.class);
         bundle = getIntent().getExtras();
+        showProgressBar(true);
 
         if (bundle != null) {
             customer_key = bundle.getString("CUSTOMERS_ACCESS_KEYS");
@@ -127,21 +127,32 @@ public class DailySalesActivity extends AppCompatActivity {
                                                     "",
                                                     "",
                                                     "",
-                                                    data.get(position).productcode);
+                                                    data.get(position).productcode
+                                            );
                                         } else {
-                                            updateSalesEntries(
-                                                    0,
-                                                    data.get(position).separator,
-                                                    data.get(position).separatorname,
-                                                    data.get(position).rollprice,
-                                                    data.get(position).packprice,
-                                                    "",
-                                                    "",
-                                                    "",
-                                                    customer_no,
-                                                    "",
-                                                    "",
-                                                    data.get(position).productcode);
+
+                                            String dates = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+                                            mDis.add(
+                                                    dailySalesViewModule.getUsersIndividualInformation()
+                                                            .subscribeOn(Schedulers.io())
+                                                            .observeOn(AndroidSchedulers.mainThread())
+                                                            .subscribe(emData -> {
+                                                                updateSalesEntries(
+                                                                        emData.user_id,
+                                                                        data.get(position).separator,
+                                                                        data.get(position).separatorname,
+                                                                        data.get(position).rollprice,
+                                                                        data.get(position).packprice,
+                                                                        getInventory.getText().toString(),
+                                                                        getPricing.getText().toString(),
+                                                                        getOrder.getText().toString(),
+                                                                        customer_no,
+                                                                        "1",
+                                                                        dates,
+                                                                        data.get(position).productcode);
+                                                            })
+                                            );
                                         }
                                     }
                                 }
@@ -149,9 +160,9 @@ public class DailySalesActivity extends AppCompatActivity {
                             skuAdapter.notifyDataSetChanged();
                             skuAdapter.setModulesAdapter(data);
                             recyler_data.setItemViewCacheSize(data.size());
+                            showProgressBar(false);
                         },
                         throwable -> Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
-
                 )
         );
 

@@ -95,44 +95,63 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/gray_line"
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/items"
-                android:layout_width="185dp"
+                android:layout_width="131dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:fontFamily="@font/roboto_regular"
                 android:paddingBottom="5dp"
-                android:text="ITEM"
+                android:text="SKU"
                 android:textAlignment="textStart"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="12dp"/>
 
             <TextView
                 android:id="@+id/qty"
-                android:layout_width="66dp"
+                android:layout_width="65dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="4dp"
                 android:layout_toStartOf="@+id/order"
                 android:fontFamily="@font/roboto_regular"
                 android:paddingBottom="5dp"
-                android:text="QTY"
+                android:text="QTY SOLD"
                 android:textAlignment="textEnd"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/basket"
+                android:layout_width="73dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingBottom="5dp"
+                android:text="BASKET"
+                android:textAlignment="textEnd"
+                android:textSize="12dp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/order"
-                android:layout_width="75dp"
+                android:layout_width="59dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginEnd="10dp"
                 android:fontFamily="@font/roboto_regular"
                 android:paddingBottom="5dp"
-                android:text="ORDER"
+                android:text="RETURN"
                 android:textAlignment="textEnd"
+                android:textSize="12dp"
                 android:textStyle="bold" />
+
         </RelativeLayout>
 
 
@@ -153,39 +172,55 @@
         >
         <TextView
             android:id="@+id/items_t"
-            android:layout_width="185dp"
+            android:layout_width="131dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:fontFamily="@font/roboto_regular"
             android:paddingBottom="5dp"
-            android:text="TOTAL TO RETURN"
+            android:text=""
             android:textAlignment="textStart"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="12dp"/>
 
         <TextView
             android:id="@+id/qty_t"
-            android:layout_width="66dp"
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="4dp"
             android:layout_toStartOf="@+id/order_t"
             android:fontFamily="@font/roboto_regular"
             android:paddingBottom="5dp"
-            android:text="QTY"
+            android:text="0.0"
             android:textAlignment="textEnd"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/basket_t"
+            android:layout_width="73dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/roboto_regular"
+            android:paddingBottom="5dp"
+            android:text="0.0"
+            android:textAlignment="textEnd"
+            android:textSize="12dp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/order_t"
-            android:layout_width="75dp"
+            android:layout_width="59dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/roboto_regular"
             android:paddingBottom="5dp"
-            android:text="ORDER"
+            android:text="0.0"
             android:textAlignment="textEnd"
+            android:textSize="12dp"
             android:textStyle="bold" />
 
     </RelativeLayout>

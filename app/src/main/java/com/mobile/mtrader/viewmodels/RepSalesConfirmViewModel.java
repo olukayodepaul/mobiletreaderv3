@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
 import io.reactivex.Flowable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -46,6 +48,7 @@ public class RepSalesConfirmViewModel extends ViewModel {
         return SalesEntriesdata;
     }
 
+
     public void salesEntries(String updatestatus, String customerno) {
         mDis.add(repository.salesEnteryRecord(updatestatus, customerno)
                 .subscribeOn(Schedulers.io())
@@ -56,16 +59,16 @@ public class RepSalesConfirmViewModel extends ViewModel {
         );
     }
 
+    public void pustSalesToServer() {
 
+        String dates = new SimpleDateFormat("HH:mm:ss").format(new Date());
+        String uiid = UUID.randomUUID().toString();
 
-    /*public void pustSalesToServer(String updatestatus, String customerno,
-                                  int user_id, String artime, String outletstatus,
-                                  String lat, String lng, String uiid) {
-
-        mDis.add(repository.pustSalesToServer(updatestatus, customerno)
+        mDis.add(repository.pustSalesToServer("1")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data -> {
+
                             result = new ArrayList<>();
 
                             for (int i = 0; i < data.size(); i++) {
@@ -74,20 +77,20 @@ public class RepSalesConfirmViewModel extends ViewModel {
                                         data.get(i).productname,
                                         data.get(i).productcode,
                                         data.get(i).customerno,
-                                        user_id,
+                                        data.get(i).user_id,
                                         data.get(i).separator,
                                         Double.parseDouble(data.get(i).orders),
                                         Double.parseDouble(data.get(i).inventory),
-                                        data.get(i).pricing,
+                                        Integer.parseInt(data.get(i).pricing),
                                         1,
                                         Double.parseDouble(data.get(i).rollprice),
                                         Double.parseDouble(data.get(i).packprice),
                                         data.get(i).separatorname,
-                                        lat,
-                                        lng,
-                                        artime,
+                                        "0.0",
+                                        "0.0",
+                                        dates,
                                         uiid,
-                                        outletstatus
+                                        "open"
                                 );
                                 result.add(dataBridge);
                             }
@@ -99,7 +102,6 @@ public class RepSalesConfirmViewModel extends ViewModel {
     }
 
     public void pushToServer(List<DataBridge> results) {
-        response.postValue("501");
         repository.sentSalesToServer(results)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -157,7 +159,6 @@ public class RepSalesConfirmViewModel extends ViewModel {
                     }
                 });
     }
-    */
 
     private class SaveSalesRecord extends AsyncTask<Sales, Void, Void> {
         @Override

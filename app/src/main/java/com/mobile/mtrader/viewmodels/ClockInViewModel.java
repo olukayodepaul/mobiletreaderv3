@@ -4,17 +4,14 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
-
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
-import com.mobile.mtrader.data.AllTablesStructures.Employees;
+import com.mobile.mtrader.data.AllTablesStructures.LastLoation;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.DataRepository;
 import com.mobile.mtrader.model.ModelAttendant;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -42,6 +39,17 @@ public class ClockInViewModel extends ViewModel {
         return repository.findAllMyProduct(separator);
     }
 
+    public void insertLastLocation() {
+        mDis.add(repository.getLastloaction()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(data->{
+            LastLoation lastLoation = new LastLoation(data.urno, data.lat, data.lng);
+            new AddLastLocation().execute(lastLoation);
+         })
+        );
+    }
+
     public void dailyRoster() {
 
         String dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -59,6 +67,7 @@ public class ClockInViewModel extends ViewModel {
                             .subscribe(new Observer<Response<ModelAttendant>>() {
                                 @Override
                                 public void onSubscribe(Disposable d) {
+                                    mDis.add(d);
                                 }
 
                                 @Override
@@ -93,8 +102,8 @@ public class ClockInViewModel extends ViewModel {
         );
     }
 
-
     private class UpdateCustomerTime extends AsyncTask<Customers, Void, Void> {
+
         @Override
         protected Void doInBackground(Customers... item) {
             repository.updateIndividualCustomers(item[0].rostertime, item[0].sort);
@@ -102,5 +111,17 @@ public class ClockInViewModel extends ViewModel {
         }
     }
 
+    private class AddLastLocation extends AsyncTask<LastLoation, Void, Void> {
+        @Override
+        protected Void doInBackground(LastLoation... item) {
+            repository.insertLastLocation(item[0]);
+            return null;
+        }
+    }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mDis.clear();
+    }
 }

@@ -21,8 +21,10 @@ public class AppUtil {
     public static void showAlertDialog(Context context, String title, String msg, String buttons) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle(title)
+                .setCancelable(false)
                 .setMessage(msg)
                 .setNegativeButton(buttons, (paramDialogInterface, paramInt) -> {
+                    paramDialogInterface.dismiss();
                 });
         dialog.show();
     }
@@ -31,6 +33,7 @@ public class AppUtil {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle(title)
                 .setMessage(msg)
+                .setCancelable(false)
                 .setNegativeButton(buttons, (DialogInterface paramDialogInterface, int paramInt) -> {
                     Intent intent = new Intent(context, object);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

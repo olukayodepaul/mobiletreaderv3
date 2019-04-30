@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:574913934977:android:30ad3db2fe4f30de",
         "android_client_info": {
-          "package_name": "com.mobile.mtrader.ui"
+          "package_name": "com.mobile.mtrader"
         }
       },
       "oauth_client": [

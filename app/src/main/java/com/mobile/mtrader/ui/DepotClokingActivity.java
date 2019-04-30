@@ -108,6 +108,7 @@ public class DepotClokingActivity extends BaseActivity {
             String[] res = s.split("\\~");
 
             if(Integer.parseInt(res[0])==200){
+                clockInViewModel.insertLastLocation();
                 Intent intent = new Intent(this,SalesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);

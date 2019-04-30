@@ -11,7 +11,8 @@
          android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="0dp">
+        android:layout_marginTop="0dp"
+        android:apiKey="@string/google_map_api_key">
     </com.google.android.gms.maps.MapView>
 
     <RelativeLayout
@@ -24,7 +25,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:orientation="horizontal"
-        android:background="@drawable/map_buttons_third">
+      >
 
         <ImageView
             android:id="@+id/back_button"
@@ -42,14 +43,14 @@
 
         <TextView
             android:id="@+id/users_name"
-            android:layout_width="254dp"
+            android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/back_button"
             android:fontFamily="@font/roboto_bold"
             android:text="Uaser Name"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textSize="17sp" />
     </RelativeLayout>
 

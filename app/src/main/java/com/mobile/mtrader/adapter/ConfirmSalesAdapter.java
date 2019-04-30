@@ -49,7 +49,7 @@ public class ConfirmSalesAdapter extends RecyclerView.Adapter<ConfirmSalesAdapte
             double rollPrice = Double.parseDouble(rs.rollprice);
 
             String[] transDouble =  Double.toString(Double.parseDouble(rs.orders)).split("\\.");
-            holder.tv_price.setText(Double.toString(packPrice*Integer.parseInt(transDouble[0])+rollPrice*Integer.parseInt(transDouble[1])));
+            holder.tv_price.setText(Double.toString(rollPrice*Integer.parseInt(transDouble[0])+packPrice*Integer.parseInt(transDouble[1])));
         }
     }
 

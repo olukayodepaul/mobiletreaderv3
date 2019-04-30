@@ -1,6 +1,7 @@
 package com.mobile.mtrader.viewmodels;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 
@@ -12,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import io.reactivex.Observer;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -24,17 +26,56 @@ public class ClockOutViewModel extends ViewModel {
 
     CompositeDisposable mDis = new CompositeDisposable();
 
+    private MutableLiveData<String> observeResponse = new MutableLiveData<>();
+
+    private MutableLiveData<Double> totalSales = new MutableLiveData<>();
+
+    Double totalProductSold;
+
     ClockOutViewModel(DataRepository repository) {
         this.repository = repository;
     }
 
-    public LiveData<List<Products>> setBasket(String separator) {
-        return repository.findAllMyProduct(separator);
+    public LiveData<List<Products>> setBasket() {
+        return repository.findAllMyProduct("1");
     }
 
+    public MutableLiveData<String> getObserveResponse() {
+        return observeResponse;
+    }
 
+    public MutableLiveData<Double> getAllSalesEntrySum() {
+        return totalSales;
+    }
+
+    public Single<Double> sunAllSoldProduct(String productid) {
+        return repository.sunAllSoldProduct(productid).map(
+                totals -> {
+                    totalProductSold = totals;
+                    return totals;
+                }
+        );
+    }
+
+    public void sunAllTotalSoldProduct() {
+
+        mDis.add(repository.sunAllTotalSoldProduct()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        data -> {
+                            getAllSalesEntrySum().postValue(data);
+                        },
+                        Throwable -> {
+                            getAllSalesEntrySum().postValue(0.0);
+                        })
+        );
+    }
 
     public void dailyRoster() {
+
+        String dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String times = new SimpleDateFormat("HH:mm:ss").format(new Date());
 
         mDis.add(repository.findIndividualUsers()
                 .subscribeOn(Schedulers.io())
@@ -44,8 +85,8 @@ public class ClockOutViewModel extends ViewModel {
                     repository.setRoster(
                             data.user_id,
                             6,
-                            new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
-                            new SimpleDateFormat("HH:mm:ss").format(new Date()),
+                            dates,
+                            times,
                             "0.0",
                             "0.0",
                             "Closing already taken")
@@ -61,23 +102,21 @@ public class ClockOutViewModel extends ViewModel {
 
                                     if (response.code() == 200) {
                                         if (roster.status == 200) {
-                               /* Customers customers = new Customers(
-                                        0, "", "", "", "", "", "", 4, "", "", times
-                                );
-                                new BankViewModel.UpdateCustomerTime().execute(customers);
-                                observeResponse.postValue(Integer.toString(roster.status) + "~" + "Successful~"+times);
-                                */
+                                            Customers customers = new Customers(0, "", "", "", "", "", "", 4, "", "", times);
+                                            new UpdateCustomerTime().execute(customers);
+                                            observeResponse.postValue(Integer.toString(roster.status) + "~" + "Successful~"+times);
+
                                         } else {
-                                            // observeResponse.postValue(Integer.toString(roster.status) + "~" + roster.msg);
+                                            observeResponse.postValue(Integer.toString(roster.status) + "~" + roster.msg);
                                         }
                                     } else {
-                                        //observeResponse.postValue("401" + "~" + "Server cant be reach");
+                                        observeResponse.postValue("401" + "~" + "Server cant be reach");
                                     }
                                 }
 
                                 @Override
                                 public void onError(Throwable e) {
-
+                                    observeResponse.postValue("401" + "~" + e.getMessage());
                                 }
 
                                 @Override

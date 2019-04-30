@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.adapter.ConfirmSalesAdapter;
 import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.di.component.ApplicationComponent;
@@ -42,7 +43,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class ConfirmSales extends AppCompatActivity {
+public class ConfirmSales extends BaseActivity {
 
     @BindView(R.id.back_page)
     ImageView back_page;
@@ -74,9 +75,6 @@ public class ConfirmSales extends AppCompatActivity {
 
     Intent intent;
 
-    @BindView(R.id.progressbar)
-    ProgressBar progressbar;
-
     ApplicationComponent component;
 
     RepSalesConfirmViewModel repSalesConfirmViewModel;
@@ -100,9 +98,9 @@ public class ConfirmSales extends AppCompatActivity {
                 .build();
         component.inject(this);
         repSalesConfirmViewModel = ViewModelProviders.of(this, viewModelFactory).get(RepSalesConfirmViewModel.class);
-        progressbar.setVisibility(View.GONE);
-
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
         bundle = getIntent().getExtras();
+        showProgressBar(true);
 
         if (bundle != null) {
             dbToken = bundle.getString("CUSTOMERS_ACCESS_KEYS");
@@ -127,44 +125,47 @@ public class ConfirmSales extends AppCompatActivity {
             for (int i = 0; i < salesEntries.size(); i++) {
 
                 String[] divider = Double.toString(Double.parseDouble(salesEntries.get(i).orders)).split("\\.");
-                sumAllPP += Integer.parseInt(divider[0]) * Double.parseDouble(salesEntries.get(i).packprice);
-                sumAllRP += Integer.parseInt(divider[1]) * Double.parseDouble(salesEntries.get(i).rollprice);
+                sumAllPP += Integer.parseInt(divider[0]) * Double.parseDouble(salesEntries.get(i).rollprice);
+                sumAllRP += Integer.parseInt(divider[1]) * Double.parseDouble(salesEntries.get(i).packprice);
                 sumInventory += Double.parseDouble(salesEntries.get(i).inventory);
                 sumPricing += Double.parseDouble(salesEntries.get(i).pricing);
                 sumOrder += Double.parseDouble(salesEntries.get(i).orders);
+
             }
 
-            invent_t.setText(Double.toString(sumOrder));
-            app_price_t.setText(Integer.toString(sumPricing));
-            order_t.setText(Double.toString(sumInventory));
-            tv_price_t.setText(Double.toString(sumAllPP + sumAllRP));
+            invent_t.setText(formatter.format(sumOrder));
+            app_price_t.setText(formatter.format(sumPricing));
+            order_t.setText(formatter.format(sumInventory));
+            tv_price_t.setText(formatter.format(sumAllPP + sumAllRP));
             confirmSalesAdapter.setModulesAdapter(salesEntries);
+            showProgressBar(false);
 
         });
 
         btns.setOnClickListener(v-> {
+            showProgressBar(true);
             if(!confirms.getText().toString().equals(dbToken)) {
+                showProgressBar(false);
                 AppUtil.showAlertDialog(this, "Verification","Enter valid verification code","Close");
             }else {
                 if(!AppUtil.checkConnection(this)) {
+                    showProgressBar(false);
                     AppUtil.showAlertDialog(this, "Internet Error","You are not connected to the internet","Close");
                 }else{
-                   /* repSalesConfirmViewModel.pustSalesToServer("1",customerno,1168,
-                            new SimpleDateFormat("HH:mm:ss").format(new Date()), "open", "00.00", "00.00", UUID.randomUUID().toString());
-                            */
+                   repSalesConfirmViewModel.pustSalesToServer();
                 }
             }
         });
 
         repSalesConfirmViewModel.observeResponse().observe(this, s -> {
-            if(s.equals("501")) {
-                progressbar.setVisibility(View.VISIBLE);
-            }else if(s.equals("200")) {
+
+            if(s.equals("200")) {
                 Intent intent = new Intent(this,SalesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }else if(s.equals("500")) {
+                showProgressBar(false);
                 Toast.makeText(this, "Server cant be access", Toast.LENGTH_SHORT).show();
             }
         });
