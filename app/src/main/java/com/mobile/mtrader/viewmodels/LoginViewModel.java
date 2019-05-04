@@ -4,14 +4,29 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.mobile.mtrader.data.AllTablesStructures.AllRepCustomers;
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
+import com.mobile.mtrader.data.AllTablesStructures.UserSpinners;
 import com.mobile.mtrader.data.DataRepository;
+import com.mobile.mtrader.firebasemodel.UserLocation;
+import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.model.ModelEmployees;
 
 import io.reactivex.Completable;
@@ -42,11 +57,13 @@ public class LoginViewModel extends ViewModel {
         return loginres;
     }
 
-    public void processLogin(String userName, String password, String imei, String todaysDate) {
+    public void processLogin(String userName, String password, String imei, String todaysDate, FirebaseAuth mAuth) {
+
 
         if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(password) || imei.isEmpty() || todaysDate.isEmpty()) {
             loginres.postValue("1~Please enter username and password");
         } else {
+
 
             repository.userLogin(userName, password, imei)
                     .subscribeOn(Schedulers.io())
@@ -65,7 +82,7 @@ public class LoginViewModel extends ViewModel {
                             if (response != null && response.isSuccessful() && response.body() != null && response.code() == 200) {
 
                                 if (data.status == 200) {
-
+                                    AuthFireBase(mAuth, data.id);
                                     Disposable mDisposable = repository.checkFirstLogin(todaysDate)
                                             .subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
@@ -78,6 +95,8 @@ public class LoginViewModel extends ViewModel {
                                                             deleteFromCustomers();
                                                             deleteFromProduct();
                                                             deleteFromSalesEntries();
+                                                            deleteFromAllRepCustomers();
+                                                            deleteFromAllUserSpinners();
 
                                                             Employees employeerdata = new Employees(
                                                                     data.id,
@@ -105,6 +124,7 @@ public class LoginViewModel extends ViewModel {
                                                             }
 
                                                             for (int i = 0; i < data.customers.size(); i++) {
+
                                                                 Customers customersdata = new Customers(
                                                                         data.customers.get(i).id,
                                                                         data.customers.get(i).notice,
@@ -119,6 +139,37 @@ public class LoginViewModel extends ViewModel {
                                                                         data.customers.get(i).rostertime
                                                                 );
                                                                 new AddCustomers().execute(customersdata);
+                                                            }
+
+                                                            for(int i = 0 ; i < data.repcustomers.size(); i++) {
+
+                                                                AllRepCustomers allRepCustomers = new AllRepCustomers(
+                                                                        data.repcustomers.get(i).id,
+                                                                        data.repcustomers.get(i).urno,
+                                                                        data.repcustomers.get(i).customerno,
+                                                                        data.repcustomers.get(i).outletclassid,
+                                                                        data.repcustomers.get(i).outletlanguageid,
+                                                                        data.repcustomers.get(i).outlettypeid,
+                                                                        data.repcustomers.get(i).outletname,
+                                                                        data.repcustomers.get(i).outletaddress,
+                                                                        data.repcustomers.get(i).contactname,
+                                                                        data.repcustomers.get(i).contactphone,
+                                                                        data.repcustomers.get(i).latitude,
+                                                                        data.repcustomers.get(i).longitude,
+                                                                        data.repcustomers.get(i).outlet_pic
+                                                                );
+
+                                                                new AddRepCustomers().execute(allRepCustomers);
+                                                            }
+
+                                                            for(int i = 0 ; i < data.spinners.size(); i++){
+
+                                                                UserSpinners userSpinners = new UserSpinners(
+                                                                        data.spinners.get(i).id,
+                                                                        data.spinners.get(i).name,
+                                                                        data.spinners.get(i).sep
+                                                                );
+                                                                new AddUserSpinnersextends().execute(userSpinners);
                                                             }
 
                                                             for (int i = 0; i < data.product.size(); i++) {
@@ -139,6 +190,7 @@ public class LoginViewModel extends ViewModel {
                                                                         data.product.get(i).productcode,
                                                                         data.product.get(i).productname,
                                                                         0,
+                                                                        "",
                                                                         "",
                                                                         "",
                                                                         "",
@@ -293,6 +345,46 @@ public class LoginViewModel extends ViewModel {
                 });
     }
 
+    private void deleteFromAllRepCustomers() {
+        Completable.fromAction(() -> repository.deleteFromAllRepCustomers())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
+    }
+
+    private void deleteFromAllUserSpinners() {
+        Completable.fromAction(() -> repository.deleteFromAllUserSpinners())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
+    }
+
     private class AddEmployees extends AsyncTask<Employees, Void, Void> {
         @Override
         protected Void doInBackground(Employees... item) {
@@ -331,6 +423,57 @@ public class LoginViewModel extends ViewModel {
             repository.insertIntoSalesEntries(item[0]);
             return null;
         }
+    }
+
+    private class AddRepCustomers extends AsyncTask<AllRepCustomers, Void, Void> {
+        @Override
+        protected Void doInBackground(AllRepCustomers... item) {
+            repository.insertIntoAllCustomers(item[0]);
+            return null;
+        }
+    }
+
+    private class AddUserSpinnersextends extends  AsyncTask<UserSpinners, Void, Void> {
+        @Override
+        protected Void doInBackground(UserSpinners... item) {
+            repository.insertIntoUserSpinners(item[0]);
+            return null;
+        }
+    }
+
+    private void AuthFireBase(FirebaseAuth mAuth, int id) {
+
+        mAuth.createUserWithEmailAndPassword("users"+id+"@mobiletrader.com","oQEJGbHKtXGjpCTZ6Bn8")
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            FirebaseUser c_user = mAuth.getCurrentUser();
+                            if (c_user != null) {
+
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                                UserLocation userLocation = new UserLocation();
+                                userLocation.setEmail("users"+id+"@mobiletrader.com");
+                                userLocation.setLat("");
+                                userLocation.setLng("");
+
+                                db.collection("user location")
+                                        .add(userLocation)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
     }
 
 }

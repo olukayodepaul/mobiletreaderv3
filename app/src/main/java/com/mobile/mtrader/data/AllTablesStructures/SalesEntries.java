@@ -21,11 +21,12 @@ public class SalesEntries {
     public String customerno;
     public String updatestatus;
     public String entry_date_time;
+    public String soq;
 
     public SalesEntries(String productcode, String productname, int user_id, String separator, String separatorname,
                         String rollprice, String packprice,
                         String inventory, String pricing, String orders, String customerno,
-                        String updatestatus, String entry_date_time) {
+                        String updatestatus, String entry_date_time, String soq) {
         this.productcode = productcode;
         this.productname = productname;
         this.user_id = user_id;
@@ -39,6 +40,7 @@ public class SalesEntries {
         this.customerno = customerno;
         this.updatestatus = updatestatus;
         this.entry_date_time = entry_date_time;
+        this.soq = soq;
     }
 
     public int getAuto() {
@@ -99,5 +101,9 @@ public class SalesEntries {
 
     public void setAuto(int auto) {
         this.auto = auto;
+    }
+
+    public String getSoq() {
+        return soq;
     }
 }

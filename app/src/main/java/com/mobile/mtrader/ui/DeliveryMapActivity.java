@@ -2,6 +2,7 @@ package com.mobile.mtrader.ui;
 
 
 import android.Manifest;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProvider;
@@ -33,6 +34,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,7 +44,12 @@ import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.model.Pasers;
 import com.mobile.mtrader.viewmodels.DeliverySalesMapViewmodel;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,7 +59,7 @@ import static com.mobile.mtrader.util.keyStore.PERMISSIONS_REQUEST_ACCESS_FINE_L
 import static com.mobile.mtrader.util.keyStore.PERMISSIONS_REQUEST_ENABLE_GPS;
 
 
-public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     @BindView(R.id.back_button)
     ImageView back_button;
@@ -87,6 +95,8 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
 
     ApplicationComponent component;
 
+    Pasers pasers;
+
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
@@ -99,6 +109,8 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
     private FusedLocationProviderClient mFusedLocationClient;
 
     private static final String TAG = "DeliveryMapActivity";
+
+    private LatLngBounds mMapBoundry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +125,7 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         component.inject(this);
         deliveryViewModel = ViewModelProviders.of(this, viewModelFactory).get(DeliverySalesMapViewmodel.class);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        pasers = new Pasers();
 
         if (bundle != null) {
 
@@ -121,7 +134,6 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
             outletname = bundle.getString("CUSTOMER_NAME");
             outletwaiver = bundle.getString("OUTLET_WAIVER");
 
-            //leaving point
             depotlat = bundle.getString("OUTLET_LAT");
             depotlng = bundle.getString("OUTLET_LNG");
 
@@ -138,7 +150,8 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         });
 
         prosales.setOnClickListener(v -> {
-            //deliveryViewModel.updateFromSalesEntries();
+            //Genfencing here
+            deliveryViewModel.updateFromSalesEntries();
             getLocationPermission();
         });
 
@@ -149,6 +162,8 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
                 intent.putExtra("CUSTOMER_ID", customer_no);
+                intent.putExtra("GEOLATLNG",pasers.getLat()+"~"+pasers.getLng());
+                intent.putExtra("ARRIVAL_TIME",  new SimpleDateFormat("HH:mm:ss").format(new Date()));
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Please clocking to proceed", Toast.LENGTH_SHORT).show();
@@ -168,7 +183,8 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
             public void onComplete(@NonNull Task<Location> task) {
                 if(task.isSuccessful()){
                     Location location = task.getResult();
-                    Log.d(TAG,"onComplete is location testing "+location.getLatitude()+" "+location.getLongitude());
+                    pasers.setLat(location.getLatitude());
+                    pasers.setLng(location.getLongitude());
                 }
             }
         });
@@ -185,7 +201,8 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         mMapView.getMapAsync(this);
     }
 
-    @Override
+
+        @Override
     protected void onResume() {
         super.onResume();
         if (checkMapServices()) {
@@ -326,6 +343,8 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         }
 
         googleMap = map;
+        //map.setMyLocationEnabled(true);
+
         googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(outletlat), Double.parseDouble(outletlng))).title(outletname));
         googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(depotlat), Double.parseDouble(depotlng)))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
@@ -334,8 +353,10 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
         googleMap.moveCamera(center);
         googleMap.animateCamera(zoom);
+        googleMap.setOnInfoWindowClickListener(this);
 
     }
+
 
     @Override
     public  void onPause() {
@@ -354,6 +375,32 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         super.onLowMemory();
         mMapView.onLowMemory();
     }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if(marker.getSnippet().equals("This is you")){
+            marker.hideInfoWindow();
+        }
+        else{
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(DeliveryMapActivity.this);
+            builder.setMessage(marker.getSnippet())
+                    .setCancelable(true)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+     }
+    }
+
 }
 
 

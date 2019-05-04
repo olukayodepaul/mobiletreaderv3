@@ -34,7 +34,7 @@ public class ClockInAdapter extends RecyclerView.Adapter<ClockInAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ClockInAdapter.ViewHolder holder, int position) {
-        if(clocking!=null){
+        if(clocking!=null) {
             Products rs = clocking.get(position);
             holder.items.setText(rs.productname);
             holder.qty.setText(rs.qty);

@@ -7,18 +7,34 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
+import com.mobile.mtrader.firebasemodel.UserLocation;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.viewmodels.LoginViewModel;
 
@@ -55,6 +71,7 @@ public class MainActivity extends BaseActivity {
 
     Intent intent;
 
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +86,7 @@ public class MainActivity extends BaseActivity {
         component.inject(this);
         loginViewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel.class);
         showProgressBar(false);
+        mAuth = FirebaseAuth.getInstance();
 
         /*
         intent = new Intent(this,ModuleActivity.class);
@@ -85,7 +103,8 @@ public class MainActivity extends BaseActivity {
                 showProgressBar(true);
                 telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 String imei = telephonyManager.getDeviceId();
-                loginViewModel.processLogin(u_email.getText().toString(), u_paswd.getText().toString(), imei,  new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+                loginViewModel.processLogin(u_email.getText().toString(), u_paswd.getText().toString(), imei,
+                        new SimpleDateFormat("yyyy-MM-dd").format(new Date()), mAuth);
             }
 
         });
@@ -105,5 +124,12 @@ public class MainActivity extends BaseActivity {
             }
 
         });
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 }

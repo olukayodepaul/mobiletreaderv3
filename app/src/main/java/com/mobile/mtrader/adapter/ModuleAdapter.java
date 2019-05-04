@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.ui.CustomerActivity;
 import com.mobile.mtrader.ui.SalesActivity;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,10 @@ import butterknife.ButterKnife;
 public class ModuleAdapter  extends RecyclerView.Adapter<ModuleAdapter.ViewHolder> {
 
     List<Modules> modules = new ArrayList<>();
+
     Context context;
+
+    Intent intent;
 
     public ModuleAdapter(Context context) {
         this.context = context;
@@ -88,7 +92,12 @@ public class ModuleAdapter  extends RecyclerView.Adapter<ModuleAdapter.ViewHolde
 
         switch (chg) {
             case "1":
-                Intent intent = new Intent(context,SalesActivity.class);
+                intent = new Intent(context,SalesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                break;
+            case "2":
+                intent = new Intent(context,CustomerActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 break;

@@ -2,31 +2,22 @@ package com.mobile.mtrader.model;
 
 public class Pasers {
 
-    public String usersname;
-    public String passsord;
-    public String imei;
+    public double lat;
+    public double lng;
 
-    public String getUsersname() {
-        return usersname;
+    public double getLat() {
+        return lat;
     }
 
-    public void setUsersname(String usersname) {
-        this.usersname = usersname;
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
-    public String getPasssord() {
-        return passsord;
+    public double getLng() {
+        return lng;
     }
 
-    public void setPasssord(String passsord) {
-        this.passsord = passsord;
-    }
-
-    public String getImei() {
-        return imei;
-    }
-
-    public void setImei(String imei) {
-        this.imei = imei;
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 }

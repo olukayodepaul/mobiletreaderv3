@@ -24,6 +24,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
         maven {
             url "https://maven.google.com"
         }
@@ -40,6 +41,8 @@ allprojects {
             options.compilerArgs << "-Xlint:deprecation"
         }
     }
+
+
 }
 
 task clean(type: Delete) {

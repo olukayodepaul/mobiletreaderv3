@@ -22,7 +22,9 @@ public class DailySalesViewModule extends ViewModel {
 
     List<Products> mproducts;
 
-    Long countItems;
+    Integer countItems;
+
+    Integer countAllItems;
 
     Employees employees;
 
@@ -41,11 +43,20 @@ public class DailySalesViewModule extends ViewModel {
         );
     }
 
-    public Single<Long> validateUserSalesEntries(String updatestatus) {
+    public Single<Integer> validateUserSalesEntries(String updatestatus) {
         return repository.validateUserSalesEntries(updatestatus).map(
                 mItems -> {
                     countItems = mItems;
                     return mItems;
+                }
+        );
+    }
+
+    public Single<Integer> countAllSalesEntries() {
+        return repository.countAllSalesEntries().map(
+                allMItems -> {
+                    countAllItems = allMItems;
+                    return allMItems;
                 }
         );
     }
@@ -61,12 +72,12 @@ public class DailySalesViewModule extends ViewModel {
 
     public void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
                          String inventory, String pricing, String orders,
-                         String customerno, String updatestatus, String entry_date_time,String productcode) {
+                         String customerno, String updatestatus, String entry_date_time,String soq, String productcode) {
 
          Completable.fromAction(() ->repository.updateSalesEntries (
          user_id, separator,separatorname, rollprice, packprice,
                 inventory, pricing, orders,
-                 customerno, updatestatus, entry_date_time,productcode
+                 customerno, updatestatus, entry_date_time,soq,productcode
 
          ))
                 .subscribeOn(Schedulers.io())

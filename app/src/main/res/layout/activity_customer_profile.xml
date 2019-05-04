@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mobile.mtrader.ui.CustomerProfile">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/prs">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/back_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="2dip"
+                        tools:ignore="ContentDescription"
+                        />
+
+                    <ImageView
+                        android:id="@+id/back_page"
+                        android:layout_width="32dip"
+                        android:layout_height="36dip"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/button"
+                        tools:ignore="ContentDescription"
+                        android:src="@drawable/white_array"/>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="8dip"
+                    android:paddingEnd="8dip"
+                    android:layout_toEndOf="@+id/back_button"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_toEndOf="@+id/back_button"
+                        android:gravity="center_vertical"
+                        android:paddingEnd="12dp"
+                        android:paddingStart="8dp"
+                        android:text="@string/edit_profile"
+                        android:textColor="@color/bgwhite"
+                        android:textSize="@dimen/modulesize"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/prs">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="20dip"
+            android:paddingEnd="20dip"
+            android:paddingBottom="36dip">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/nameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dip">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/u_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Customer Name"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:padding="10dip"
+                    android:singleLine="true"
+                    android:textColor="@color/ballReleaseColor"
+                    android:textSize="15sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/emailLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nameLayout"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/u_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Contact Name"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:padding="10dip"
+                    android:singleLine="true"
+                    android:textColor="@color/ballReleaseColor"
+                    android:textSize="15sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/emailLayout"
+                android:layout_marginTop="16dip"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/colorPrimary">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/u_paswd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Address"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:padding="10dip"
+                    android:singleLine="true"
+                    android:textColor="@color/ballReleaseColor"
+                    android:textSize="15sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/phoneLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/passwordLayout"
+                android:layout_marginTop="16dip">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/u_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Phone Number"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:padding="10dip"
+                    android:singleLine="true"
+                    android:textColor="@color/ballReleaseColor"
+                    android:textSize="15sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/u_group_container"
+                android:layout_width="match_parent"
+                android:layout_height="43dip"
+                android:layout_below="@+id/phoneLayout"
+                android:layout_marginTop="16dip">
+
+                <Spinner
+                    android:id="@+id/u_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dip"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:padding="8dip"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_below="@+id/u_group"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dip"
+                    android:background="@color/colorPrimary"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/extras"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/u_group_container"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/delivery_extras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <RelativeLayout
+                        android:id="@+id/u_gender_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="43dip"
+                        android:layout_marginTop="16dip">
+
+                        <Spinner
+                            android:id="@+id/u_gender"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dip"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:padding="8dip"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dip"
+                            android:layout_below="@+id/u_gender"
+                            android:layout_marginStart="4dip"
+                            android:layout_marginEnd="4dip"
+                            android:background="@color/colorPrimary"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/vehicle_type_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="43dip"
+                        android:layout_marginTop="16dip">
+
+                        <Spinner
+                            android:id="@+id/vehicleType"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dip"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:padding="8dip"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dip"
+                            android:layout_below="@+id/vehicleType"
+                            android:layout_marginStart="4dip"
+                            android:layout_marginEnd="4dip"
+                            android:background="@color/colorPrimary"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/merchant_extras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/adsLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dip">
+
+                        <EditText
+                            android:id="@+id/u_ads"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="Address"
+                            android:imeOptions="actionNext"
+                            android:inputType="textAutoCorrect"
+                            android:padding="10dip"
+                            android:singleLine="true"
+                            android:textColor="@color/ballReleaseColor"
+                            android:textSize="15sp"/>
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/registerBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/terms"
+                android:layout_marginTop="24dip"
+                android:background="@drawable/design_login_btn"
+                android:fontFamily="@font/montserrat_regular"
+                android:minWidth="16dip"
+                android:minHeight="16dip"
+                android:padding="10dip"
+                android:text="@string/edit_profile"
+                android:textAllCaps="false"
+                android:textColor="@color/white_color"
+                android:textSize="@dimen/fontSize"/>
+
+            <TextView
+                android:id="@+id/terms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/extras"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/montserrat_regular"
+                android:layout_marginTop="20dip"
+                android:gravity="center_horizontal"
+                android:background="?selectableItemBackground"
+                android:textColor="@color/bg_black"
+                android:textSize="@dimen/fontSize"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+</RelativeLayout>

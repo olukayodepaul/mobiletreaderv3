@@ -2,12 +2,9 @@ package com.mobile.mtrader.viewmodels;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
-import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.data.DataRepository;
@@ -17,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import io.reactivex.Flowable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -59,10 +54,11 @@ public class RepSalesConfirmViewModel extends ViewModel {
         );
     }
 
-    public void pustSalesToServer() {
+    public void pustSalesToServer(String latlng, String artime) {
 
         String dates = new SimpleDateFormat("HH:mm:ss").format(new Date());
         String uiid = UUID.randomUUID().toString();
+        String[] arr = latlng.split("\\~");
 
         mDis.add(repository.pustSalesToServer("1")
                 .subscribeOn(Schedulers.io())
@@ -86,8 +82,8 @@ public class RepSalesConfirmViewModel extends ViewModel {
                                         Double.parseDouble(data.get(i).rollprice),
                                         Double.parseDouble(data.get(i).packprice),
                                         data.get(i).separatorname,
-                                        "0.0",
-                                        "0.0",
+                                        arr[0],
+                                        arr[1],
                                         dates,
                                         uiid,
                                         "open"
@@ -108,6 +104,7 @@ public class RepSalesConfirmViewModel extends ViewModel {
                 .subscribe(new Observer<Response<DataBridge>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        mDis.add(d);
                     }
 
                     @Override

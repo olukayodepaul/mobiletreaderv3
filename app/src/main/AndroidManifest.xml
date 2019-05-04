@@ -11,7 +11,7 @@
 
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true"/>
+        android:required="true" />
 
     <application
         android:name="com.mobile.mtrader.Apps"
@@ -25,18 +25,16 @@
         <activity android:name="com.mobile.mtrader.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.mobile.mtrader.ui.ModuleActivity" >
-
-        </activity>
+        <activity android:name="com.mobile.mtrader.ui.ModuleActivity" />
         <activity android:name="com.mobile.mtrader.ui.AttendantActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_map_api_key"/>
-
+            android:value="@string/google_map_api_key" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -49,16 +47,25 @@
             android:name="com.mobile.mtrader.ui.DepotClokingActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.mobile.mtrader.ui.DepotClockoutActivity" />
-        <activity android:name="com.mobile.mtrader.ui.DailySalesActivity" android:screenOrientation="portrait" >
-
-        </activity>
+        <activity
+            android:name="com.mobile.mtrader.ui.DailySalesActivity"
+            android:screenOrientation="portrait" />
         <activity android:name="com.mobile.mtrader.ui.ConfirmSales" />
-        <activity android:name="com.mobile.mtrader.ui.Customer_Sales_History"></activity>
+        <activity android:name="com.mobile.mtrader.ui.Customer_Sales_History" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <service
+            android:name="com.mobile.mtrader.util.LocationService"
+            android:stopWithTask="true" />
+
+        <activity
+            android:name="com.mobile.mtrader.ui.CustomerActivity"
+            android:label="@string/title_activity_customer"
+            android:theme="@style/AppTheme" />
+        <activity android:name="com.mobile.mtrader.ui.CustomerProfile"></activity>
     </application>
 
 </manifest>

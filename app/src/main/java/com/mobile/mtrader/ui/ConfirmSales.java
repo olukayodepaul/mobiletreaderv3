@@ -75,6 +75,9 @@ public class ConfirmSales extends BaseActivity {
 
     Intent intent;
 
+    String latlng;
+    String arrTime;
+
     ApplicationComponent component;
 
     RepSalesConfirmViewModel repSalesConfirmViewModel;
@@ -105,6 +108,8 @@ public class ConfirmSales extends BaseActivity {
         if (bundle != null) {
             dbToken = bundle.getString("CUSTOMERS_ACCESS_KEYS");
             customerno = bundle.getString("CUSTOMER_NO");
+            latlng = bundle.getString("GEOLATLNG");
+            arrTime = bundle.getString("ARRIVAL_TIME");
         }
 
         repSalesConfirmViewModel.salesEntries("1", customerno);
@@ -152,7 +157,7 @@ public class ConfirmSales extends BaseActivity {
                     showProgressBar(false);
                     AppUtil.showAlertDialog(this, "Internet Error","You are not connected to the internet","Close");
                 }else{
-                   repSalesConfirmViewModel.pustSalesToServer();
+                   repSalesConfirmViewModel.pustSalesToServer(latlng,arrTime);
                 }
             }
         });

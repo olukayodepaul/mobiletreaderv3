@@ -2,6 +2,8 @@ package com.mobile.mtrader.data;
 
 
 import android.arch.lifecycle.LiveData;
+
+import com.mobile.mtrader.data.AllTablesStructures.AllRepCustomers;
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.LastLoation;
@@ -9,6 +11,7 @@ import com.mobile.mtrader.data.AllTablesStructures.Modules;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
+import com.mobile.mtrader.data.AllTablesStructures.UserSpinners;
 import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelAttendant;
 import com.mobile.mtrader.model.ModelEmployees;
@@ -48,16 +51,24 @@ public class DataRepository  {
         return this.daoSQLQuery.insertIntoSalesEntries(salesEntries);
     }
 
+    public Long insertIntoAllCustomers(AllRepCustomers allRepCustomers) {
+        return this.daoSQLQuery.insertIntoAllCustomers(allRepCustomers);
+    }
+
     public Long insertLastLocation(LastLoation lastLoation) {
         return this.daoSQLQuery.insertLastLocation(lastLoation);
     }
 
+    public Long insertIntoUserSpinners(UserSpinners userSpinners) {
+        return this.daoSQLQuery.insertIntoUserSpinners(userSpinners);
+    }
+
     public void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
                                    String inventory, String pricing, String orders,
-                                   String customerno, String updatestatus, String entry_date_time,String productcode) {
+                                   String customerno, String updatestatus, String entry_date_time,String soq, String productcode ) {
         this.daoSQLQuery.updateSalesEntries(user_id, separator,separatorname, rollprice, packprice,
                 inventory, pricing, orders,
-                customerno, updatestatus, entry_date_time,productcode);
+                customerno, updatestatus, entry_date_time,soq,productcode);
     }
 
     public Long insertIntoProducts(Products products) {
@@ -97,7 +108,7 @@ public class DataRepository  {
         return api.getUserRoster(userid, taskid, dates, times, lat, lng, rmsg);
     }
 
-    public Single<Long> validateUserSalesEntries(String updatestatus) {
+    public Single<Integer> validateUserSalesEntries(String updatestatus) {
         return this.daoSQLQuery.validateUserSalesEntries(updatestatus);
     }
 
@@ -127,6 +138,14 @@ public class DataRepository  {
 
     public void deleteFromSalesEntries() {
         this.daoSQLQuery.deleteFromSalesEntries();
+    }
+
+    public void deleteFromAllRepCustomers() {
+        this.daoSQLQuery.deleteFromAllRepCustomers();
+    }
+
+    public void deleteFromAllUserSpinners() {
+        this.daoSQLQuery.deleteFromAllUserSpinners();
     }
 
     public void deleteFromCustomers() {
@@ -183,6 +202,22 @@ public class DataRepository  {
 
     public Single<LastLoation> getPreviousState() {
         return this.daoSQLQuery.getPreviousState();
+    }
+
+    public Single<Integer> countAllSalesEntries() {
+        return this.daoSQLQuery.countAllSalesEntries();
+    }
+
+    public LiveData<List<AllRepCustomers>> getAllCustomersList() {
+        return this.daoSQLQuery.getAllCustomersList();
+    }
+
+    public Single<AllRepCustomers> getIndividualCustomerProfiles(int id) {
+        return this.daoSQLQuery.getIndividualCustomerProfiles(id);
+    }
+
+    public LiveData<List<UserSpinners>> getGroupUserSpinners(int sep) {
+        return this.daoSQLQuery.getGroupUserSpinners(sep);
     }
 
 }

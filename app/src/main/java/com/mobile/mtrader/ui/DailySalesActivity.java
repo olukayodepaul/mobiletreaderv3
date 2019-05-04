@@ -48,6 +48,8 @@ public class DailySalesActivity extends BaseActivity {
 
     Bundle bundle;
     String customer_key, customer_no;
+    String latlng;
+    String arrTime;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -76,7 +78,11 @@ public class DailySalesActivity extends BaseActivity {
         if (bundle != null) {
             customer_key = bundle.getString("CUSTOMERS_ACCESS_KEYS");
             customer_no = bundle.getString("CUSTOMER_ID");
+            latlng = bundle.getString("GEOLATLNG");
+            arrTime = bundle.getString("ARRIVAL_TIME");
         }
+
+        Toast.makeText(this, arrTime, Toast.LENGTH_LONG).show();
 
         recyler_data.setLayoutManager(new LinearLayoutManager(this));
         recyler_data.setHasFixedSize(true);
@@ -102,7 +108,6 @@ public class DailySalesActivity extends BaseActivity {
                                 } else if (getOrder.getText().toString().equals(".")) {
                                     getOrder.setText("");
                                 } else {
-
                                     double salesQty = 0.0;
                                     if (!getOrder.getText().toString().equals("")) {
                                         salesQty = Double.parseDouble(getOrder.getText().toString());
@@ -127,11 +132,12 @@ public class DailySalesActivity extends BaseActivity {
                                                     "",
                                                     "",
                                                     "",
+                                                    "",
                                                     data.get(position).productcode
                                             );
                                         } else {
 
-                                            String dates = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                                            String dates = new SimpleDateFormat("HH:mm:ss").format(new Date());
 
                                             mDis.add(
                                                     dailySalesViewModule.getUsersIndividualInformation()
@@ -150,6 +156,7 @@ public class DailySalesActivity extends BaseActivity {
                                                                         customer_no,
                                                                         "1",
                                                                         dates,
+                                                                        data.get(position).soq,
                                                                         data.get(position).productcode);
                                                             })
                                             );
@@ -172,15 +179,29 @@ public class DailySalesActivity extends BaseActivity {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             data -> {
-                                if (data == 0) {
-                                    Toast.makeText(getApplication(), "Please enter sales", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    intent = new Intent(this, ConfirmSales.class);
-                                    intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
-                                    intent.putExtra("CUSTOMER_NO", customer_no);
-                                    startActivity(intent);
-                                }
+
+                                    mDis.add(dailySalesViewModule.countAllSalesEntries()
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(allData->{
+
+                                        if(!allData.equals(data)){
+                                            Toast.makeText(getApplication(), "Please enter sales", Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            intent = new Intent(this, ConfirmSales.class);
+                                            intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
+                                            intent.putExtra("CUSTOMER_NO", customer_no);
+                                            intent.putExtra("GEOLATLNG",latlng);
+                                            intent.putExtra("ARRIVAL_TIME",arrTime);
+                                            startActivity(intent);
+                                        }
+                                    },throwable -> {
+                                        Toast.makeText(getApplication(), "Please enter sales", Toast.LENGTH_SHORT).show();
+                                    })
+                                    );
+
+
                             })
             );
         });
@@ -190,11 +211,11 @@ public class DailySalesActivity extends BaseActivity {
 
     public void updateSalesEntries(int user_id, String separator, String separatorname, String rollprice, String packprice,
                                    String inventory, String pricing, String orders,
-                                   String customerno, String updatestatus, String entry_date_time, String productcode) {
+                                   String customerno, String updatestatus, String entry_date_time, String soq, String productcode) {
         dailySalesViewModule.updateSalesEntries(
                 user_id, separator, separatorname, rollprice, packprice,
                 inventory, pricing, orders,
-                customerno, updatestatus, entry_date_time, productcode
+                customerno, updatestatus, entry_date_time, soq, productcode
         );
     }
 }

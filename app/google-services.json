@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "574913934977",
-    "firebase_url": "https://map-mobile-trader-v3.firebaseio.com",
-    "project_id": "map-mobile-trader-v3",
-    "storage_bucket": "map-mobile-trader-v3.appspot.com"
+    "project_number": "969529872031",
+    "firebase_url": "https://mobiletraderdb.firebaseio.com",
+    "project_id": "mobiletraderdb",
+    "storage_bucket": "mobiletraderdb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:574913934977:android:30ad3db2fe4f30de",
+        "mobilesdk_app_id": "1:969529872031:android:83a6860beb0ed35b",
         "android_client_info": {
           "package_name": "com.mobile.mtrader"
         }
       },
       "oauth_client": [
         {
-          "client_id": "574913934977-m4c2ul9dgt3flbj8kr0s6orgi2ojdplr.apps.googleusercontent.com",
+          "client_id": "969529872031-f2vc687pgho4pr6feusopljp1tq1mc0q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCPLiO0tKAvPdHAIv8MBUvCSi75EJnHCDQ"
+          "current_key": "AIzaSyD3EEsXmRKexhy6Kae1a_pRNJAErLg-c2E"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "574913934977-m4c2ul9dgt3flbj8kr0s6orgi2ojdplr.apps.googleusercontent.com",
+              "client_id": "969529872031-f2vc687pgho4pr6feusopljp1tq1mc0q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

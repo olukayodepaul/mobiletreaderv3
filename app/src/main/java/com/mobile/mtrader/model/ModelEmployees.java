@@ -67,4 +67,11 @@ public class ModelEmployees {
     @Expose
     public List<ModelProducts> product;
 
+    @SerializedName("repcustomers")
+    @Expose
+    public List<AllRepCustomers> repcustomers;
+
+    @SerializedName("spinners")
+    @Expose
+    public List<Spinners> spinners;
 }
