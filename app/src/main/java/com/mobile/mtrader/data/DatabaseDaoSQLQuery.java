@@ -17,6 +17,8 @@ import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.data.AllTablesStructures.UserSpinners;
 
 import java.util.List;
+
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -150,6 +152,15 @@ public interface DatabaseDaoSQLQuery {
 
     @Query("SELECT * FROM userspinners WHERE sep=:sep")
     LiveData<List<UserSpinners>> getGroupUserSpinners(int sep);
+
+    @Query("UPDATE AllRepCustomers SET outletname=:outletname, outletaddress=:outletaddress,  contactname=:contactname, contactphone=:contactphone, outletclassid=:outletclassid, outletlanguageid=:outletlanguageid , outlettypeid=:outlettypeid, latitude=:latitude, longitude=:longitude WHERE id=:id")
+    void updateMultipleCustomers(String outletname, String outletaddress, String contactname, Long contactphone,
+                                                        int outletclassid, int outletlanguageid, int outlettypeid,
+                                                        double latitude, double longitude, int id);
+
+    @Query("UPDATE Customers SET outletname=:outletname, lat=:lat, lng=:lng  WHERE id=:id")
+    void updateLocalCustomers(String outletname, String lat, String lng, int id);
+
 
 }
 

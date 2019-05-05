@@ -220,6 +220,24 @@ public class DataRepository  {
         return this.daoSQLQuery.getGroupUserSpinners(sep);
     }
 
+    public Single<Response<ModelAttendant>> reSetCustomerProfile(String outletname, String contactname, String address, Long phone,
+                                                                 int outlet_class_id, int outlet_language_id, int outlet_type_id,
+                                                                 int custno, double lat, double lng) {
+        return api.reSetCustomerProfile(outletname, contactname, address, phone, outlet_class_id, outlet_language_id, outlet_type_id,
+        custno, lat, lng);
+    }
+
+    public void updateMultipleCustomers(String outletname, String outletaddress, String contactname, Long contactphone,
+                                        int outletclassid, int outletlanguageid, int outlettypeid,
+                                        double latitude, double longitude, int id) {
+        this.daoSQLQuery.updateMultipleCustomers(outletname,outletaddress, contactname, contactphone,
+        outletclassid, outletlanguageid, outlettypeid, latitude, longitude, id);
+    }
+
+    public void updateLocalCustomers(String outletname, String lat, String lng, int id) {
+        this.daoSQLQuery.updateLocalCustomers(outletname,lat,lng,id);
+    }
+
 }
 
 

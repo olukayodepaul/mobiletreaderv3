@@ -30,6 +30,26 @@ public class OutletLanguageCache {
         return nodes.get(index).getName();
     }
 
+    public int getIndexById(int id) {
+        int index = 0;
+        for(Caches nd : nodes){
+            if(nd.getId() == id){break;}
+            index++;
+        }
+        return index;
+    }
+
+    public int getValueId(String value) {
+        int id = 0;
+        for(Caches nd : nodes){
+            if(nd.getName().equals(value)){
+                id=nd.getId();
+                break;
+            }
+        }
+        return id;
+    }
+
     class Caches{
 
         private int id;

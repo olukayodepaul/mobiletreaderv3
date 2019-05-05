@@ -36,6 +36,7 @@ import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.firebasemodel.UserLocation;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.util.AppUtil;
 import com.mobile.mtrader.viewmodels.LoginViewModel;
 
 import java.text.SimpleDateFormat;
@@ -99,7 +100,9 @@ public class MainActivity extends BaseActivity {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE_REQUEST);
-            } else {
+            }else if (!AppUtil.checkConnection(this)) {
+                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }else {
                 showProgressBar(true);
                 telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 String imei = telephonyManager.getDeviceId();

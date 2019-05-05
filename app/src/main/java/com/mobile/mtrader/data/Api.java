@@ -1,7 +1,6 @@
 package com.mobile.mtrader.data;
 
 
-import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelEmployees;
 import com.mobile.mtrader.model.ModelAttendant;
@@ -9,6 +8,7 @@ import com.mobile.mtrader.model.ModelAttendant;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -37,5 +37,19 @@ public interface Api {
     @POST("/mobiletrader/order")
     Observable<Response<DataBridge>> moveDataToServer(
             @Body List<DataBridge> salesEntries
+    );
+
+    @POST("/mobiletrader/customerprofile")
+    Single<Response<ModelAttendant>> reSetCustomerProfile(
+            @Query("outletname") String  outletname,
+            @Query("contactname") String contactname,
+            @Query("address") String address,
+            @Query("phone") Long phone,
+            @Query("outlet_class_id") int outlet_class_id,
+            @Query("outlet_language_id") int outlet_language_id,
+            @Query("outlet_type_id") int outlet_type_id,
+            @Query("custno") int custno,
+            @Query("lat") double lat,
+            @Query("lng") double lng
     );
 }
