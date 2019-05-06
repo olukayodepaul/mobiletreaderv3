@@ -4,6 +4,7 @@
     <string name="modules">Modules</string>
     <string name="logout">Logout</string>
     <string name="menu_sales">Customers</string>
+    <string name="menu_cust">Sales</string>
     <string name="menu_history">Sales History</string>
     <string name="menu_routemap">Route Map</string>
     <string name="register">User Profile</string>

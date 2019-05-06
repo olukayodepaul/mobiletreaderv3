@@ -24,10 +24,15 @@ import retrofit2.Response;
 public class RepSalesConfirmViewModel extends ViewModel {
 
     private DataRepository repository;
+
     MutableLiveData<String> response = new MutableLiveData<>();
+
     CompositeDisposable mDis = new CompositeDisposable();
+
     List<DataBridge> result;
+
     DataBridge dataBridge;
+
     MutableLiveData<List<SalesEntries>> SalesEntriesdata = new MutableLiveData<>();
 
 
@@ -171,5 +176,11 @@ public class RepSalesConfirmViewModel extends ViewModel {
             repository.updateIndividualCustomersSalesTime(item[0].rostertime, item[0].urno);
             return null;
         }
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mDis.clear();
     }
 }

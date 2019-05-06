@@ -160,6 +160,13 @@ public class BankViewModel extends ViewModel {
         }
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mDis.clear();
+    }
+
+
 }
 
 

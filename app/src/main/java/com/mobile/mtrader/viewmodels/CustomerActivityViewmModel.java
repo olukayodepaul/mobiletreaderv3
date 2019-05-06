@@ -127,12 +127,17 @@ public class CustomerActivityViewmModel extends ViewModel {
                                     }
                                 });
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         broadcast.postValue("400~Channel throwable error");
                     }
                 });
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposable.clear();
     }
 
 }

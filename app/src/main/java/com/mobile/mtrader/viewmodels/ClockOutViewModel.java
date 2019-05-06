@@ -136,4 +136,11 @@ public class ClockOutViewModel extends ViewModel {
         }
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mDis.clear();
+    }
+
+
 }

@@ -239,11 +239,7 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        mCompositeDisposable.clear();
-    }
+
 
     private void deleteFromEmployee() {
         Completable.fromAction(() -> repository.deleteFromEmployee())
@@ -475,5 +471,13 @@ public class LoginViewModel extends ViewModel {
                     }
                 });
     }
+
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mCompositeDisposable.clear();
+    }
+
 
 }
