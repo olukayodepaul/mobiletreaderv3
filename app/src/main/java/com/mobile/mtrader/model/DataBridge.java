@@ -99,10 +99,31 @@ public class DataBridge {
     @Expose
     public String trans;
 
+    @SerializedName("latlng")
+    @Expose
+    public String latlng;
+
+    @SerializedName("artime")
+    @Expose
+    public String artime;
+
+    @SerializedName("dptime")
+    @Expose
+    public String dptime;
+
+    @SerializedName("custtoken")
+    @Expose
+    public String custtoken;
+
+    @SerializedName("soq")
+    @Expose
+    public String soq;
+
+
     public DataBridge(String entrytime, String product_name, String product_code, String customer_id,
                       int userid, String separator, double order, double invs, int pricing, int status,
                       double rollprice, double packprice, String separatorname, String lat, String lng,
-                      String location_entry_time, String token, String trans) {
+                      String location_entry_time, String token, String trans, String latlng, String artime, String dptime, String custtoken, String soq) {
         this.entrytime = entrytime;
         this.product_name = product_name;
         this.product_code = product_code;
@@ -121,6 +142,11 @@ public class DataBridge {
         this.location_entry_time = location_entry_time;
         this.token = token;
         this.trans = trans;
+        this.latlng = latlng;
+        this.artime = artime;
+        this.dptime = dptime;
+        this.custtoken = custtoken;
+        this.soq = soq;
     }
 
     public String getEntrytime() {
@@ -265,5 +291,45 @@ public class DataBridge {
 
     public void setTrans(String trans) {
         this.trans = trans;
+    }
+
+    public String getLatlng() {
+        return latlng;
+    }
+
+    public void setLatlng(String latlng) {
+        this.latlng = latlng;
+    }
+
+    public String getArtime() {
+        return artime;
+    }
+
+    public void setArtime(String artime) {
+        this.artime = artime;
+    }
+
+    public String getDptime() {
+        return dptime;
+    }
+
+    public void setDptime(String dptime) {
+        this.dptime = dptime;
+    }
+
+    public String getCusttoken() {
+        return custtoken;
+    }
+
+    public void setCusttoken(String custtoken) {
+        this.custtoken = custtoken;
+    }
+
+    public String getSoq() {
+        return soq;
+    }
+
+    public void setSoq(String soq) {
+        this.soq = soq;
     }
 }
