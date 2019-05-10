@@ -19,6 +19,4 @@ public class ModuleViewModel extends ViewModel {
     public LiveData<List<Modules>> getLiveModules() {
         return repository.findAllModules();
     }
-
-
 }

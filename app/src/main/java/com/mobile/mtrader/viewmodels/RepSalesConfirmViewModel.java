@@ -59,7 +59,7 @@ public class RepSalesConfirmViewModel extends ViewModel {
         );
     }
 
-    public void pustSalesToServer(String latlng, String artime) {
+    public void pustSalesToServer(String latlng, String artime, String custtoken) {
 
         String dates = new SimpleDateFormat("HH:mm:ss").format(new Date());
         String uiid = UUID.randomUUID().toString();
@@ -74,7 +74,7 @@ public class RepSalesConfirmViewModel extends ViewModel {
 
                             for (int i = 0; i < data.size(); i++) {
                                 dataBridge = new DataBridge(
-                                        new SimpleDateFormat("HH:mm:ss").format(new Date()),
+                                        data.get(i).entry_date_time,
                                         data.get(i).productname,
                                         data.get(i).productcode,
                                         data.get(i).customerno,
@@ -91,7 +91,12 @@ public class RepSalesConfirmViewModel extends ViewModel {
                                         arr[1],
                                         dates,
                                         uiid,
-                                        "open"
+                                        "open",
+                                        latlng,
+                                        artime,
+                                        new SimpleDateFormat("HH:mm:ss").format(new Date()),
+                                        custtoken,
+                                        data.get(i).soq
                                 );
                                 result.add(dataBridge);
                             }

@@ -82,8 +82,6 @@ public class DailySalesActivity extends BaseActivity {
             arrTime = bundle.getString("ARRIVAL_TIME");
         }
 
-        Toast.makeText(this, arrTime, Toast.LENGTH_LONG).show();
-
         recyler_data.setLayoutManager(new LinearLayoutManager(this));
         recyler_data.setHasFixedSize(true);
         skuAdapter = new SkuAdapter(this, customer_no);

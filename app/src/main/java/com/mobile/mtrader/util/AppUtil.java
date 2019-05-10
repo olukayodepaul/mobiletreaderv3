@@ -46,5 +46,4 @@ public class AppUtil {
         return ((ConnectivityManager) context.getSystemService
                 (Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
     }
-
 }

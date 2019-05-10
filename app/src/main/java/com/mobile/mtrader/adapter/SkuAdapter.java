@@ -67,16 +67,17 @@ public class SkuAdapter extends RecyclerView.Adapter<SkuAdapter.ViewHolder> {
                 //own product
                 holder.skus.setTextColor(Color.parseColor("#FFFFFF"));
                 holder.skus.setBackgroundColor(Color.parseColor("#fa8100"));
-            } else if (rs.separator.equals("2")) {
+            }else if (rs.separator.equals("2")) {
                 //promo
                 holder.skus.setTextColor(Color.parseColor("#FFFFFF"));
-                holder.soq.setText("");
+                //holder.soq.setText("");
                 holder.skus.setBackgroundColor(Color.parseColor("#1769AA"));
-            } else if (rs.separator.equals("3")) {
+            }else if (rs.separator.equals("3")) {
                 //competition product
-                holder.order.setInputType(InputType.TYPE_NULL);
-                holder.order.setText("0.0");
-                holder.skus.setBackgroundColor(Color.parseColor("#ECEFF1"));
+                //holder.order.setText("0.0");
+                //holder.order.setInputType(InputType.TYPE_NULL);
+                holder.skus.setTextColor(Color.parseColor("#FFFFFF"));
+                holder.skus.setBackgroundColor(Color.parseColor("#0088BB"));
             }
 
         }

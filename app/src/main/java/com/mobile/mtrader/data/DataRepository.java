@@ -238,7 +238,7 @@ public class DataRepository  {
         this.daoSQLQuery.updateLocalCustomers(outletname,lat,lng,id);
     }
 
+    public Single<Response<ModelAttendant>> setOutletClose(int userid, String urno, double lat, double lng, String  arivaltime) {
+        return api.setOutletClose(userid, urno, lat,  lng, arivaltime);
+    }
 }
-
-
-

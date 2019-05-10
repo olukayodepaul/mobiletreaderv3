@@ -14,7 +14,8 @@
     <string name="title_activity_delivery_map">Customer Location</string>
     <string name="collection_user_locations">user location</string>
     <string name="title_activity_customer">CustomerActivity</string>
-    <string name="edit_profile">Customer Profile</string>
+    <string name="edit_profile">Save Change</string>
+    <string name="edit_profile_edit">Profile and Edit Profile</string>
 
 
 </resources>

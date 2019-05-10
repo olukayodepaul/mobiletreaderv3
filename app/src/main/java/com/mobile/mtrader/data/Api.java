@@ -52,4 +52,15 @@ public interface Api {
             @Query("lat") double lat,
             @Query("lng") double lng
     );
+
+    @POST("/mobiletrader/outletclose")
+    Single<Response<ModelAttendant>> setOutletClose(
+            @Query("userid") int  userid,
+            @Query("urno") String urno,
+            @Query("lat") double lat,
+            @Query("lng") double lng,
+            @Query("arivaltime") String arivaltime
+    );
+
+
 }

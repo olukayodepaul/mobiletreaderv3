@@ -156,8 +156,8 @@ public class ConfirmSales extends BaseActivity {
                 if(!AppUtil.checkConnection(this)) {
                     showProgressBar(false);
                     AppUtil.showAlertDialog(this, "Internet Error","You are not connected to the internet","Close");
-                }else{
-                   repSalesConfirmViewModel.pustSalesToServer(latlng,arrTime);
+                }else {
+                   repSalesConfirmViewModel.pustSalesToServer(latlng,arrTime,confirms.getText().toString());
                 }
             }
         });

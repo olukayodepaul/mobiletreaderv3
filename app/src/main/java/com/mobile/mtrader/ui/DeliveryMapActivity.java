@@ -19,6 +19,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +27,9 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,6 +42,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -48,7 +53,9 @@ import com.mobile.mtrader.model.Pasers;
 import com.mobile.mtrader.viewmodels.DeliverySalesMapViewmodel;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import butterknife.BindView;
@@ -72,6 +79,9 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
 
     @BindView(R.id.map)
     MapView mMapView;
+
+    @BindView(R.id.back_butto)
+    Button back_butto;
 
     Intent intent;
 
@@ -110,8 +120,6 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
 
     private static final String TAG = "DeliveryMapActivity";
 
-    private LatLngBounds mMapBoundry;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,10 +157,32 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
             onBackPressed();
         });
 
+        back_butto.setOnClickListener(view -> {
+
+        });
+
+
         prosales.setOnClickListener(v -> {
-            //Genfencing here
+
+            /*Location crntLocation=new Location("crntlocation");
+            crntLocation.setLatitude(Double.parseDouble(outletlat));
+            crntLocation.setLongitude(Double.parseDouble(outletlng));
+
+            Location newLocation=new Location("newLocation");
+            newLocation.setLatitude(pasers.getLat());
+            newLocation.setLongitude(pasers.getLng());*/
+
+            //distance = crntLocation.distanceTo(newLocation) / 1000;
+            //
+
+            //geo fencing using distance for the calculation.
+            /*float[] distance = new float[10];
+            Location.distanceBetween(pasers.getLat(),pasers.getLng(),Double.parseDouble(outletlat),Double.parseDouble(outletlng),distance);
+            float dis = distance[0];*/
             deliveryViewModel.updateFromSalesEntries();
             getLocationPermission();
+           // Toast.makeText(this, Float.toString(dis)+' '+pasers.getLat(), Toast.LENGTH_SHORT).show();
+
         });
 
         deliveryViewModel.returnRep().observe(this, data -> {
@@ -169,7 +199,6 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
                 Toast.makeText(this, "Please clocking to proceed", Toast.LENGTH_SHORT).show();
             }
         });
-
         initialiseMap(savedInstanceState);
     }
 
@@ -185,6 +214,7 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
                     Location location = task.getResult();
                     pasers.setLat(location.getLatitude());
                     pasers.setLng(location.getLongitude());
+
                 }
             }
         });
@@ -400,6 +430,7 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
             alert.show();
      }
     }
+
 
 }
 

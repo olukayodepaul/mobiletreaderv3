@@ -182,7 +182,6 @@
                     android:textSize="15sp"/>
             </android.support.design.widget.TextInputLayout>
 
-
             <TextView
                 android:id="@+id/cclass"
                 android:layout_width="match_parent"
@@ -308,10 +307,6 @@
 
             </RelativeLayout>
 
-
-
-
-
             <Button
                 android:id="@+id/registerBtn"
                 android:layout_width="match_parent"
@@ -328,9 +323,6 @@
                 android:textColor="@color/white_color"
                 android:textSize="@dimen/fontSize"/>
 
-
-
         </RelativeLayout>
-
     </ScrollView>
 </RelativeLayout>
