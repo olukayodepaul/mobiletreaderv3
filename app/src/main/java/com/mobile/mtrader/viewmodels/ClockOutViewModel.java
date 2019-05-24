@@ -72,6 +72,60 @@ public class ClockOutViewModel extends ViewModel {
         );
     }
 
+
+    public void clockinInRoster() {
+
+        String dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String times = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+        mDis.add(repository.findIndividualUsers()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(data -> {
+
+                    repository.setRoster(
+                            data.user_id,
+                            3,
+                            dates,
+                            times,
+                            "0.0",
+                            "0.0",
+                            "Clockin already taken")
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<Response<ModelAttendant>>() {
+                                @Override
+                                public void onSubscribe(Disposable d) { }
+
+                                @Override
+                                public void onNext(Response<ModelAttendant> response) {
+                                    ModelAttendant roster = response.body();
+
+                                    if (response.code() == 200) {
+                                        if (roster.status == 200) {
+                                            observeResponse.postValue(Integer.toString(roster.status) + "~" + "Successful~"+times);
+                                        } else {
+                                            observeResponse.postValue(Integer.toString(roster.status) + "~" + roster.msg);
+                                        }
+                                    } else {
+                                        observeResponse.postValue("401" + "~" + "Server cant be reach");
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    observeResponse.postValue("401" + "~" + e.getMessage());
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                })
+        );
+    }
+
     public void dailyRoster() {
 
         String dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date());

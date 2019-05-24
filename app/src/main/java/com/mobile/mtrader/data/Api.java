@@ -4,9 +4,7 @@ package com.mobile.mtrader.data;
 import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelEmployees;
 import com.mobile.mtrader.model.ModelAttendant;
-
 import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Response;
@@ -17,14 +15,14 @@ import retrofit2.http.Query;
 public interface Api {
 
     @POST("/mobiletrader/login")
-    Observable<Response<ModelEmployees>> getUserLogin(
+    Observable<Response<ModelEmployees>> getUserLogin (
             @Query("username") String username,
             @Query("password") String password,
             @Query("imei") String imei
     );
 
     @POST("/mobiletrader/roster")
-    Observable<Response<ModelAttendant>> getUserRoster(
+    Observable<Response<ModelAttendant>> getUserRoster (
             @Query("userid") int userid,
             @Query("taskid") int taskid,
             @Query("dates") String dates,
@@ -35,12 +33,12 @@ public interface Api {
     );
 
     @POST("/mobiletrader/order")
-    Observable<Response<DataBridge>> moveDataToServer(
+    Observable<Response<DataBridge>> moveDataToServer (
             @Body List<DataBridge> salesEntries
     );
 
     @POST("/mobiletrader/customerprofile")
-    Single<Response<ModelAttendant>> reSetCustomerProfile(
+    Single<Response<ModelAttendant>> reSetCustomerProfile (
             @Query("outletname") String  outletname,
             @Query("contactname") String contactname,
             @Query("address") String address,
@@ -54,13 +52,9 @@ public interface Api {
     );
 
     @POST("/mobiletrader/outletclose")
-    Single<Response<ModelAttendant>> setOutletClose(
+    Single<Response<ModelAttendant>> setOutletClose (
             @Query("userid") int  userid,
             @Query("urno") String urno,
-            @Query("lat") double lat,
-            @Query("lng") double lng,
             @Query("arivaltime") String arivaltime
     );
-
-
 }

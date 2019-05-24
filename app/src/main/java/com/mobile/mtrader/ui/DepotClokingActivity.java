@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,6 +42,9 @@ public class DepotClokingActivity extends BaseActivity {
 
     @BindView(R.id.back_page)
     ImageView back_page;
+
+    @BindView(R.id.clockout)
+    Button clockout;
 
     @BindView(R.id.resume)
     Button resume;
@@ -79,9 +83,22 @@ public class DepotClokingActivity extends BaseActivity {
                 showProgressBar(false);
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             }else {
+                showProgressBar(true);
                 clockInViewModel.dailyRoster();
             }
         });
+
+        clockout.setOnClickListener(view -> {
+            if(!AppUtil.checkConnection(this)) {
+                showProgressBar(false);
+                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }else {
+                showProgressBar(true);
+                clockInViewModel.dailyClockOut();
+            }
+        });
+
+
         user_baskets.setLayoutManager(new LinearLayoutManager(this));
         user_baskets.setHasFixedSize(true);
         clockInAdapter = new ClockInAdapter(this);
@@ -106,7 +123,6 @@ public class DepotClokingActivity extends BaseActivity {
         clockInViewModel.getObserveResponse().observe(this, s -> {
             showProgressBar(false);
             String[] res = s.split("\\~");
-
             if(Integer.parseInt(res[0])==200){
                 clockInViewModel.insertLastLocation();
                 Intent intent = new Intent(this,SalesActivity.class);

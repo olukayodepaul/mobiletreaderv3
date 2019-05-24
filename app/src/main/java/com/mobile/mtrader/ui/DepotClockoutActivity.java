@@ -41,8 +41,11 @@ public class DepotClockoutActivity extends BaseActivity {
     @BindView(R.id.back_page)
     ImageView back_page;
 
-    @BindView(R.id.payments_btn)
-    Button payments_btn;
+    @BindView(R.id.btn_clockin)
+    Button btn_clockin;
+
+    @BindView(R.id.btn_close)
+    Button btn_close;
 
     @BindView(R.id.basket_t)
     TextView basket_t;
@@ -71,13 +74,24 @@ public class DepotClockoutActivity extends BaseActivity {
         showProgressBar(true);
         myFormatter = new DecimalFormat("#,###.0");
 
-        payments_btn.setOnClickListener(v -> {
+        btn_close.setOnClickListener(v -> {
             showProgressBar(true);
             if (!AppUtil.checkConnection(this)) {
                 showProgressBar(false);
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             } else {
+                showProgressBar(true);
                 clockOutViewModel.dailyRoster();
+            }
+        });
+
+        btn_clockin.setOnClickListener(view -> {
+            if(!AppUtil.checkConnection(this)) {
+                showProgressBar(false);
+                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }else {
+                showProgressBar(true);
+                clockOutViewModel.clockinInRoster();
             }
         });
 

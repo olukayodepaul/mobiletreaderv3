@@ -2,11 +2,19 @@ package com.mobile.mtrader.viewmodels;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.os.AsyncTask;
+
+import com.mobile.mtrader.data.AllTablesStructures.Customers;
+import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.DataRepository;
 import com.mobile.mtrader.model.ModelAttendant;
 
+import org.reactivestreams.Subscription;
+
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableSubscriber;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -24,6 +32,8 @@ public class DeliverySalesMapViewmodel extends ViewModel {
 
     CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
+    Employees employees;
+
     DeliverySalesMapViewmodel(DataRepository repository) {
         this.repository = repository;
     }
@@ -32,38 +42,70 @@ public class DeliverySalesMapViewmodel extends ViewModel {
         return rep;
     }
 
-    public MutableLiveData<String> rpRep() {
+    public MutableLiveData<String> rpRep(){
         return rp;
     }
 
-    public void setOutletClose(int userid, String urno, double lat, double lng, String  arivaltime) {
+    public Flowable<Employees> getUsersIndividualInformation() {
+        return repository.findIndividualUsers().map(
+                em -> {
+                    employees = em;
+                    return em;
+                }
+        );
+    }
 
-        repository.setOutletClose(userid, urno, lat, lng, arivaltime)
+    public void setOutletClose(String urno,  String  arivaltime) {
+
+        mCompositeDisposable.add(getUsersIndividualInformation()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<ModelAttendant>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        mCompositeDisposable.add(d);
-                    }
+                .subscribe(mEmployees->{
 
-                    @Override
-                    public void onSuccess(Response<ModelAttendant> response) {
+                    repository.setOutletClose(mEmployees.user_id, urno, arivaltime)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<Response<ModelAttendant>>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                    mCompositeDisposable.add(d);
+                                }
 
-                        ModelAttendant res = response.body();
+                                @Override
+                                public void onSuccess(Response<ModelAttendant> response) {
 
-                        if (response != null && response.isSuccessful() && response.body() != null && response.code() == 200) {
-                            rp.postValue("200");
-                        } else {
-                            rp.postValue("400~Connection Error, Please try again");
-                        }
-                    }
+                                    ModelAttendant res = response.body();
 
-                    @Override
-                    public void onError(Throwable e) {
-                        rp.postValue("400~Server Error");
-                    }
-                });
+                                    if (response != null && response.isSuccessful() && response.body() != null && response.code() == 200) {
+
+                                        if(res.status==200) {
+
+                                            Customers customers = new Customers(
+                                                    0, "", urno, "",
+                                                    "", "", "", 0,
+                                                    "", "", "close "+arivaltime
+                                            );
+                                            new UpdateCustomerTime().execute(customers);
+                                            rp.postValue("200~");
+
+                                        }else{
+                                            rp.postValue("200~"+res.msg);
+                                        }
+
+                                    } else {
+                                        rp.postValue("400~Connection Error, Please try again");
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    rp.postValue("400~Server Error");
+                                }
+                            });
+                },throwable -> {
+                    rp.postValue("400~Server Error");
+                })
+        );
     }
 
     public void updateFromSalesEntries() {
@@ -96,6 +138,14 @@ public class DeliverySalesMapViewmodel extends ViewModel {
 
                     }
                 });
+    }
+
+    private class UpdateCustomerTime extends AsyncTask<Customers, Void, Void> {
+        @Override
+        protected Void doInBackground(Customers... item) {
+            repository.updateIndividualCustomersSalesTime(item[0].rostertime, item[0].urno);
+            return null;
+        }
     }
 
     @Override

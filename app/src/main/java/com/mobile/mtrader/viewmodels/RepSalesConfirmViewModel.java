@@ -147,7 +147,7 @@ public class RepSalesConfirmViewModel extends ViewModel {
                             Customers customers = new Customers(
                                     0, "", data.urno, "",
                                     "", "", "", 0,
-                                    "", "", data.mdate
+                                    "", "", "open "+data.mdate
                             );
                             new UpdateCustomerTime().execute(customers);
                             response.postValue("200");

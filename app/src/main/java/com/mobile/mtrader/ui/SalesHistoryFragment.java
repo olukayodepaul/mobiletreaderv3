@@ -1,8 +1,6 @@
 package com.mobile.mtrader.ui;
 
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -13,21 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-
 import com.mobile.mtrader.adapter.OrderHistoryAdapter;
-import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.viewmodels.BankViewModel;
-import com.mobile.mtrader.viewmodels.DailySalesViewModule;
-import java.util.List;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.disposables.CompositeDisposable;
 
 
 public class SalesHistoryFragment extends Fragment {
@@ -47,7 +40,9 @@ public class SalesHistoryFragment extends Fragment {
     @BindView(R.id.progressbar)
     ProgressBar progressbar;
 
-    public SalesHistoryFragment() { }
+    public SalesHistoryFragment() {
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

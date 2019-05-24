@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.widget.Toast;
+
+import java.net.InetAddress;
 
 public class AppUtil {
 
@@ -43,7 +46,33 @@ public class AppUtil {
     }
 
     public static boolean checkConnection(Context context) {
-        return ((ConnectivityManager) context.getSystemService
-                (Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+        return ((ConnectivityManager) context.getSystemService (Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
     }
+
+    public static boolean checkConnections(Context context) {
+
+        final ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = connMgr.getActiveNetworkInfo();
+
+        if (activeNetworkInfo != null) { // connected to the internet
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                // connected to wifi
+                return true;
+            } else if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                // connected to the mobile provider's data plan
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean insideRadius(double custLat, double custLng, double curLat, double curLng) { 
+        int ky = 40000000/360;//40000/360;
+        double kx = Math.cos(Math.PI*custLat/180) * ky;
+        double dx = Math.abs(custLng-curLng)*kx;
+        double dy = Math.abs(custLat-curLat)*ky;
+        return Math.sqrt(dx*dx+dy*dy)<=5;
+    }
+
 }

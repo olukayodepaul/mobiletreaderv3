@@ -89,18 +89,12 @@ public class MainActivity extends BaseActivity {
         showProgressBar(false);
         mAuth = FirebaseAuth.getInstance();
 
-        /*
-        intent = new Intent(this,ModuleActivity.class);
-        startActivity(intent);
-        finish();
-        */
-
         loginButtons.setOnClickListener(view -> {
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE_REQUEST);
-            }else if (!AppUtil.checkConnection(this)) {
+            }else if (!AppUtil.checkConnections(this)) {
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             }else {
                 showProgressBar(true);

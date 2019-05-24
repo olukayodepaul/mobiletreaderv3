@@ -18,7 +18,6 @@ import com.mobile.mtrader.model.ModelEmployees;
 import java.util.List;
 import javax.inject.Inject;
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Response;
@@ -238,7 +237,7 @@ public class DataRepository  {
         this.daoSQLQuery.updateLocalCustomers(outletname,lat,lng,id);
     }
 
-    public Single<Response<ModelAttendant>> setOutletClose(int userid, String urno, double lat, double lng, String  arivaltime) {
-        return api.setOutletClose(userid, urno, lat,  lng, arivaltime);
+    public Single<Response<ModelAttendant>> setOutletClose(int userid, String urno,  String  arivaltime) {
+        return api.setOutletClose(userid, urno,  arivaltime);
     }
 }

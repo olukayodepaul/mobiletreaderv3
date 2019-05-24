@@ -88,7 +88,7 @@ public class LoginViewModel extends ViewModel {
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(mData -> {
 
-                                                        if (mData == 0) {
+                                                if (mData == 0) {
 
                                                             deleteFromEmployee();
                                                             deleteFromModules();
@@ -239,7 +239,11 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mCompositeDisposable.clear();
+    }
 
     private void deleteFromEmployee() {
         Completable.fromAction(() -> repository.deleteFromEmployee())
@@ -471,13 +475,5 @@ public class LoginViewModel extends ViewModel {
                     }
                 });
     }
-
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        mCompositeDisposable.clear();
-    }
-
 
 }

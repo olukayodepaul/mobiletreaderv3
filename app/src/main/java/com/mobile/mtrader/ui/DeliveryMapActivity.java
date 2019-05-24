@@ -2,9 +2,9 @@ package com.mobile.mtrader.ui;
 
 
 import android.Manifest;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -13,7 +13,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -22,14 +24,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,11 +38,9 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -50,13 +48,10 @@ import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.model.Pasers;
+import com.mobile.mtrader.util.AppUtil;
 import com.mobile.mtrader.viewmodels.DeliverySalesMapViewmodel;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
-
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +77,9 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
 
     @BindView(R.id.back_butto)
     Button back_butto;
+
+    @BindView(R.id.mProgressBar)
+    ProgressBar mProgressBar;
 
     Intent intent;
 
@@ -134,6 +132,7 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         deliveryViewModel = ViewModelProviders.of(this, viewModelFactory).get(DeliverySalesMapViewmodel.class);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         pasers = new Pasers();
+        mProgressBar.setVisibility(View.INVISIBLE);
 
         if (bundle != null) {
 
@@ -157,32 +156,42 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
             onBackPressed();
         });
 
-        back_butto.setOnClickListener(view -> {
+        //check internet connection in an android.
 
+
+        back_butto.setOnClickListener(view -> {
+            mProgressBar.setVisibility(View.VISIBLE);
+            if (!AppUtil.checkConnections(this)) {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                buildAlertMessageMobileDataOff();
+            }else {
+                deliveryViewModel.setOutletClose(customer_no,new SimpleDateFormat("HH:mm:ss").format(new Date()));
+            }
         });
 
-
         prosales.setOnClickListener(v -> {
+            if (!AppUtil.checkConnection(this)) {
+                buildAlertMessageMobileDataOff();
+            }else {
+                deliveryViewModel.updateFromSalesEntries();
+                getLocationPermission();
+            }
+        });
 
-            /*Location crntLocation=new Location("crntlocation");
-            crntLocation.setLatitude(Double.parseDouble(outletlat));
-            crntLocation.setLongitude(Double.parseDouble(outletlng));
-
-            Location newLocation=new Location("newLocation");
-            newLocation.setLatitude(pasers.getLat());
-            newLocation.setLongitude(pasers.getLng());*/
-
-            //distance = crntLocation.distanceTo(newLocation) / 1000;
-            //
-
-            //geo fencing using distance for the calculation.
-            /*float[] distance = new float[10];
-            Location.distanceBetween(pasers.getLat(),pasers.getLng(),Double.parseDouble(outletlat),Double.parseDouble(outletlng),distance);
-            float dis = distance[0];*/
-            deliveryViewModel.updateFromSalesEntries();
-            getLocationPermission();
-           // Toast.makeText(this, Float.toString(dis)+' '+pasers.getLat(), Toast.LENGTH_SHORT).show();
-
+        deliveryViewModel.rpRep().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String data) {
+                String dataSplits[] = data.split("\\~");
+                if(dataSplits[0].equals("200")) {
+                    Intent intent = new Intent(getApplication(),SalesActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplication(), dataSplits[1], Toast.LENGTH_SHORT).show();
+                }
+                mProgressBar.setVisibility(View.INVISIBLE);
+            }
         });
 
         deliveryViewModel.returnRep().observe(this, data -> {
@@ -210,11 +219,13 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
-                if(task.isSuccessful()){
+                if(task.isSuccessful()) {
                     Location location = task.getResult();
                     pasers.setLat(location.getLatitude());
                     pasers.setLng(location.getLongitude());
-
+                }else{
+                    pasers.setLat(0.0);
+                    pasers.setLng(0.0);
                 }
             }
         });
@@ -232,7 +243,7 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
 
-        @Override
+    @Override
     protected void onResume() {
         super.onResume();
         if (checkMapServices()) {
@@ -260,6 +271,20 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void buildAlertMessageMobileDataOff() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("This application requires mobile Data to be on?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Intent enableGpsIntent = new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS);
                         startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
                     }
                 });
@@ -431,7 +456,23 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
      }
     }
 
+/*Location crntLocation=new Location("crntlocation");
+            crntLocation.setLatitude(Double.parseDouble(outletlat));
+            crntLocation.setLongitude(Double.parseDouble(outletlng));
 
+            Location newLocation=new Location("newLocation");
+            newLocation.setLatitude(pasers.getLat());
+            newLocation.setLongitude(pasers.getLng());*/
+
+    //distance = crntLocation.distanceTo(newLocation) / 1000;
+    //
+
+    //geo fencing using distance W the calculation.
+            /*float[] distance = new float[10];
+            Location.distanceBetween(pasers.getLat(),pasers.getLng(),Double.parseDouble(outletlat),Double.parseDouble(outletlng),distance);
+            float dis = distance[0];*/
+
+    // Toast.makeText(this, Float.toString(dis)+' '+pasers.getLat(), Toast.LENGTH_SHORT).show();
 }
 
 
