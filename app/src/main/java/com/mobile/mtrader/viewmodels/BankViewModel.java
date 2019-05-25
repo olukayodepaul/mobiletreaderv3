@@ -78,14 +78,7 @@ public class BankViewModel extends ViewModel {
         );
     }
 
-    public Single<Double> skuTotalSum(String productid) {
-        return repository.skuTotalSum(productid).map(
-                totals -> {
-                    totalAmount = totals;
-                    return totals;
-                }
-        );
-    }
+   
 
     public Single<Double> sumAllOrder(String productid) {
         return repository.sumAllOrder(productid).map(
