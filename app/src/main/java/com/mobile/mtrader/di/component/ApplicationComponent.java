@@ -8,6 +8,7 @@ import com.mobile.mtrader.di.module.PicassoModule;
 import com.mobile.mtrader.di.module.RetrofitModule;
 import com.mobile.mtrader.di.qualifier.ApplicationContext;
 import com.mobile.mtrader.di.scopes.ApplicationScope;
+import com.mobile.mtrader.ui.AddCustomers;
 import com.mobile.mtrader.ui.BankActivity;
 import com.mobile.mtrader.ui.ConfirmSales;
 import com.mobile.mtrader.ui.CustomerActivity;
@@ -49,5 +50,6 @@ public interface ApplicationComponent {
     void inject(LocationService locationService);
     void inject(CustomerActivity customerActivity);
     void inject(CustomerProfile customerProfile);
+    void inject(AddCustomers addCustomers);
 
 }

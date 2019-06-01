@@ -15,7 +15,9 @@
     <string name="collection_user_locations">user location</string>
     <string name="title_activity_customer">CustomerActivity</string>
     <string name="edit_profile">Save Change</string>
+    <string name="add_btn">Save</string>
     <string name="edit_profile_edit">Profile and Edit Profile</string>
+    <string name="add_new_customer">Add New Customer</string>
 
 
 </resources>
