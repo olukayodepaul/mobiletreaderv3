@@ -156,9 +156,6 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
             onBackPressed();
         });
 
-        //check internet connection in an android.
-
-
         back_butto.setOnClickListener(view -> {
             mProgressBar.setVisibility(View.VISIBLE);
             if (!AppUtil.checkConnections(this)) {
@@ -227,6 +224,7 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
                     pasers.setLat(0.0);
                     pasers.setLng(0.0);
                 }
+
             }
         });
     }
@@ -456,23 +454,6 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
      }
     }
 
-/*Location crntLocation=new Location("crntlocation");
-            crntLocation.setLatitude(Double.parseDouble(outletlat));
-            crntLocation.setLongitude(Double.parseDouble(outletlng));
-
-            Location newLocation=new Location("newLocation");
-            newLocation.setLatitude(pasers.getLat());
-            newLocation.setLongitude(pasers.getLng());*/
-
-    //distance = crntLocation.distanceTo(newLocation) / 1000;
-    //
-
-    //geo fencing using distance W the calculation.
-            /*float[] distance = new float[10];
-            Location.distanceBetween(pasers.getLat(),pasers.getLng(),Double.parseDouble(outletlat),Double.parseDouble(outletlng),distance);
-            float dis = distance[0];*/
-
-    // Toast.makeText(this, Float.toString(dis)+' '+pasers.getLat(), Toast.LENGTH_SHORT).show();
 }
 
 

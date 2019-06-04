@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="com.mobile.mtrader.ui.AddCustomers"
-android:focusable="true"
-android:focusableInTouchMode="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.mobile.mtrader.ui.AddCustomers">
+
 
     <LinearLayout
+        android:id="@+id/prs"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/prs"
-        android:background="@color/blue_nblac">
+        android:background="@color/blue_nblac"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -37,19 +38,18 @@ android:focusableInTouchMode="true">
                         android:layout_height="36dip"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/button"
-                        tools:ignore="ContentDescription"
-                        android:src="@drawable/white_array"/>
+                        android:src="@drawable/white_array"
+                        tools:ignore="ContentDescription" />
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingStart="8dip"
-                    android:paddingEnd="8dip"
                     android:layout_toEndOf="@+id/back_button"
+                    android:gravity="center_vertical"
                     android:orientation="vertical"
-                    >
+                    android:paddingEnd="8dip"
+                    android:paddingStart="8dip">
 
                     <TextView
                         android:id="@+id/title"
@@ -70,291 +70,301 @@ android:focusableInTouchMode="true">
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/image_tv"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="140dp"
         android:layout_below="@+id/prs"
         android:background="@color/blue_nblac">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="89dp"
+            android:layout_height="match_parent"
             android:background="@color/blue_nblac"
-            android:layout_below="@+id/prs"
             android:paddingTop="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_height="match_parent"
                 android:id="@+id/photo_image"
-                android:layout_marginTop="5dp">
-                <ImageView
-                    android:id="@+id/slap_photo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:scaleType="centerCrop"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/add_photo"
-                    />
-            </LinearLayout>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/photo_image"
-                android:textAlignment="center"
-                android:text="Tap take a photo of the outlet"
-                android:textColor="@color/white"
                 android:layout_marginTop="5dp"
-                android:fontFamily="@font/roboto_light"
-                android:textSize="12sp"/>
+                android:orientation="vertical">
+                <FrameLayout
+                    android:layout_width="110dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp">
+
+                    <com.pkmmte.view.CircularImageView
+                        android:id="@+id/slap_photo"
+                        android:layout_width="101dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/add_photo"
+                        app:border="true"
+                        app:border_color="#EEEEEE"
+                        app:border_width="3dp"
+                        app:shadow="true" />
+
+                    <com.pkmmte.view.CircularImageView
+                        android:id="@+id/iv_camera"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/photo_icons"
+                        android:layout_gravity="bottom|right"
+                        android:scaleType="centerCrop"
+                        />
+
+                </FrameLayout>
+            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="440dp"
-        android:layout_below="@+id/prs"
-        android:layout_marginTop="90dp">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image_tv">
 
-
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingBottom="36dip"
-            android:paddingEnd="20dip"
-            android:paddingStart="20dip">
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/nameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dip">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/u_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/line_color_light"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:hint="Customer Name"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapWords"
-                    android:padding="10dip"
-                    android:singleLine="true"
-                    android:textColor="@color/ballReleaseColor"
-                    android:textSize="15sp" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/emailLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/nameLayout"
-                android:layout_marginTop="16dp">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/u_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/line_color_light"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:hint="Contact Name"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapWords"
-                    android:padding="10dip"
-                    android:singleLine="true"
-                    android:textColor="@color/ballReleaseColor"
-                    android:textSize="15sp" />
-            </android.support.design.widget.TextInputLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/passwordLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/emailLayout"
-                android:layout_marginTop="16dip"
-                app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/colorPrimary">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/u_paswd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/line_color_light"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:hint="Address"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapWords"
-                    android:padding="10dip"
-                    android:singleLine="true"
-                    android:textColor="@color/ballReleaseColor"
-                    android:textSize="15sp" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/phoneLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/passwordLayout"
-                android:layout_marginTop="16dip">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/u_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/line_color_light"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:hint="Phone Number"
-                    android:imeOptions="actionNext"
-                    android:inputType="phone"
-                    android:padding="10dip"
-                    android:singleLine="true"
-                    android:textColor="@color/ballReleaseColor"
-                    android:textSize="15sp" />
-            </android.support.design.widget.TextInputLayout>
-
-            <TextView
-                android:id="@+id/cclass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/phoneLayout"
-                android:layout_marginBottom="5dip"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/montserrat_regular"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:text="Customer classification"
-                android:textColor="@color/ballReleaseColor"
-                android:textSize="12sp" />
-
+            android:layout_height="match_parent">
             <RelativeLayout
-                android:id="@+id/u_group_container"
                 android:layout_width="match_parent"
-                android:layout_height="33dp"
-                android:layout_below="@+id/cclass"
-                android:layout_marginTop="5dip">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingBottom="36dip"
+                android:paddingEnd="20dip"
+                android:paddingStart="20dip">
 
-
-                <Spinner
-                    android:id="@+id/u_group"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/nameLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="30dip"
-                    android:backgroundTint="@color/line_color_light"
-                    android:padding="0dip" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dip">
 
-                <View
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/u_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/line_color_light"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="Customer Name"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:padding="10dip"
+                        android:singleLine="true"
+                        android:textColor="@color/ballReleaseColor"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/emailLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="1dip"
-                    android:layout_below="@+id/u_group"
-                    android:layout_marginEnd="4dip"
-                    android:layout_marginStart="4dp"
-                    android:background="@color/line_color_light"
-                    android:textSize="11sp" />
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/nameLayout"
+                    android:layout_marginTop="16dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/u_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/line_color_light"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="Contact Name"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:padding="10dip"
+                        android:singleLine="true"
+                        android:textColor="@color/ballReleaseColor"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/passwordLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/emailLayout"
+                    android:layout_marginTop="16dip"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/colorPrimary">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/u_paswd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/line_color_light"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="Address"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:padding="10dip"
+                        android:singleLine="true"
+                        android:textColor="@color/ballReleaseColor"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/phoneLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/passwordLayout"
+                    android:layout_marginTop="16dip">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/u_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/line_color_light"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="Phone Number"
+                        android:imeOptions="actionNext"
+                        android:inputType="phone"
+                        android:padding="10dip"
+                        android:singleLine="true"
+                        android:textColor="@color/ballReleaseColor"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/cclass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/phoneLayout"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:paddingLeft="10dip"
+                    android:paddingRight="10dip"
+                    android:text="Customer classification"
+                    android:textColor="@color/ballReleaseColor"
+                    android:textSize="12sp" />
+
+                <RelativeLayout
+                    android:id="@+id/u_group_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:layout_below="@+id/cclass"
+                    android:layout_marginTop="5dip">
+
+
+                    <Spinner
+                        android:id="@+id/u_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dip"
+                        android:backgroundTint="@color/line_color_light"
+                        android:padding="0dip" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dip"
+                        android:layout_below="@+id/u_group"
+                        android:layout_marginEnd="4dip"
+                        android:layout_marginStart="4dp"
+                        android:background="@color/line_color_light"
+                        android:textSize="11sp" />
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/plang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/u_group_container"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:paddingLeft="10dip"
+                    android:paddingRight="10dip"
+                    android:text="Preferred Language"
+                    android:textColor="@color/ballReleaseColor"
+                    android:textSize="12sp" />
+
+                <RelativeLayout
+                    android:id="@+id/extras"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:layout_below="@+id/plang"
+                    android:layout_marginTop="5dip">
+
+
+                    <Spinner
+                        android:id="@+id/u_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dip"
+                        android:backgroundTint="@color/line_color_light"
+                        android:padding="0dip" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dip"
+                        android:layout_below="@+id/u_gender"
+                        android:layout_marginEnd="4dip"
+                        android:layout_marginStart="4dp"
+                        android:background="@color/line_color_light"
+                        android:textSize="11sp" />
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/otype"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/extras"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:paddingLeft="10dip"
+                    android:paddingRight="10dip"
+                    android:text="Outlet Type"
+                    android:textColor="@color/ballReleaseColor"
+                    android:textSize="12sp" />
+
+                <RelativeLayout
+                    android:id="@+id/vehicle_type_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:layout_below="@+id/otype"
+                    android:layout_marginTop="5dip">
+
+
+                    <Spinner
+                        android:id="@+id/vehicleType"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dip"
+                        android:backgroundTint="@color/line_color_light"
+                        android:padding="0dip" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dip"
+                        android:layout_below="@+id/vehicleType"
+                        android:layout_marginEnd="4dip"
+                        android:layout_marginStart="4dp"
+                        android:background="@color/line_color_light"
+                        android:textSize="11sp" />
+
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/registerBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/vehicle_type_container"
+                    android:layout_marginTop="24dip"
+                    android:background="@drawable/design_login_btn"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:minHeight="16dip"
+                    android:minWidth="16dip"
+                    android:padding="10dip"
+                    android:text="@string/add_btn"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/fontSize" />
 
             </RelativeLayout>
-
-
-            <TextView
-                android:id="@+id/plang"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/u_group_container"
-                android:layout_marginBottom="5dip"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/montserrat_regular"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:text="Preferred Language"
-                android:textColor="@color/ballReleaseColor"
-                android:textSize="12sp" />
-
-            <RelativeLayout
-                android:id="@+id/extras"
-                android:layout_width="match_parent"
-                android:layout_height="33dp"
-                android:layout_below="@+id/plang"
-                android:layout_marginTop="5dip">
-
-
-                <Spinner
-                    android:id="@+id/u_gender"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dip"
-                    android:backgroundTint="@color/line_color_light"
-                    android:padding="0dip" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dip"
-                    android:layout_below="@+id/u_gender"
-                    android:layout_marginEnd="4dip"
-                    android:layout_marginStart="4dp"
-                    android:background="@color/line_color_light"
-                    android:textSize="11sp" />
-
-            </RelativeLayout>
-
-
-            <TextView
-                android:id="@+id/otype"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/extras"
-                android:layout_marginBottom="5dip"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/montserrat_regular"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:text="Outlet Type"
-                android:textColor="@color/ballReleaseColor"
-                android:textSize="12sp" />
-
-            <RelativeLayout
-                android:id="@+id/vehicle_type_container"
-                android:layout_width="match_parent"
-                android:layout_height="33dp"
-                android:layout_below="@+id/otype"
-                android:layout_marginTop="5dip">
-
-
-                <Spinner
-                    android:id="@+id/vehicleType"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dip"
-                    android:backgroundTint="@color/line_color_light"
-                    android:padding="0dip" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dip"
-                    android:layout_below="@+id/vehicleType"
-                    android:layout_marginEnd="4dip"
-                    android:layout_marginStart="4dp"
-                    android:background="@color/line_color_light"
-                    android:textSize="11sp" />
-
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/registerBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/vehicle_type_container"
-                android:layout_marginTop="24dip"
-                android:background="@drawable/design_login_btn"
-                android:fontFamily="@font/montserrat_regular"
-                android:minHeight="16dip"
-                android:minWidth="16dip"
-                android:padding="10dip"
-                android:text="@string/add_btn"
-                android:textAllCaps="false"
-                android:textColor="@color/white_color"
-                android:textSize="@dimen/fontSize" />
-
-        </RelativeLayout>
-    </ScrollView>
-
-
+        </ScrollView>
+    </LinearLayout>
 </RelativeLayout>

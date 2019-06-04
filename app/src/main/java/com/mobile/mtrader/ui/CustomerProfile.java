@@ -7,12 +7,14 @@ import android.app.Dialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -169,10 +171,12 @@ public class CustomerProfile extends BaseActivity{
                 TextUtils.isEmpty(Uphone) || Uphone.length()<=9 ) {
             Toast.makeText(this, "Please enter all the fields and enter valid phone number", Toast.LENGTH_SHORT).show();
         }else if (!AppUtil.checkConnection(this)) {
-            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            buildAlertMessageMobileDataOff();
         }else{
-            customerActivityViewmModel.reSetUserProfile(Uname, Uemail, Upaswd, Long.parseLong(Uphone), outlet_class_id, outlet_language_id, outlet_type_id, customerid,  pasers.getLat(), pasers.getLng());
-            showProgressBar(true);
+            //customerActivityViewmModel.reSetUserProfile(Uname, Uemail, Upaswd, Long.parseLong(Uphone), outlet_class_id, outlet_language_id, outlet_type_id, customerid,  pasers.getLat(), pasers.getLng());
+            //showProgressBar(true);
+            Toast.makeText(getApplicationContext(),Double.toString(pasers.getLng()),Toast.LENGTH_LONG ).show();
         }
     }
 
@@ -254,10 +258,7 @@ public class CustomerProfile extends BaseActivity{
 
     }
 
-
     //-------Location Tracker require permission--------//
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -268,25 +269,9 @@ public class CustomerProfile extends BaseActivity{
         }
     }
 
-    private void getLastLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if(task.isSuccessful()){
-                    Location location = task.getResult();
-                    pasers.setLat(location.getLatitude());
-                    pasers.setLng(location.getLongitude());
-                }
-            }
-        });
-    }
-
-    private boolean checkMapServices(){
-        if(isServicesOK()){
-            if(isMapsEnabled()){
+    private boolean checkMapServices() {
+        if (isServicesOK()) {
+            if (isMapsEnabled()) {
                 return true;
             }
         }
@@ -307,10 +292,24 @@ public class CustomerProfile extends BaseActivity{
         alert.show();
     }
 
-    public boolean isMapsEnabled(){
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+    private void buildAlertMessageMobileDataOff() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("This application requires mobile Data to be on?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Intent enableGpsIntent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
 
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+    public boolean isMapsEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
             return false;
         }
@@ -318,11 +317,6 @@ public class CustomerProfile extends BaseActivity{
     }
 
     private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -335,18 +329,21 @@ public class CustomerProfile extends BaseActivity{
         }
     }
 
-    public boolean isServicesOK(){
+    public boolean isServicesOK() {
+        // Log.d(TAG, "isServicesOK: checking google services version");
+
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
 
-        if(available == ConnectionResult.SUCCESS){
+        if (available == ConnectionResult.SUCCESS) {
             //everything is fine and the user can make map requests
+            //Log.d(TAG, "isServicesOK: Google Play Services is working");
             return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
             //an error occured but we can resolve it
+            //Log.d(TAG, "isServicesOK: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
-        }else{
+        } else {
             Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
         }
         return false;
@@ -371,13 +368,32 @@ public class CustomerProfile extends BaseActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //Log.d(TAG, "onActivityResult: called.");
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ENABLE_GPS: {
-                if(!mLocationPermissionGranted){
+                if (!mLocationPermissionGranted) {
                     getLocationPermission();
                 }
             }
         }
+    }
 
+    private void getLastLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if(task.isSuccessful()) {
+                    Location location = task.getResult();
+                    pasers.setLat(location.getLatitude());
+                    pasers.setLng(location.getLongitude());
+                }else{
+                    pasers.setLat(0.0);
+                    pasers.setLng(0.0);
+                }
+            }
+        });
     }
 }

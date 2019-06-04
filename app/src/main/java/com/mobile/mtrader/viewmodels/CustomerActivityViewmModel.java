@@ -56,6 +56,10 @@ public class CustomerActivityViewmModel extends ViewModel {
         );
     }
 
+    public void mapOutlet(){
+
+    }
+
     public void reSetUserProfile(String outletName, String contactName, String address, Long phone,
                                  int outlet_class_id, int outlet_language_id, int outlet_type_id, int custno, double lat, double lng) {
 
