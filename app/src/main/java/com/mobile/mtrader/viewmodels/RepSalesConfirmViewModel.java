@@ -139,7 +139,8 @@ public class RepSalesConfirmViewModel extends ViewModel {
                                         data.push.get(i).packqty,
                                         data.push.get(i).rollprice,
                                         data.push.get(i).packprice,
-                                        data.push.get(i).customername
+                                        data.push.get(i).customername,
+                                        data.push.get(i).salescommission
                                 );
                                 new SaveSalesRecord().execute(sales);
                             }

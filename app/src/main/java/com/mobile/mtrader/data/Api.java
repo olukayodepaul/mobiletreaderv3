@@ -4,12 +4,18 @@ package com.mobile.mtrader.data;
 import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelEmployees;
 import com.mobile.mtrader.model.ModelAttendant;
+import com.mobile.mtrader.model.SoqMapperModel;
+
 import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface Api {
@@ -57,4 +63,24 @@ public interface Api {
             @Query("urno") String urno,
             @Query("arivaltime") String arivaltime
     );
+
+    @Multipart
+    @POST("/mobiletrader/mapcustomers")
+    Observable<Response<ModelAttendant>> mapCustomers (
+            @Part("custname") RequestBody custname,
+            @Part("contactname") RequestBody contactname,
+            @Part("phoneno") RequestBody phoneno,
+            @Part("address") RequestBody address,
+            @Part("outlet_class_id") RequestBody outlet_class_id,
+            @Part("outlet_language_id") RequestBody outlet_language_id,
+            @Part("outlet_type_id") RequestBody outlet_type_id,
+            @Part("userid") RequestBody userid,
+            @Part MultipartBody.Part mphoto
+    );
+
+    @POST("/mobiletrader/loadsoq")
+    Single<Response<SoqMapperModel>> getCustomerSoq (
+            @Query("custid") String  custid
+    );
+
 }

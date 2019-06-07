@@ -16,11 +16,13 @@ import android.widget.Toast;
 
 import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.adapter.BankAdapter;
+import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
+import com.mobile.mtrader.model.SumSales;
 import com.mobile.mtrader.util.AppUtil;
 import com.mobile.mtrader.viewmodels.BankViewModel;
 import com.mobile.mtrader.viewmodels.LoginViewModel;
@@ -33,6 +35,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class BankActivity extends BaseActivity {
 
@@ -51,6 +57,15 @@ public class BankActivity extends BaseActivity {
     @BindView(R.id.payments_btn)
     Button payments_btn;
 
+    @BindView(R.id.basket_t)
+    TextView basket_t;
+
+    @BindView(R.id.qty_t)
+    TextView qty_t;
+
+    @BindView(R.id.order_t)
+    TextView order_t;
+
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
@@ -66,6 +81,7 @@ public class BankActivity extends BaseActivity {
         component.inject(this);
         bankViewModel = ViewModelProviders.of(this, viewModelFactory).get(BankViewModel.class);
         showProgressBar(true);
+        DecimalFormat formatter = new DecimalFormat("#,###.0");
 
         back_page.setOnClickListener(v -> onBackPressed());
 
@@ -81,6 +97,24 @@ public class BankActivity extends BaseActivity {
             showProgressBar(false);
 
         });
+
+        bankViewModel.sumAllSalesCommission()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<SumSales>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+                    @Override
+                    public void onSuccess(SumSales sumSales) {
+                        basket_t.setText(formatter.format(sumSales.mPrice));
+                        qty_t.setText(formatter.format(sumSales.mOrder));
+                        order_t.setText(formatter.format(sumSales.mSales));
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
 
         payments_btn.setOnClickListener(v -> {
             showProgressBar(true);

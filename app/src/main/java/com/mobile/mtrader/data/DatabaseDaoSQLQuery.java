@@ -15,6 +15,7 @@ import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.data.AllTablesStructures.UserSpinners;
+import com.mobile.mtrader.model.SumSales;
 
 import java.util.List;
 
@@ -129,11 +130,14 @@ public interface DatabaseDaoSQLQuery {
     @Query("SELECT SUM(orders) FROM Sales")
     Single<Double> sunAllTotalSoldProduct();
 
-    @Query("SELECT SUM(packprice+rollprice) FROM Sales WHERE productcode =:productcode")
+    @Query("SELECT SUM(rollprice+packprice-salescommission) FROM Sales WHERE productcode =:productcode")
     Single<Double> skuTotalSum(String productcode);
 
     @Query("SELECT SUM(orders) FROM Sales WHERE productcode =:productcode")
     Single<Double> sumAllOrder(String productcode);
+
+    @Query("SELECT SUM(salescommission) FROM Sales WHERE productcode =:productcode")
+    Single<Double> sumAllSalesCommission(String productcode);
 
     @Query("SELECT * FROM Customers WHERE sort='1' limit 1")
     Flowable<Customers> getLastloaction();
@@ -161,6 +165,12 @@ public interface DatabaseDaoSQLQuery {
     @Query("UPDATE Customers SET outletname=:outletname, lat=:lat, lng=:lng  WHERE id=:id")
     void updateLocalCustomers(String outletname, String lat, String lng, int id);
 
+
+    @Query("UPDATE Products SET SOQ = :soq WHERE productcode=:productcode")
+    void updateLocalSoq (String soq, String productcode);
+
+    @Query("SELECT SUM(orders) AS mOrder, SUM(salescommission) AS mSales, SUM(rollprice+packprice-salescommission) mPrice FROM Sales")
+    Single<SumSales> sumAllSalesCommission();
 
 }
 

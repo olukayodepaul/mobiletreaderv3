@@ -109,7 +109,7 @@
                         android:id="@+id/iv_camera"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/photo_icons"
+                        android:src="@drawable/snap_photo"
                         android:layout_gravity="bottom|right"
                         android:scaleType="centerCrop"
                         />

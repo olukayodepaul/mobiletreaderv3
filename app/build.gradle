@@ -65,7 +65,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.13'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
@@ -112,6 +112,7 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxbinding_version"
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxbinding_version"
     implementation "com.jakewharton.rxbinding2:rxbinding-design:$rxbinding_version"
+
 
     implementation 'org.slf4j:slf4j-simple:1.7.25'
 

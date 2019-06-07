@@ -2,18 +2,24 @@ package com.mobile.mtrader.viewmodels;
 
 
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
+
 import com.mobile.mtrader.data.AllTablesStructures.Employees;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.DataRepository;
+import com.mobile.mtrader.model.SoqMapperModel;
+
 import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 
 public class DailySalesViewModule extends ViewModel {
@@ -60,6 +66,60 @@ public class DailySalesViewModule extends ViewModel {
                 }
         );
     }
+
+    public void mapSoqToProducts(String customerno) {
+
+        repository.pullServerSoq(customerno)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<SoqMapperModel>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mDis.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(Response<SoqMapperModel> response) {
+
+                        SoqMapperModel data = response.body();
+
+                        if (response != null && response.isSuccessful() && response.body() != null && response.code() == 200) {
+
+                            if (data.status == 200) {
+                                for(int i =0; i < data.customersoq.size(); i++) {
+                                    setNewSoqForCustomer(data.customersoq.get(i).soq, data.customersoq.get(i).skucode) ;
+
+                                }
+                            }else{
+                            }
+                        }else{
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
+    }
+
+    public void setNewSoqForCustomer(String soq, String productcode) {
+
+        Completable.fromAction(()->repository.updateLocalSoq(soq,productcode))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) { mDis.add(d);}
+
+                    @Override
+                    public void onComplete() {}
+
+                    @Override
+                    public void onError(Throwable e) {}
+                });
+    }
+
+
 
     public Flowable<Employees> getUsersIndividualInformation() {
         return repository.findIndividualUsers().map(

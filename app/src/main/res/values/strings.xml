@@ -18,6 +18,7 @@
     <string name="add_btn">Save</string>
     <string name="edit_profile_edit">Profile and Edit Profile</string>
     <string name="add_new_customer">Add New Customer</string>
+    <string name="internal_storage">Internal storage</string>
 
 
 </resources>

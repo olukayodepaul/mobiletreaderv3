@@ -5,14 +5,18 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
+
 import com.mobile.mtrader.data.AllTablesStructures.Customers;
 import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.Sales;
 import com.mobile.mtrader.data.DataRepository;
 import com.mobile.mtrader.model.ModelAttendant;
+import com.mobile.mtrader.model.SumSales;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,6 +39,10 @@ public class BankViewModel extends ViewModel {
     Double totalAmount;
 
     Double totalOrder;
+
+    Double totalSalesCom;
+
+    SumSales msales;
 
     private MutableLiveData<List<Sales>> groupList = new MutableLiveData<>();
 
@@ -75,12 +83,37 @@ public class BankViewModel extends ViewModel {
         );
     }
 
-   
+    public Single<Double> skuTotalSum(String productid) {
+        return repository.skuTotalSum(productid).map(
+                totals -> {
+                    totalAmount = totals;
+                    return totals;
+                }
+        );
+    }
 
     public Single<Double> sumAllOrder(String productid) {
         return repository.sumAllOrder(productid).map(
                 totals -> {
                     totalOrder = totals;
+                    return totals;
+                }
+        );
+    }
+
+    public Single<SumSales> sumAllSalesCommission() {
+        return repository.sumAllSalesCommission().map(
+              sales->{
+                  msales = sales;
+                  return sales;
+              }
+        );
+    }
+
+    public Single<Double> sumAllSalesCommission(String productid) {
+        return repository.sumAllSalesCommission(productid).map(
+                totals -> {
+                    totalSalesCom = totals;
                     return totals;
                 }
         );
@@ -154,9 +187,10 @@ public class BankViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
         mDis.clear();
+
     }
-
-
 }
+
+
 
 

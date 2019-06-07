@@ -154,4 +154,3 @@ public class DeliverySalesMapViewmodel extends ViewModel {
         mCompositeDisposable.clear();
     }
 }
-

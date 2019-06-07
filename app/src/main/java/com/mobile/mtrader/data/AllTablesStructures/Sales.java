@@ -23,9 +23,11 @@ public class Sales {
     public String rollprice;
     public String packprice;
     public String cutomersname;
+    public double salescommission;
 
+    
     public Sales(String map_token, String separatorname, String productcode, String productname, String localstatus, String inventory, String pricing, String orders, String customerno,
-                 String salestime, String rollqty, String packqty, String rollprice, String packprice, String cutomersname) {
+                 String salestime, String rollqty, String packqty, String rollprice, String packprice, String cutomersname, double salescommission) {
         this.map_token = map_token;
         this.separatorname = separatorname;
         this.productcode = productcode;
@@ -41,6 +43,11 @@ public class Sales {
         this.rollprice = rollprice;
         this.packprice = packprice;
         this.cutomersname = cutomersname;
+        this.salescommission = salescommission;
+    }
+
+    public double getSalescommission() {
+        return salescommission;
     }
 
     public String getMap_token() {

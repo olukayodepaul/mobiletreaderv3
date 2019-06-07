@@ -47,8 +47,11 @@ public class DailySalesActivity extends BaseActivity {
     RecyclerView recyler_data;
 
     Bundle bundle;
+
     String customer_key, customer_no;
+
     String latlng;
+
     String arrTime;
 
     @Inject
@@ -82,10 +85,15 @@ public class DailySalesActivity extends BaseActivity {
             arrTime = bundle.getString("ARRIVAL_TIME");
         }
 
-        recyler_data.setLayoutManager(new LinearLayoutManager(this));
+        dailySalesViewModule.mapSoqToProducts(customer_no);
+
+        /*before pubulating adapter*/
+
+        /*recyler_data.setLayoutManager(new LinearLayoutManager(this));
         recyler_data.setHasFixedSize(true);
         skuAdapter = new SkuAdapter(this, customer_no);
-        recyler_data.setAdapter(skuAdapter);
+        recyler_data.setAdapter(skuAdapter);*/
+
 
 
         mDis.add(dailySalesViewModule.getLiveCustomers()
@@ -184,7 +192,7 @@ public class DailySalesActivity extends BaseActivity {
                                             .subscribe(allData->{
 
                                         if(!allData.equals(data)){
-                                            Toast.makeText(getApplication(), "Please enter sales", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplication(), "Please enter all the field", Toast.LENGTH_SHORT).show();
                                         }else{
                                             intent = new Intent(this, ConfirmSales.class);
                                             intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);

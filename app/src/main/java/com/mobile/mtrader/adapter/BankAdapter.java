@@ -69,6 +69,18 @@ public class BankAdapter extends RecyclerView.Adapter<BankAdapter.ViewHolder> {
                                                 })
                                 );
 
+                                mDis.add(bankViewModel.sumAllSalesCommission(rs.productcode)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(
+                                                mdata -> {
+                                                    holder.order.setText(formatter.format(mdata));
+                                                },
+                                                Throwable -> {
+                                                    holder.order.setText("0.0");
+                                                })
+                                );
+
                                 holder.basket.setText(formatter.format(data));
                             },
                             Throwable -> {

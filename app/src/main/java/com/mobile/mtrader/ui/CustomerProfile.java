@@ -174,8 +174,8 @@ public class CustomerProfile extends BaseActivity{
             //Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             buildAlertMessageMobileDataOff();
         }else{
-            //customerActivityViewmModel.reSetUserProfile(Uname, Uemail, Upaswd, Long.parseLong(Uphone), outlet_class_id, outlet_language_id, outlet_type_id, customerid,  pasers.getLat(), pasers.getLng());
-            //showProgressBar(true);
+            customerActivityViewmModel.reSetUserProfile(Uname, Uemail, Upaswd, Long.parseLong(Uphone), outlet_class_id, outlet_language_id, outlet_type_id, customerid,  pasers.getLat(), pasers.getLng());
+            showProgressBar(true);
             Toast.makeText(getApplicationContext(),Double.toString(pasers.getLng()),Toast.LENGTH_LONG ).show();
         }
     }

@@ -17,7 +17,6 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -34,7 +33,6 @@ import com.mobile.mtrader.di.component.DaggerApplicationComponent;
 import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
-import com.mobile.mtrader.util.AppUtil;
 import com.mobile.mtrader.viewmodels.CustomerActivityViewmModel;
 import com.pkmmte.view.CircularImageView;
 
@@ -89,7 +87,6 @@ public class AddCustomers extends BaseActivity {
     @BindView(R.id.iv_camera)
     CircularImageView iv_camera;
 
-
     OutletClassCache outletClassCache;
 
     OutletLanguageCache outletLanguageCache;
@@ -114,9 +111,7 @@ public class AddCustomers extends BaseActivity {
 
     Uri selectedImage;
 
-    Bitmap photo;
-
-    String mPhoto = "";
+    String mPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,9 +167,8 @@ public class AddCustomers extends BaseActivity {
             int outlet_language_id = outletLanguageCache.getValueId(u_gender.getSelectedItem().toString());
             int outlet_type_id = outletTypeCache.getValueId(vehicleType.getSelectedItem().toString());
 
-            Log.e("check_input", "----------------" + outlet_type_id);
 
-            if(TextUtils.isEmpty(custname) || !TextUtils.isDigitsOnly(phoneno) || TextUtils.isEmpty(address) || TextUtils.isEmpty(contactname) ||
+            /*if(TextUtils.isEmpty(custname) || !TextUtils.isDigitsOnly(phoneno) || TextUtils.isEmpty(address) || TextUtils.isEmpty(contactname) ||
                     TextUtils.isEmpty(contactname) || contactname.length()<=9){
                 Toast.makeText(this, "Please enter all the fields and enter valid phone number", Toast.LENGTH_SHORT).show();
             }else if (!AppUtil.checkConnection(this)) {
@@ -183,17 +177,23 @@ public class AddCustomers extends BaseActivity {
             }else{
                 showProgressBar(true);
                 uploadImage();
-                //customerActivityViewmModel.mapOutlet(custname,contactname,address,ba1, );
-            }
+                customerActivityViewmModel.mapOutlet(custname,contactname,address,
+                        phoneno,outlet_class_id,outlet_language_id,
+                        1,outlet_type_id,mPhoto);
+            }*/
+            uploadImage();
+            showProgressBar(true);
+            customerActivityViewmModel.mapOutlet(this,custname,contactname,address,
+                    phoneno,outlet_class_id,outlet_language_id,
+                    1,outlet_type_id,picturePath);
+            Log.e("paths", "----------------" + "nkjjj");
         });
 
         customerActivityViewmModel.getGroupUserSpinners(1).observe(this, userSpinners -> {
             outletClassList = new ArrayList<>();
-            if(outletClassCache.size()>0){
-                outletClassCache.clear();
-            }
+            if(outletClassCache.size()>0){outletClassCache.clear();}
             if(userSpinners!=null) {
-                for(int i = 0 ; i < userSpinners.size() ; i++) {
+                for(int i = 0 ; i < userSpinners.size() ; i++){
                     outletClassList.add(userSpinners.get(i).name);
                     outletClassCache.add(userSpinners.get(i).id, userSpinners.get(i).name);
                 }
@@ -246,13 +246,13 @@ public class AddCustomers extends BaseActivity {
 
     //real image to be move to the server with retrofit.
     private void uploadImage() {
-        Log.e("path", "----------------" + picturePath);
+        //Log.e("pathss", "----------------" + picturePath);
         Bitmap bm = BitmapFactory.decodeFile(picturePath);
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 90, bao);
         byte[] ba = bao.toByteArray();
-        mPhoto = Base64.encodeToString(ba, Base64.DEFAULT); //Base64.encodeToString(ba, Base64.NO_WRAP);
-        Log.e("base64", "-----" + mPhoto);
+        mPhoto = Base64.encodeToString(ba, Base64.NO_WRAP);
+        //Log.e("base64", "-----" + mPhoto);
     }
 
     @Override
@@ -273,11 +273,9 @@ public class AddCustomers extends BaseActivity {
         if (requestCode == IMAGE_CAPTURE_CODE && resultCode == RESULT_OK) {
 
             selectedImage = data.getData();
-            photo = (Bitmap) data.getExtras().get("data");
 
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             cursor.moveToFirst();
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
@@ -285,11 +283,9 @@ public class AddCustomers extends BaseActivity {
             cursor.close();
 
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-
             slap_photo.setImageBitmap(photo);
         }
     }
-
 
     private void buildAlertMessageMobileDataOff() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -304,4 +300,5 @@ public class AddCustomers extends BaseActivity {
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
 }

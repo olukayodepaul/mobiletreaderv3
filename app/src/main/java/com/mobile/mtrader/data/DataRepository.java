@@ -15,11 +15,16 @@ import com.mobile.mtrader.data.AllTablesStructures.UserSpinners;
 import com.mobile.mtrader.model.DataBridge;
 import com.mobile.mtrader.model.ModelAttendant;
 import com.mobile.mtrader.model.ModelEmployees;
+import com.mobile.mtrader.model.SoqMapperModel;
+import com.mobile.mtrader.model.SumSales;
+
 import java.util.List;
 import javax.inject.Inject;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Response;
 
 public class DataRepository  {
@@ -195,6 +200,10 @@ public class DataRepository  {
         return this.daoSQLQuery.sumAllOrder(productcode);
     }
 
+    public Single<Double> sumAllSalesCommission(String productcode) {
+        return this.daoSQLQuery.sumAllSalesCommission(productcode);
+    }
+
     public Flowable<Customers> getLastloaction() {
         return this.daoSQLQuery.getLastloaction();
     }
@@ -240,4 +249,22 @@ public class DataRepository  {
     public Single<Response<ModelAttendant>> setOutletClose(int userid, String urno,  String  arivaltime) {
         return api.setOutletClose(userid, urno,  arivaltime);
     }
+
+    public Observable<Response<ModelAttendant>> mapOutlet(RequestBody custname, RequestBody contactname, RequestBody phoneno, RequestBody address, RequestBody outlet_class_id,
+                                                      RequestBody outlet_language_id, RequestBody outlet_type_id, RequestBody userid, MultipartBody.Part mphoto) {
+        return api.mapCustomers(custname,contactname,phoneno,address,outlet_class_id,outlet_language_id,outlet_type_id,userid,mphoto);
+    }
+
+    public Single<SumSales> sumAllSalesCommission() {
+        return this.daoSQLQuery.sumAllSalesCommission();
+    }
+
+    public Single<Response<SoqMapperModel>> pullServerSoq(String custid){
+        return api.getCustomerSoq(custid);
+    }
+
+    public void updateLocalSoq(String soq, String productcode) {
+        this.daoSQLQuery.updateLocalSoq(soq,productcode);
+    }
 }
+

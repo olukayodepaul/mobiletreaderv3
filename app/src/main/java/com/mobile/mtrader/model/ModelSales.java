@@ -61,5 +61,7 @@ public class ModelSales {
     @Expose
     public String customername;
 
-
+    @SerializedName("salescommission")
+    @Expose
+    public double salescommission;
 }
