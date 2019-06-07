@@ -107,8 +107,7 @@ public class DataRepository  {
         return api.getUserLogin(username, password, imei);
     }
 
-    public Observable<Response<ModelAttendant>> setRoster(int userid, int taskid, String dates,
-                                                          String times,String lat, String lng,String rmsg) {
+    public Observable<Response<ModelAttendant>> setRoster(int userid, int taskid, String dates, String times,String lat, String lng,String rmsg) {
         return api.getUserRoster(userid, taskid, dates, times, lat, lng, rmsg);
     }
 
@@ -265,6 +264,10 @@ public class DataRepository  {
 
     public void updateLocalSoq(String soq, String productcode) {
         this.daoSQLQuery.updateLocalSoq(soq,productcode);
+    }
+
+    public void refreshSOQ() {
+        this.daoSQLQuery.refreshSOQ();
     }
 }
 

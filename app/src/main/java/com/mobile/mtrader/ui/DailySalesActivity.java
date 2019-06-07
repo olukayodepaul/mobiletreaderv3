@@ -23,7 +23,10 @@ import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.viewmodels.DailySalesViewModule;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -87,97 +90,101 @@ public class DailySalesActivity extends BaseActivity {
 
         dailySalesViewModule.mapSoqToProducts(customer_no);
 
-        /*before pubulating adapter*/
+        dailySalesViewModule.getviewCom().observe(this, check -> {
+            if (check.equals("200")) {
 
-        /*recyler_data.setLayoutManager(new LinearLayoutManager(this));
-        recyler_data.setHasFixedSize(true);
-        skuAdapter = new SkuAdapter(this, customer_no);
-        recyler_data.setAdapter(skuAdapter);*/
+                mDis.add(dailySalesViewModule.getLiveCustomers()
+                        .delaySubscription(5, TimeUnit.MINUTES)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(data -> {
 
+                                    recyler_data.setLayoutManager(new LinearLayoutManager(this));
+                                    recyler_data.setHasFixedSize(true);
+                                    skuAdapter = new SkuAdapter(this, customer_no);
+                                    Log.e("mapper", "----------------" + "in");
+                                    recyler_data.setAdapter(skuAdapter);
 
+                                    skuAdapter.setOnItemClickListener(position -> {
 
-        mDis.add(dailySalesViewModule.getLiveCustomers()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> {
-                            skuAdapter.setOnItemClickListener(position -> {
+                                        SkuAdapter.ViewHolder holder = (SkuAdapter.ViewHolder) recyler_data
+                                                .findViewHolderForLayoutPosition(position);
 
-                                SkuAdapter.ViewHolder holder = (SkuAdapter.ViewHolder) recyler_data
-                                        .findViewHolderForLayoutPosition(position);
+                                        EditText getInventory = holder.itemView.findViewById(R.id.editTextq);
+                                        EditText getPricing = holder.itemView.findViewById(R.id.editText2q);
+                                        EditText getOrder = holder.itemView.findViewById(R.id.editText3q);
 
-                                EditText getInventory = holder.itemView.findViewById(R.id.editTextq);
-                                EditText getPricing = holder.itemView.findViewById(R.id.editText2q);
-                                EditText getOrder = holder.itemView.findViewById(R.id.editText3q);
-
-                                if (getInventory.getText().toString().equals(".")) {
-                                    getInventory.setText("");
-                                } else if (getOrder.getText().toString().equals(".")) {
-                                    getOrder.setText("");
-                                } else {
-                                    double salesQty = 0.0;
-                                    if (!getOrder.getText().toString().equals("")) {
-                                        salesQty = Double.parseDouble(getOrder.getText().toString());
-                                    }
-
-                                    if (Double.parseDouble(data.get(position).qty) < salesQty) {
-                                        getOrder.setText("");
-                                    } else {
-                                        if (TextUtils.isEmpty(getInventory.getText().toString()) ||
-                                                TextUtils.isEmpty(getPricing.getText().toString()) ||
-                                                TextUtils.isEmpty(getOrder.getText().toString())
-                                                ) {
-                                            updateSalesEntries(
-                                                    0,
-                                                    "0",
-                                                    "",
-                                                    "",
-                                                    "",
-                                                    "",
-                                                    "",
-                                                    "",
-                                                    "",
-                                                    "",
-                                                    "",
-                                                    "",
-                                                    data.get(position).productcode
-                                            );
+                                        if (getInventory.getText().toString().equals(".")) {
+                                            getInventory.setText("");
+                                        } else if (getOrder.getText().toString().equals(".")) {
+                                            getOrder.setText("");
                                         } else {
+                                            double salesQty = 0.0;
+                                            if (!getOrder.getText().toString().equals("")) {
+                                                salesQty = Double.parseDouble(getOrder.getText().toString());
+                                            }
 
-                                            String dates = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                                            if (Double.parseDouble(data.get(position).qty) < salesQty) {
+                                                getOrder.setText("");
+                                            } else {
+                                                if (TextUtils.isEmpty(getInventory.getText().toString()) ||
+                                                        TextUtils.isEmpty(getPricing.getText().toString()) ||
+                                                        TextUtils.isEmpty(getOrder.getText().toString())
+                                                        ) {
+                                                    updateSalesEntries(
+                                                            0,
+                                                            "0",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            data.get(position).productcode
+                                                    );
+                                                } else {
 
-                                            mDis.add(
-                                                    dailySalesViewModule.getUsersIndividualInformation()
-                                                            .subscribeOn(Schedulers.io())
-                                                            .observeOn(AndroidSchedulers.mainThread())
-                                                            .subscribe(emData -> {
-                                                                updateSalesEntries(
-                                                                        emData.user_id,
-                                                                        data.get(position).separator,
-                                                                        data.get(position).separatorname,
-                                                                        data.get(position).rollprice,
-                                                                        data.get(position).packprice,
-                                                                        getInventory.getText().toString(),
-                                                                        getPricing.getText().toString(),
-                                                                        getOrder.getText().toString(),
-                                                                        customer_no,
-                                                                        "1",
-                                                                        dates,
-                                                                        data.get(position).soq,
-                                                                        data.get(position).productcode);
-                                                            })
-                                            );
+                                                    String dates = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+                                                    mDis.add(
+                                                            dailySalesViewModule.getUsersIndividualInformation()
+                                                                    .subscribeOn(Schedulers.io())
+                                                                    .observeOn(AndroidSchedulers.mainThread())
+                                                                    .subscribe(emData -> {
+                                                                        updateSalesEntries(
+                                                                                emData.user_id,
+                                                                                data.get(position).separator,
+                                                                                data.get(position).separatorname,
+                                                                                data.get(position).rollprice,
+                                                                                data.get(position).packprice,
+                                                                                getInventory.getText().toString(),
+                                                                                getPricing.getText().toString(),
+                                                                                getOrder.getText().toString(),
+                                                                                customer_no,
+                                                                                "1",
+                                                                                dates,
+                                                                                data.get(position).soq,
+                                                                                data.get(position).productcode);
+                                                                    })
+                                                    );
+                                                }
+                                            }
                                         }
-                                    }
-                                }
-                            });
-                            skuAdapter.notifyDataSetChanged();
-                            skuAdapter.setModulesAdapter(data);
-                            recyler_data.setItemViewCacheSize(data.size());
-                            showProgressBar(false);
-                        },
-                        throwable -> Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
-                )
-        );
+                                    });
+                                    skuAdapter.notifyDataSetChanged();
+                                    skuAdapter.setModulesAdapter(data);
+                                    recyler_data.setItemViewCacheSize(data.size());
+                                    showProgressBar(false);
+                                },
+                                throwable -> Log.e("ZERO_ITEM_POPULAR_ERROR", throwable.getMessage())
+                        )
+                );
+            }
+        });
 
         save.setOnClickListener(v -> {
             mDis.add(dailySalesViewModule.validateUserSalesEntries("1")
@@ -186,28 +193,26 @@ public class DailySalesActivity extends BaseActivity {
                     .subscribe(
                             data -> {
 
-                                    mDis.add(dailySalesViewModule.countAllSalesEntries()
-                                            .subscribeOn(Schedulers.io())
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(allData->{
+                                mDis.add(dailySalesViewModule.countAllSalesEntries()
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(allData -> {
 
-                                        if(!allData.equals(data)){
-                                            Toast.makeText(getApplication(), "Please enter all the field", Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            intent = new Intent(this, ConfirmSales.class);
-                                            intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-                                            intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
-                                            intent.putExtra("CUSTOMER_NO", customer_no);
-                                            intent.putExtra("GEOLATLNG",latlng);
-                                            intent.putExtra("ARRIVAL_TIME",arrTime);
-                                            startActivity(intent);
-                                        }
-                                    },throwable -> {
-                                        Toast.makeText(getApplication(), "Please enter sales", Toast.LENGTH_SHORT).show();
-                                    })
-                                    );
-
-
+                                            if (!allData.equals(data)) {
+                                                Toast.makeText(getApplication(), "Please enter all the field", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                intent = new Intent(this, ConfirmSales.class);
+                                                intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+                                                intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
+                                                intent.putExtra("CUSTOMER_NO", customer_no);
+                                                intent.putExtra("GEOLATLNG", latlng);
+                                                intent.putExtra("ARRIVAL_TIME", arrTime);
+                                                startActivity(intent);
+                                            }
+                                        }, throwable -> {
+                                            Toast.makeText(getApplication(), "Please enter sales", Toast.LENGTH_SHORT).show();
+                                        })
+                                );
                             })
             );
         });

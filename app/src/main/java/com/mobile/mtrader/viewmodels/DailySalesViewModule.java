@@ -1,6 +1,7 @@
 package com.mobile.mtrader.viewmodels;
 
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
@@ -34,7 +35,13 @@ public class DailySalesViewModule extends ViewModel {
 
     Employees employees;
 
+    private MutableLiveData<String> viewCom = new MutableLiveData<>();
+
     CompositeDisposable mDis = new CompositeDisposable();
+
+    public MutableLiveData<String> getviewCom() {
+        return viewCom;
+    }
 
     DailySalesViewModule(DataRepository repository) {
         this.repository = repository;
@@ -80,24 +87,32 @@ public class DailySalesViewModule extends ViewModel {
 
                     @Override
                     public void onSuccess(Response<SoqMapperModel> response) {
-
                         SoqMapperModel data = response.body();
-
                         if (response != null && response.isSuccessful() && response.body() != null && response.code() == 200) {
-
                             if (data.status == 200) {
-                                for(int i =0; i < data.customersoq.size(); i++) {
-                                    setNewSoqForCustomer(data.customersoq.get(i).soq, data.customersoq.get(i).skucode) ;
-
+                                refreshSOQ();
+                                if(data.customersoq!=null) {
+                                    for(int i = 0; i < data.customersoq.size(); i++) {
+                                        setNewSoqForCustomer(data.customersoq.get(i).soq, data.customersoq.get(i).skucode) ;
+                                        if(i==data.customersoq.size()-1){
+                                            viewCom.postValue("200");
+                                            break;
+                                        }
+                                    }
+                                }else{
+                                    viewCom.postValue("200");
                                 }
                             }else{
+                                viewCom.postValue("200");
                             }
                         }else{
+                            viewCom.postValue("200");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        viewCom.postValue("200");
                     }
                 });
     }
@@ -119,7 +134,22 @@ public class DailySalesViewModule extends ViewModel {
                 });
     }
 
+    public void refreshSOQ() {
 
+        Completable.fromAction(()->repository.refreshSOQ())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) { mDis.add(d);}
+
+                    @Override
+                    public void onComplete() {}
+
+                    @Override
+                    public void onError(Throwable e) {}
+                });
+    }
 
     public Flowable<Employees> getUsersIndividualInformation() {
         return repository.findIndividualUsers().map(
@@ -149,14 +179,10 @@ public class DailySalesViewModule extends ViewModel {
                     }
 
                     @Override
-                    public void onComplete() {
-
-                    }
+                    public void onComplete() {}
 
                     @Override
-                    public void onError(Throwable e) {
-
-                    }
+                    public void onError(Throwable e) {}
                 });
     }
 

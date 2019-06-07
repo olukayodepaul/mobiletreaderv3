@@ -165,13 +165,14 @@ public interface DatabaseDaoSQLQuery {
     @Query("UPDATE Customers SET outletname=:outletname, lat=:lat, lng=:lng  WHERE id=:id")
     void updateLocalCustomers(String outletname, String lat, String lng, int id);
 
-
     @Query("UPDATE Products SET SOQ = :soq WHERE productcode=:productcode")
     void updateLocalSoq (String soq, String productcode);
 
     @Query("SELECT SUM(orders) AS mOrder, SUM(salescommission) AS mSales, SUM(rollprice+packprice-salescommission) mPrice FROM Sales")
     Single<SumSales> sumAllSalesCommission();
 
+    @Query("UPDATE Products SET SOQ = '0'")
+    void refreshSOQ ();
 }
 
 
