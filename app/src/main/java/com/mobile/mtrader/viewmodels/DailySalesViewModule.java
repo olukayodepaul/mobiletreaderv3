@@ -14,6 +14,7 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Flowable;
+import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -79,26 +80,31 @@ public class DailySalesViewModule extends ViewModel {
         repository.pullServerSoq(customerno)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<SoqMapperModel>>() {
+                .subscribe(new Observer<Response<SoqMapperModel>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         mDis.add(d);
                     }
 
                     @Override
-                    public void onSuccess(Response<SoqMapperModel> response) {
+                    public void onNext(Response<SoqMapperModel> response) {
+
                         SoqMapperModel data = response.body();
                         if (response != null && response.isSuccessful() && response.body() != null && response.code() == 200) {
                             if (data.status == 200) {
+
                                 refreshSOQ();
-                                if(data.customersoq!=null) {
+                                if(data.customersoq.size()!=0) {
+
                                     for(int i = 0; i < data.customersoq.size(); i++) {
                                         setNewSoqForCustomer(data.customersoq.get(i).soq, data.customersoq.get(i).skucode) ;
+
                                         if(i==data.customersoq.size()-1){
                                             viewCom.postValue("200");
                                             break;
                                         }
                                     }
+
                                 }else{
                                     viewCom.postValue("200");
                                 }
@@ -113,6 +119,11 @@ public class DailySalesViewModule extends ViewModel {
                     @Override
                     public void onError(Throwable e) {
                         viewCom.postValue("200");
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }
@@ -162,12 +173,12 @@ public class DailySalesViewModule extends ViewModel {
 
     public void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
                          String inventory, String pricing, String orders,
-                         String customerno, String updatestatus, String entry_date_time,String soq, String productcode) {
+                         String customerno, String updatestatus, String entry_date_time,String soq, int rollqty, int packqty, String productcode) {
 
          Completable.fromAction(() ->repository.updateSalesEntries (
          user_id, separator,separatorname, rollprice, packprice,
                 inventory, pricing, orders,
-                 customerno, updatestatus, entry_date_time,soq,productcode
+                 customerno, updatestatus, entry_date_time,soq,rollqty, packqty, productcode
 
          ))
                 .subscribeOn(Schedulers.io())

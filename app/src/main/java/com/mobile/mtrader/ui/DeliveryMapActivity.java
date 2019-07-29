@@ -30,6 +30,9 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,6 +44,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.mobile.mtrader.di.component.ApplicationComponent;
 import com.mobile.mtrader.di.component.DaggerApplicationComponent;
@@ -103,7 +107,9 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
 
     ApplicationComponent component;
 
-    Pasers pasers;
+    double curlat = 0.0;
+
+    double curlng = 0.0;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -131,7 +137,8 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         component.inject(this);
         deliveryViewModel = ViewModelProviders.of(this, viewModelFactory).get(DeliverySalesMapViewmodel.class);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        pasers = new Pasers();
+
+
         mProgressBar.setVisibility(View.INVISIBLE);
 
         if (bundle != null) {
@@ -147,7 +154,6 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
             //destination route
             outletlat = bundle.getString("DEPOT_LAT");
             outletlng = bundle.getString("DEPOT_LNG");
-
         }
 
         users_name.setText(outletname);
@@ -157,22 +163,39 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         });
 
         back_butto.setOnClickListener(view -> {
-            mProgressBar.setVisibility(View.VISIBLE);
-            if (!AppUtil.checkConnections(this)) {
-                mProgressBar.setVisibility(View.INVISIBLE);
-                buildAlertMessageMobileDataOff();
-            }else {
-                deliveryViewModel.setOutletClose(customer_no,new SimpleDateFormat("HH:mm:ss").format(new Date()));
+            if(AppUtil.insideRadius(Double.parseDouble(depotlat),Double.parseDouble(depotlng),curlat,curlng)==true) {
+                mProgressBar.setVisibility(View.VISIBLE);
+                if (!AppUtil.checkConnections(this)) {
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    buildAlertMessageMobileDataOff();
+                } else {
+                    deliveryViewModel.setOutletClose(customer_no, new SimpleDateFormat("HH:mm:ss").format(new Date()));
+                }
+            }else{
+                AppUtil.showAlertDialog(DeliveryMapActivity.this, "Outlet Error",
+                        "You are not at the corresponding outlet","Close");
             }
         });
 
         prosales.setOnClickListener(v -> {
-            if (!AppUtil.checkConnection(this)) {
-                buildAlertMessageMobileDataOff();
-            }else {
-                deliveryViewModel.updateFromSalesEntries();
-                getLocationPermission();
+            if(AppUtil.insideRadius(Double.parseDouble(depotlat),Double.parseDouble(depotlng),curlat,curlng)==true){
+                if (!AppUtil.checkConnection(this)) {
+                    buildAlertMessageMobileDataOff();
+                }else {
+                    if (!mLocationPermissionGranted) {
+                        getLocationPermission();
+                        Log.d(TAG, "onTrackLat: one");
+                    }else{
+                        getLastLocation();
+                        Log.d(TAG, "onTrackLat: two");
+                    }
+                    deliveryViewModel.updateFromSalesEntries();
+                }
+            }else{
+                AppUtil.showAlertDialog(DeliveryMapActivity.this, "Outlet Error",
+                        "You are not at the corresponding outlet","Close");
             }
+            Log.d(TAG, "onTrackLatlong: "+depotlat+"-"+depotlng+"-"+curlat+"-"+curlng);
         });
 
         deliveryViewModel.rpRep().observe(this, new Observer<String>() {
@@ -198,7 +221,7 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("CUSTOMERS_ACCESS_KEYS", customer_key);
                 intent.putExtra("CUSTOMER_ID", customer_no);
-                intent.putExtra("GEOLATLNG",pasers.getLat()+"~"+pasers.getLng());
+                intent.putExtra("GEOLATLNG",curlat+"~"+curlng);
                 intent.putExtra("ARRIVAL_TIME",  new SimpleDateFormat("HH:mm:ss").format(new Date()));
                 startActivity(intent);
             } else {
@@ -213,18 +236,17 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
         mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
                 if(task.isSuccessful()) {
                     Location location = task.getResult();
-                    pasers.setLat(location.getLatitude());
-                    pasers.setLng(location.getLongitude());
-                }else{
-                    pasers.setLat(0.0);
-                    pasers.setLng(0.0);
+                    if(location != null){
+                        curlat = location.getLatitude();
+                        curlng = location.getLongitude();
+                    }
                 }
-
             }
         });
     }
@@ -306,6 +328,7 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
             getLastLocation();
+            Log.d(TAG, "onTrackLat: check per");
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -319,12 +342,8 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
 
         if (available == ConnectionResult.SUCCESS) {
-            //everything is fine and the user can make map requests
-            //Log.d(TAG, "isServicesOK: Google Play Services is working");
             return true;
         } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-            //an error occured but we can resolve it
-            //Log.d(TAG, "isServicesOK: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
         } else {
@@ -340,7 +359,6 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         mLocationPermissionGranted = false;
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
@@ -352,7 +370,6 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Log.d(TAG, "onActivityResult: called.");
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ENABLE_GPS: {
                 if (!mLocationPermissionGranted) {
@@ -396,7 +413,6 @@ public class DeliveryMapActivity extends FragmentActivity implements OnMapReadyC
         }
 
         googleMap = map;
-        //map.setMyLocationEnabled(true);
 
         googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(outletlat), Double.parseDouble(outletlng))).title(outletname));
         googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(depotlat), Double.parseDouble(depotlng)))

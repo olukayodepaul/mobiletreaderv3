@@ -24,9 +24,7 @@ import com.mobile.mtrader.viewmodels.DailySalesViewModule;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -94,7 +92,8 @@ public class DailySalesActivity extends BaseActivity {
             if (check.equals("200")) {
 
                 mDis.add(dailySalesViewModule.getLiveCustomers()
-                        .delaySubscription(5, TimeUnit.MINUTES)
+                        .delay(12, TimeUnit.SECONDS)
+                        .delaySubscription(1, TimeUnit.SECONDS)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(data -> {
@@ -139,14 +138,27 @@ public class DailySalesActivity extends BaseActivity {
                                                             "",
                                                             "",
                                                             "",
+                                                            "0.0",
                                                             "",
                                                             "",
                                                             "",
                                                             "",
-                                                            "",
+                                                            0,
+                                                            0,
                                                             data.get(position).productcode
                                                     );
+                                                    Log.e("orders", "----------------" +0);
                                                 } else {
+
+                                                    double dorder = 0.0;
+
+                                                    if(!getOrder.getText().toString().isEmpty()){
+                                                        dorder = Double.parseDouble(getOrder.getText().toString());
+                                                    }
+
+
+                                                    String[] rorder =  Double.toString(dorder).split("\\.");
+
 
                                                     String dates = new SimpleDateFormat("HH:mm:ss").format(new Date());
 
@@ -168,9 +180,12 @@ public class DailySalesActivity extends BaseActivity {
                                                                                 "1",
                                                                                 dates,
                                                                                 data.get(position).soq,
+                                                                                Integer.parseInt(rorder[0]),
+                                                                                Integer.parseInt(rorder[1]),
                                                                                 data.get(position).productcode);
                                                                     })
                                                     );
+
                                                 }
                                             }
                                         }
@@ -222,11 +237,11 @@ public class DailySalesActivity extends BaseActivity {
 
     public void updateSalesEntries(int user_id, String separator, String separatorname, String rollprice, String packprice,
                                    String inventory, String pricing, String orders,
-                                   String customerno, String updatestatus, String entry_date_time, String soq, String productcode) {
+                                   String customerno, String updatestatus, String entry_date_time, String soq, int rollqty, int packqty, String productcode) {
         dailySalesViewModule.updateSalesEntries(
                 user_id, separator, separatorname, rollprice, packprice,
                 inventory, pricing, orders,
-                customerno, updatestatus, entry_date_time, soq, productcode
+                customerno, updatestatus, entry_date_time, soq, rollqty, packqty, productcode
         );
     }
 }

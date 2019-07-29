@@ -1,29 +1,32 @@
 package com.mobile.mtrader.ui;
 
 
-import android.app.AlertDialog;
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.util.Base64;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
+
 import com.mobile.mtrader.BaseActivity;
 import com.mobile.mtrader.cache.OutletClassCache;
 import com.mobile.mtrader.cache.OutletLanguageCache;
@@ -34,16 +37,18 @@ import com.mobile.mtrader.di.module.ContextModule;
 import com.mobile.mtrader.di.module.MvvMModule;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import com.mobile.mtrader.viewmodels.CustomerActivityViewmModel;
-import com.pkmmte.view.CircularImageView;
 
-import java.io.ByteArrayOutputStream;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-
-import static com.mobile.mtrader.util.keyStore.PERMISSIONS_REQUEST_ENABLE_GPS;
 
 public class AddCustomers extends BaseActivity {
 
@@ -81,12 +86,6 @@ public class AddCustomers extends BaseActivity {
     @BindView(R.id.registerBtn)
     Button registerBtn;
 
-    @BindView(R.id.slap_photo)
-    CircularImageView slap_photo;
-
-    @BindView(R.id.iv_camera)
-    CircularImageView iv_camera;
-
     OutletClassCache outletClassCache;
 
     OutletLanguageCache outletLanguageCache;
@@ -101,17 +100,19 @@ public class AddCustomers extends BaseActivity {
 
     ArrayAdapter<String> arrayAdapterType;
 
-    private static final int CAMERAL_PERMISSION_CODE = 1000;
+    BottomSheetDialog bottomSheetDialog;
 
-    private static final int IMAGE_CAPTURE_CODE = 100;
+    private static final int REQUEST_CODE = 1001;
 
-    Uri fileUri;
+    private boolean mPermissions;
 
-    String picturePath;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    Uri selectedImage;
+    private static final String TAG = "AddCustomers";
 
-    String mPhoto;
+    static final int REQUEST_TAKE_PHOTO = 1;
+
+    String imageFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,31 +128,34 @@ public class AddCustomers extends BaseActivity {
         outletClassCache = new OutletClassCache();
         outletLanguageCache = new OutletLanguageCache();
         outletTypeCache = new OutletTypeCache();
+        bottomSheetDialog = new BottomSheetDialog(this);
         showProgressBar(false);
-        init();
+        eventInit();
+        spinnerInit();
+        cameraInit();
     }
 
-    public void init() {
+    public void cameraInit() {
+        if(mPermissions){
+            if(!checkCameraHardware(this)) {
+                showSnackBar("You need a camera to use this application", Snackbar.LENGTH_INDEFINITE);
+            }
+        }
+        else{
+            verifyPermissions();
+        }
+    }
+
+
+    public void eventInit(){
+        View bottomSheetDialogView = getLayoutInflater().inflate(R.layout.botton_sheet_dialog_photo, null);
+        bottomSheetDialog.setContentView(bottomSheetDialogView);
 
         //open camera
-        iv_camera.setOnClickListener(v->{
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-
-                if(checkSelfPermission(android.Manifest.permission.CAMERA) ==
-                        PackageManager.PERMISSION_DENIED ||
-                        checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                                PackageManager.PERMISSION_DENIED ){
-                        //Permission not enable, Request it
-                    String[] permission = {android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                    requestPermissions(permission,CAMERAL_PERMISSION_CODE );
-                }else{
-                    //permission already granted
-                    openCamera();
-                }
-            }else{
-                openCamera();
-            }
-        });
+       /* iv_camera.setOnClickListener(v->{
+            openCameraIntent();
+            //bottomSheetDialog.show();
+        });*/
 
         back_page.setOnClickListener(view -> {
             onBackPressed();
@@ -181,13 +185,12 @@ public class AddCustomers extends BaseActivity {
                         phoneno,outlet_class_id,outlet_language_id,
                         1,outlet_type_id,mPhoto);
             }*/
-            uploadImage();
             showProgressBar(true);
-            customerActivityViewmModel.mapOutlet(this,custname,contactname,address,
-                    phoneno,outlet_class_id,outlet_language_id,
-                    1,outlet_type_id,picturePath);
-            Log.e("paths", "----------------" + "nkjjj");
+
         });
+    }
+
+    public void spinnerInit() {
 
         customerActivityViewmModel.getGroupUserSpinners(1).observe(this, userSpinners -> {
             outletClassList = new ArrayList<>();
@@ -232,73 +235,78 @@ public class AddCustomers extends BaseActivity {
         });
     }
 
-    private void openCamera() {
-        // Check Camera
-        if (getApplicationContext().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA)) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-            startActivityForResult(intent, IMAGE_CAPTURE_CODE);
+    /** Check if this device has a camera */
+    private boolean checkCameraHardware(Context context) {
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+            // this device has a camera
+            return true;
         } else {
-            Toast.makeText(getApplication(), "Camera not supported", Toast.LENGTH_LONG).show();
+            // no camera on this device
+            return false;
         }
     }
 
-    //real image to be move to the server with retrofit.
-    private void uploadImage() {
-        //Log.e("pathss", "----------------" + picturePath);
-        Bitmap bm = BitmapFactory.decodeFile(picturePath);
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 90, bao);
-        byte[] ba = bao.toByteArray();
-        mPhoto = Base64.encodeToString(ba, Base64.NO_WRAP);
-        //Log.e("base64", "-----" + mPhoto);
+    public void verifyPermissions() {
+        String[] permissions = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), permissions[0] ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this.getApplicationContext(), permissions[1] ) == PackageManager.PERMISSION_GRANTED) {
+            mPermissions = true;
+            cameraInit();
+        } else {
+            ActivityCompat.requestPermissions(AddCustomers.this, permissions, REQUEST_CODE);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode) {
-            case CAMERAL_PERMISSION_CODE: {
-                if(grantResults.length > 0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    openCamera();
-                }else{
-                    Toast.makeText(this, "Camera Permission Denied.", Toast.LENGTH_SHORT).show();
-                }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQUEST_CODE) {
+            if(mPermissions){
+                cameraInit();
+            }
+            else{
+                verifyPermissions();
+            }
+        }
+    }
+
+    private void showSnackBar(final String text, final int length) {
+        View view = this.findViewById(android.R.id.content).getRootView();
+        Snackbar.make(view, text, length).show();
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName,  ".jpg",storageDir);
+        imageFilePath = image.getAbsolutePath();
+        Log.d(TAG, "onCreate: "+imageFilePath);
+        return image;
+    }
+
+    private void openCameraIntent() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(pictureIntent.resolveActivity(getPackageManager()) != null){
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName()+".provider", photoFile);
+                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                pictureIntent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                startActivityForResult(pictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == IMAGE_CAPTURE_CODE && resultCode == RESULT_OK) {
-
-            selectedImage = data.getData();
-
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            slap_photo.setImageBitmap(photo);
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            //Glide.with(AddCustomers.this).load(imageFilePath).into(slap_photo);
+            Log.d(TAG, "onCreate: "+"NO");
         }
     }
-
-    private void buildAlertMessageMobileDataOff() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("This application requires mobile Data to be on?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        Intent enableGpsIntent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
 }

@@ -80,7 +80,7 @@ public class RepSalesConfirmViewModel extends ViewModel {
                                         data.get(i).customerno,
                                         data.get(i).user_id,
                                         data.get(i).separator,
-                                        Double.parseDouble(data.get(i).orders),
+                                        data.get(i).orders,
                                         Double.parseDouble(data.get(i).inventory),
                                         Integer.parseInt(data.get(i).pricing),
                                         1,

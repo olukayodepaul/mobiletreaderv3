@@ -69,10 +69,10 @@ public class DataRepository  {
 
     public void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
                                    String inventory, String pricing, String orders,
-                                   String customerno, String updatestatus, String entry_date_time,String soq, String productcode ) {
+                                   String customerno, String updatestatus, String entry_date_time,String soq, int rollqty, int packqty, String productcode ) {
         this.daoSQLQuery.updateSalesEntries(user_id, separator,separatorname, rollprice, packprice,
                 inventory, pricing, orders,
-                customerno, updatestatus, entry_date_time,soq,productcode);
+                customerno, updatestatus, entry_date_time,soq,rollqty, packqty, productcode);
     }
 
     public Long insertIntoProducts(Products products) {
@@ -153,6 +153,10 @@ public class DataRepository  {
 
     public void deleteFromCustomers() {
         this.daoSQLQuery.deleteFromCustomers();
+    }
+
+    public void deleteFromSales() {
+        this.daoSQLQuery.deleteFromSales();
     }
 
     public Observable<Response<DataBridge>> sentSalesToServer(List<DataBridge> salesEntries) {
@@ -258,7 +262,7 @@ public class DataRepository  {
         return this.daoSQLQuery.sumAllSalesCommission();
     }
 
-    public Single<Response<SoqMapperModel>> pullServerSoq(String custid){
+    public Observable<Response<SoqMapperModel>> pullServerSoq(String custid){
         return api.getCustomerSoq(custid);
     }
 

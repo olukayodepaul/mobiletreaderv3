@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.mobile.mtrader.data.AllTablesStructures.Products;
 import com.mobile.mtrader.data.AllTablesStructures.SalesEntries;
 import com.mobile.mtrader.mobiletreaderv3.R;
 import java.util.ArrayList;
@@ -43,13 +42,14 @@ public class ConfirmSalesAdapter extends RecyclerView.Adapter<ConfirmSalesAdapte
             holder.sku.setText(rs.productname);
             holder.order.setText(rs.inventory);
             holder.app_price.setText(rs.pricing);
-            holder.invent.setText(Double.toString(Double.parseDouble(rs.orders)));
+            holder.invent.setText(Double.toString(rs.orders));
 
             double packPrice = Double.parseDouble(rs.packprice);
             double rollPrice = Double.parseDouble(rs.rollprice);
 
-            String[] transDouble =  Double.toString(Double.parseDouble(rs.orders)).split("\\.");
+            String[] transDouble =  Double.toString(rs.orders).split("\\.");
             holder.tv_price.setText(Double.toString(rollPrice*Integer.parseInt(transDouble[0])+packPrice*Integer.parseInt(transDouble[1])));
+
         }
     }
 

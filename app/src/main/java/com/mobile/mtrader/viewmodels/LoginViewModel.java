@@ -97,6 +97,7 @@ public class LoginViewModel extends ViewModel {
                                                             deleteFromSalesEntries();
                                                             deleteFromAllRepCustomers();
                                                             deleteFromAllUserSpinners();
+                                                            deleteFromSales();
 
                                                             Employees employeerdata = new Employees(
                                                                     data.id,
@@ -196,11 +197,13 @@ public class LoginViewModel extends ViewModel {
                                                                         "",
                                                                         "",
                                                                         "",
+                                                                        0.0,
                                                                         "",
                                                                         "",
                                                                         "",
                                                                         "",
-                                                                        ""
+                                                                        0,
+                                                                        0
                                                                 );
                                                                 new AddProducts().execute(productsData);
                                                                 new AddSalesEntries().execute(salesEntries);
@@ -367,6 +370,26 @@ public class LoginViewModel extends ViewModel {
 
     private void deleteFromAllUserSpinners() {
         Completable.fromAction(() -> repository.deleteFromAllUserSpinners())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
+    }
+
+    private void deleteFromSales() {
+        Completable.fromAction(() -> repository.deleteFromSales())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {

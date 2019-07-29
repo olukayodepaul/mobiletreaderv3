@@ -17,16 +17,18 @@ public class SalesEntries {
     public String packprice;
     public String inventory;
     public String pricing;
-    public String orders;
+    public double orders;
     public String customerno;
     public String updatestatus;
     public String entry_date_time;
     public String soq;
+    public int rollqty;
+    public int packqty;
 
     public SalesEntries(String productcode, String productname, int user_id, String separator, String separatorname,
                         String rollprice, String packprice,
-                        String inventory, String pricing, String orders, String customerno,
-                        String updatestatus, String entry_date_time, String soq) {
+                        String inventory, String pricing, double orders, String customerno,
+                        String updatestatus, String entry_date_time, String soq, int rollqty, int packqty) {
         this.productcode = productcode;
         this.productname = productname;
         this.user_id = user_id;
@@ -41,6 +43,9 @@ public class SalesEntries {
         this.updatestatus = updatestatus;
         this.entry_date_time = entry_date_time;
         this.soq = soq;
+        this.rollqty = rollqty;
+        this.packqty = packqty;
+
     }
 
     public int getAuto() {
@@ -83,7 +88,7 @@ public class SalesEntries {
         return pricing;
     }
 
-    public String getOrders() {
+    public double getOrders() {
         return orders;
     }
 
@@ -105,5 +110,13 @@ public class SalesEntries {
 
     public String getSoq() {
         return soq;
+    }
+
+    public int getRollqty() {
+        return rollqty;
+    }
+
+    public int getPackqty() {
+        return packqty;
     }
 }

@@ -41,7 +41,8 @@ public class RetrofitModule {
                 .baseUrl(keyStore.baseURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(okHttpClient)
+                .client(okHttpClien
+                t)
                 .build();
     }
 
@@ -128,4 +129,5 @@ public class RetrofitModule {
     public Api provideApiMvvm(@Named("mvvm_server") Retrofit retrofit) {
         return retrofit.create(Api.class);
     }
+
 }

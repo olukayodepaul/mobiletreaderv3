@@ -79,7 +79,7 @@ public interface Api {
     );
 
     @POST("/mobiletrader/loadsoq")
-    Single<Response<SoqMapperModel>> getCustomerSoq (
+    Observable<Response<SoqMapperModel>> getCustomerSoq (
             @Query("custid") String  custid
     );
 

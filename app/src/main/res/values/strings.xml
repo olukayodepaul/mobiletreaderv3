@@ -19,6 +19,7 @@
     <string name="edit_profile_edit">Profile and Edit Profile</string>
     <string name="add_new_customer">Add New Customer</string>
     <string name="internal_storage">Internal storage</string>
+    <string name="fragment_camera2">Camera2</string>
 
 
 </resources>

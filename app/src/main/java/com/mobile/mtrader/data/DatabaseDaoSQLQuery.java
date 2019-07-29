@@ -18,8 +18,6 @@ import com.mobile.mtrader.data.AllTablesStructures.UserSpinners;
 import com.mobile.mtrader.model.SumSales;
 
 import java.util.List;
-
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -47,10 +45,10 @@ public interface DatabaseDaoSQLQuery {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertLastLocation(LastLoation lastLoation);
 
-    @Query("UPDATE SalesEntries SET user_id=:user_id,separator=:separator, separatorname=:separatorname,rollprice=:rollprice, packprice=:packprice, inventory=:inventory, pricing=:pricing, orders=:orders, customerno=:customerno, updatestatus=:updatestatus, entry_date_time=:entry_date_time, soq=:soq where productcode=:productcode")
+    @Query("UPDATE SalesEntries SET user_id=:user_id,separator=:separator, separatorname=:separatorname,rollprice=:rollprice, packprice=:packprice, inventory=:inventory, pricing=:pricing, orders=:orders, customerno=:customerno, updatestatus=:updatestatus, entry_date_time=:entry_date_time, soq=:soq, rollqty=:rollqty, packqty=:packqty where productcode=:productcode")
     void updateSalesEntries(int user_id, String separator,String separatorname, String rollprice, String packprice,
                             String inventory, String pricing, String orders,
-                            String customerno, String updatestatus, String entry_date_time,String soq , String productcode);
+                            String customerno, String updatestatus, String entry_date_time,String soq , int rollqty, int packqty, String productcode);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insertIntoProducts(Products products);
@@ -102,6 +100,9 @@ public interface DatabaseDaoSQLQuery {
 
     @Query("Delete from UserSpinners")
     void deleteFromAllUserSpinners();
+
+    @Query("Delete from Sales")
+    void deleteFromSales();
 
     @Query("SELECT * FROM SalesEntries WHERE updatestatus=:updatestatus")
     Flowable<List<SalesEntries>> pustSalesToServer(String updatestatus);
@@ -173,6 +174,7 @@ public interface DatabaseDaoSQLQuery {
 
     @Query("UPDATE Products SET SOQ = '0'")
     void refreshSOQ ();
+
 }
 
 

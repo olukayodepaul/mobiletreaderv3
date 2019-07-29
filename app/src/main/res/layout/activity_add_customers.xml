@@ -9,6 +9,7 @@
     tools:context="com.mobile.mtrader.ui.AddCustomers">
 
 
+
     <LinearLayout
         android:id="@+id/prs"
         android:layout_width="match_parent"
@@ -100,10 +101,7 @@
                         android:layout_gravity="bottom|center_horizontal"
                         android:scaleType="centerCrop"
                         android:src="@drawable/add_photo"
-                        app:border="true"
-                        app:border_color="#EEEEEE"
-                        app:border_width="3dp"
-                        app:shadow="true" />
+                      />
 
                     <com.pkmmte.view.CircularImageView
                         android:id="@+id/iv_camera"
@@ -367,4 +365,18 @@
             </RelativeLayout>
         </ScrollView>
     </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        >
+        <FrameLayout
+            android:id="@+id/camera_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000"/>
+    </RelativeLayout>
+
 </RelativeLayout>

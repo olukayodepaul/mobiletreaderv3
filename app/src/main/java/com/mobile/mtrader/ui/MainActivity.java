@@ -74,6 +74,8 @@ public class MainActivity extends BaseActivity {
 
     private FirebaseAuth mAuth;
 
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -119,7 +121,6 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
                 finish();
             }
-
         });
     }
 

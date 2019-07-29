@@ -120,7 +120,11 @@ public class CustomerProfile extends BaseActivity{
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    Pasers pasers;
+    double getLat = 0.0;
+
+    double getLng = 0.0;
+
+    private static final String TAG = "CustomerProfile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +143,6 @@ public class CustomerProfile extends BaseActivity{
         outletTypeCache = new OutletTypeCache();
         showProgressBar(true);
         bundle = getIntent().getExtras();
-        pasers = new Pasers();
 
         if (bundle != null) {
             customerid = bundle.getInt("CUSTOMERS_ID_INFO_APPS");
@@ -171,12 +174,24 @@ public class CustomerProfile extends BaseActivity{
                 TextUtils.isEmpty(Uphone) || Uphone.length()<=9 ) {
             Toast.makeText(this, "Please enter all the fields and enter valid phone number", Toast.LENGTH_SHORT).show();
         }else if (!AppUtil.checkConnection(this)) {
-            //Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
             buildAlertMessageMobileDataOff();
         }else{
-            customerActivityViewmModel.reSetUserProfile(Uname, Uemail, Upaswd, Long.parseLong(Uphone), outlet_class_id, outlet_language_id, outlet_type_id, customerid,  pasers.getLat(), pasers.getLng());
-            showProgressBar(true);
-            Toast.makeText(getApplicationContext(),Double.toString(pasers.getLng()),Toast.LENGTH_LONG ).show();
+            if(mLocationPermissionGranted==true) {
+                if(getLat==0.0) {
+                    Log.d(TAG, "editProfile: location not update");
+                    AppUtil.showAlertDialog(CustomerProfile.this, "Location Error", "Location not properly update, please re-update","OK" );
+                }else {
+                    getLocationPermission();
+                    customerActivityViewmModel.reSetUserProfile(Uname, Uemail, Upaswd, Long.parseLong(Uphone), outlet_class_id, outlet_language_id, outlet_type_id, customerid,  getLat, getLng);
+                    showProgressBar(true);
+                    Log.d(TAG, "editProfile: location update");
+                }
+            }else{
+                if (checkMapServices()) {
+                    getLocationPermission();
+                    Log.d(TAG, "editProfile: location  update permission");
+                }
+            }
         }
     }
 
@@ -387,11 +402,8 @@ public class CustomerProfile extends BaseActivity{
             public void onComplete(@NonNull Task<Location> task) {
                 if(task.isSuccessful()) {
                     Location location = task.getResult();
-                    pasers.setLat(location.getLatitude());
-                    pasers.setLng(location.getLongitude());
-                }else{
-                    pasers.setLat(0.0);
-                    pasers.setLng(0.0);
+                    getLat = location.getLatitude();
+                    getLng = location.getLongitude();
                 }
             }
         });

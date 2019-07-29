@@ -127,15 +127,13 @@ public class ConfirmSales extends BaseActivity {
             int sumPricing = 0;
             double sumOrder = 0.0;
 
-            for (int i = 0; i < salesEntries.size(); i++) {
-
-                String[] divider = Double.toString(Double.parseDouble(salesEntries.get(i).orders)).split("\\.");
+           for (int i = 0; i < salesEntries.size(); i++) {
+                String[] divider = Double.toString(salesEntries.get(i).orders).split("\\.");
                 sumAllPP += Integer.parseInt(divider[0]) * Double.parseDouble(salesEntries.get(i).rollprice);
                 sumAllRP += Integer.parseInt(divider[1]) * Double.parseDouble(salesEntries.get(i).packprice);
                 sumInventory += Double.parseDouble(salesEntries.get(i).inventory);
                 sumPricing += Double.parseDouble(salesEntries.get(i).pricing);
-                sumOrder += Double.parseDouble(salesEntries.get(i).orders);
-
+                sumOrder += salesEntries.get(i).orders;
             }
 
             invent_t.setText(formatter.format(sumOrder));

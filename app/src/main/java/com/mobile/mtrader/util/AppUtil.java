@@ -65,14 +65,18 @@ public class AppUtil {
             }
         }
         return false;
+        //3.554547
     }
 
-    public static boolean insideRadius(double custLat, double custLng, double curLat, double curLng) { 
-        int ky = 40000000/360;//40000/360;
+    public static boolean insideRadius(double custLat, double custLng, double curLat, double curLng) {
+        int ky =  400000/360; //40000/360;
         double kx = Math.cos(Math.PI*custLat/180) * ky;
         double dx = Math.abs(custLng-curLng)*kx;
         double dy = Math.abs(custLat-curLat)*ky;
         return Math.sqrt(dx*dx+dy*dy)<=5;
     }
+
+
+
 
 }
