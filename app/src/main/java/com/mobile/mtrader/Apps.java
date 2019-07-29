@@ -11,7 +11,7 @@ public class Apps extends Application {
     public void onCreate() {
         super.onCreate();
         Timber.plant(new Timber.DebugTree());
-        //this is to check the update on the git
+        //this is to check the update on the git self
     }
 
 }
