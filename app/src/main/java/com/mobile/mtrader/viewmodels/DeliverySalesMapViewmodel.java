@@ -81,7 +81,7 @@ public class DeliverySalesMapViewmodel extends ViewModel {
                                         if(res.status==200) {
 
                                             Customers customers = new Customers(
-                                                    0, "", urno, "",
+                                                    0,0, "", urno, "",
                                                     "", "", "", 0,
                                                     "", "", "close "+arivaltime
                                             );

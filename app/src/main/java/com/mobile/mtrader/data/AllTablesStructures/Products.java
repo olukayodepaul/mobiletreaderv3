@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class Products {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public int auto;
     public int id;
     public String separator;
@@ -18,9 +18,11 @@ public class Products {
     public String packprice;
     public String productname;
 
-    public Products(int id, String separator, String separatorname, String productcode,
+    public Products(int auto, int id, String separator, String separatorname, String productcode,
                     String qty, String soq, String rollprice,
                     String packprice, String productname) {
+
+        this.auto =  auto;
         this.id = id;
         this.separator = separator;
         this.separatorname = separatorname;
@@ -30,6 +32,7 @@ public class Products {
         this.rollprice = rollprice;
         this.packprice = packprice;
         this.productname = productname;
+
     }
 
     public int getAuto() {
@@ -72,7 +75,4 @@ public class Products {
         return productname;
     }
 
-    public void setAuto(int auto) {
-        this.auto = auto;
-    }
 }

@@ -149,7 +149,7 @@ public class BankViewModel extends ViewModel {
 
                                     if (response.code() == 200) {
                                         if (roster.status == 200) {
-                                            Customers customers = new Customers(0, "", "", "", "", "", "", 3, "", "", times);
+                                            Customers customers = new Customers(0,0, "", "", "", "", "", "", 3, "", "", times);
                                             new UpdateCustomerTime().execute(customers);
                                             res.postValue(Integer.toString(roster.status) + "~" + "Successful~" + times);
                                         } else {

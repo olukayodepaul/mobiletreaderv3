@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class Customers {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public int auto;
     public int id;
     public String notice;
@@ -20,8 +20,9 @@ public class Customers {
     public String token;
     public String rostertime;
 
-    public Customers(int id, String notice, String urno, String customerno, String outletname, String lat, String lng, int sort,
+    public Customers(int auto, int id, String notice, String urno, String customerno, String outletname, String lat, String lng, int sort,
                      String outlet_waiver, String token, String rostertime) {
+        this.auto = auto;
         this.id = id;
         this.notice = notice;
         this.urno = urno;
@@ -78,10 +79,5 @@ public class Customers {
     public String getToken() {
         return token;
     }
-
-    public void setAuto(int auto) {
-        this.auto = auto;
-    }
-
 
 }

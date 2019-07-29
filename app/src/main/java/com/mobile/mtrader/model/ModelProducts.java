@@ -10,6 +10,10 @@ public class ModelProducts {
     @Expose
     public int id;
 
+    @SerializedName("auto")
+    @Expose
+    public int auto;
+
     @SerializedName("separator")
     @Expose
     public String separator;

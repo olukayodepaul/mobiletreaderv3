@@ -9,6 +9,10 @@ public class ModelCustomers {
     @Expose
     public int id;
 
+    @SerializedName("auto")
+    @Expose
+    public int auto;
+
     @SerializedName("notice")
     @Expose
     public String notice;

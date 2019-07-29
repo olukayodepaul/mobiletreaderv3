@@ -127,6 +127,7 @@ public class LoginViewModel extends ViewModel {
                                                             for (int i = 0; i < data.customers.size(); i++) {
 
                                                                 Customers customersdata = new Customers(
+                                                                        data.customers.get(i).auto,
                                                                         data.customers.get(i).id,
                                                                         data.customers.get(i).notice,
                                                                         data.customers.get(i).urno,
@@ -176,6 +177,7 @@ public class LoginViewModel extends ViewModel {
                                                             for (int i = 0; i < data.product.size(); i++) {
 
                                                                 Products productsData = new Products(
+                                                                        data.product.get(i).auto,
                                                                         data.product.get(i).id,
                                                                         data.product.get(i).separator,
                                                                         data.product.get(i).separatorname,

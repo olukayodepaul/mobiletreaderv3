@@ -156,7 +156,7 @@ public class ClockOutViewModel extends ViewModel {
 
                                     if (response.code() == 200) {
                                         if (roster.status == 200) {
-                                            Customers customers = new Customers(0, "", "", "", "", "", "", 4, "", "", times);
+                                            Customers customers = new Customers(0,0, "", "", "", "", "", "", 4, "", "", times);
                                             new UpdateCustomerTime().execute(customers);
                                             observeResponse.postValue(Integer.toString(roster.status) + "~" + "Successful~"+times);
 

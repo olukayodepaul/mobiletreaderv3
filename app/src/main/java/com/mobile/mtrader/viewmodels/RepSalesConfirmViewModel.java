@@ -146,7 +146,7 @@ public class RepSalesConfirmViewModel extends ViewModel {
                             }
 
                             Customers customers = new Customers(
-                                    0, "", data.urno, "",
+                                    0,0, "", data.urno, "",
                                     "", "", "", 0,
                                     "", "", "open "+data.mdate
                             );

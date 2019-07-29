@@ -6,8 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class Modules {
 
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    @PrimaryKey
     public int module_id;
     public String nav;
     public String name;
@@ -20,9 +19,6 @@ public class Modules {
         this.imageurl = imageurl;
     }
 
-    public int getId() {
-        return id;
-    }
 
     public int getModule_id() {
         return module_id;
@@ -40,9 +36,6 @@ public class Modules {
         return imageurl;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 }
 
 
