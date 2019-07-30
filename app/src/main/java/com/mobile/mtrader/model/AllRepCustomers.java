@@ -9,6 +9,10 @@ public class AllRepCustomers {
     @Expose
     public int id;
 
+    @SerializedName("auto")
+    @Expose
+    public int auto;
+
     @SerializedName("urno")
     @Expose
     public String urno;

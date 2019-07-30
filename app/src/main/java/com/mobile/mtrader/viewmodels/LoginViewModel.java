@@ -146,6 +146,7 @@ public class LoginViewModel extends ViewModel {
                                                             for(int i = 0 ; i < data.repcustomers.size(); i++) {
 
                                                                 AllRepCustomers allRepCustomers = new AllRepCustomers(
+                                                                        data.repcustomers.get(i).auto,
                                                                         data.repcustomers.get(i).id,
                                                                         data.repcustomers.get(i).urno,
                                                                         data.repcustomers.get(i).customerno,

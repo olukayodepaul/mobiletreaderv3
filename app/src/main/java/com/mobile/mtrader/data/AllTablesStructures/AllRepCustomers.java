@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class AllRepCustomers {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public int auto;
     public int id;
     public String urno;
@@ -22,9 +22,10 @@ public class AllRepCustomers {
     public String longitude;
     public String outlet_pic;
 
-    public AllRepCustomers(int id, String urno, String customerno, String outletclassid, String outletlanguageid,
+    public AllRepCustomers(int auto, int id, String urno, String customerno, String outletclassid, String outletlanguageid,
                            String outlettypeid, String outletname, String outletaddress, String contactname,
                            String contactphone, String latitude, String longitude,String outlet_pic) {
+        this.auto = auto;
         this.id = id;
         this.urno = urno;
         this.customerno = customerno;
@@ -38,7 +39,6 @@ public class AllRepCustomers {
         this.latitude = latitude;
         this.longitude = longitude;
         this.outlet_pic = outlet_pic;
-
     }
 
     public int getAuto() {
@@ -97,7 +97,4 @@ public class AllRepCustomers {
         return longitude;
     }
 
-    public void setAuto(int auto) {
-        this.auto = auto;
-    }
 }
